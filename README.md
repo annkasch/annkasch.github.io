@@ -11,6 +11,8 @@ This folder is a static, GitHub Pages–ready portfolio. It contains a home page
 - `/projects/black-hole-binaries/` — gravitational-wave astrophysics project
 - `/projects/scientific-ml/` — ML in scientific pipelines, scientific validity, and HPC bottlenecks
 
+The home page contains the introduction and research themes, with Projects available in the main navigation. Research project cards and the scientific ML essay are listed together on `/projects/`.
+
 ## Publish on GitHub Pages
 
 The Pages address follows the repository owner's current GitHub username. For the `annkasch` account, create a public repository named `annkasch.github.io` to publish at `https://annkasch.github.io/`. A repository with another name, such as `portfolio`, publishes at `https://annkasch.github.io/portfolio/`.

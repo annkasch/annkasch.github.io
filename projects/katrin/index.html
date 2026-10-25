@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111512">
+  <meta name="description" content="How Ann-Kathrin Schuetz used NERSC's Cori supercomputer and contributed Bayesian MCMC tools to KATRIN's neutrino-mass analysis at Berkeley Lab.">
+  <title>Weighing the weightless | KATRIN | Ann-Kathrin Schuetz</title>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#story">Skip to the article</a>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <main>
+    <section class="cover" id="top" aria-labelledby="hero-title">
+      <img class="cover-image" src="https://www.kit.edu/img/pi/2025_029_Bild%201_Astroteilchenphysik_Neutrinos%20sind%20leichter%20als%200,45%20Elektronenvolt_72dpi.jpg" fetchpriority="high" alt="Interior view of the KATRIN main spectrometer." aria-describedby="hero-image-caption">
+      <header class="site-header">
+        <a class="signature" href="../../">Ann-Kathrin Schuetz<span>Back to portfolio / Particle physics</span></a>
+        <nav aria-label="Main navigation">
+          <a href="#story">The story</a>
+          <a href="#mcmc">My contribution</a>
+          <a href="https://doi.org/10.1126/science.adq9592" target="_blank" rel="noopener">2025 result ↗</a>
+        </nav>
+      </header>
+      <div class="cover-copy">
+        <p class="eyebrow">KATRIN × NERSC / Bayesian MCMC</p>
+        <h1 id="hero-title">Weighing the<br><em>weightless</em></h1>
+        <p class="cover-deck">I helped build statistical models and an MCMC framework, then used NERSC’s Cori for Bayesian analysis.</p>
+        <a class="story-link" href="#story">Read the story <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="cover-footnote" aria-hidden="true"><span>KATRIN / Main spectrometer</span><span>Karlsruhe, Germany</span></div>
+    </section>
+
+    <div class="image-caption" id="hero-image-caption">
+      <p>Interior view of the KATRIN main spectrometer.</p>
+      <p>Image: M. Zacher / KATRIN Collaboration. <a href="https://www.kit.edu/kit/english/pi_2025_029_astroparticle-physics-neutrinos-weigh-less-than-0-45-electronvolts.php" target="_blank" rel="noopener">KIT result and image credit ↗</a></p>
+    </div>
+
+    <section class="result-strip" aria-labelledby="result-strip-title">
+      <div class="result-strip-inner">
+        <p class="eyebrow" id="result-strip-title">Three numbers tell the story</p>
+        <div class="result-metrics">
+          <div><span>Berkeley Lab Bayesian posterior</span><strong>&lt; 0.73 <small>eV/c<sup>2</sup></small></strong><p>90% upper limit from the combined data</p></div>
+          <div><span>KNM1–5 proof of concept</span><strong>136 <small>parameters</small></strong><p>272 walkers in a preliminary statistical-only run</p></div>
+          <div><span>Latest KATRIN result</span><strong>&lt; 0.45 <small>eV/c<sup>2</sup></small></strong><p>2025 result across five measurement campaigns</p></div>
+        </div>
+        <p class="result-strip-note">The preliminary KNM1–5 run produced 29 million samples and 28 GB of chain data. Full statistical-plus-systematic sampling was still a performance challenge at this stage.</p>
+      </div>
+    </section>
+
+    <article id="story">
+      <header class="article-opening">
+        <div class="article-meta"><span class="eyebrow">Neutrino mass / Bayesian inference</span><p>By Ann-Kathrin Schuetz</p></div>
+        <div class="standfirst">
+          <p>KATRIN infers neutrino mass from the energy spectrum of electrons emitted in tritium decay. The signature is a tiny change near the spectrum’s endpoint.</p>
+          <p>My work connected the statistical model, MCMC software, and high-performance computing needed to explore that signal: from modeling systematic effects to running Bayesian chains on NERSC’s Cori.</p>
+        </div>
+      </header>
+
+      <div class="article-layout">
+        <aside class="contents">
+          <nav aria-label="In this article">
+            <p class="eyebrow">In this article</p>
+            <ol>
+              <li><a href="#measurement">The measurement</a></li>
+              <li><a href="#instrument">A 70 m experiment</a></li>
+              <li><a href="#bayesian">Bayesian analysis</a></li>
+              <li><a href="#mcmc">The MCMC framework</a></li>
+              <li><a href="#result">Results over time</a></li>
+            </ol>
+          </nav>
+        </aside>
+
+        <div class="article-body">
+          <section class="chapter" id="measurement" aria-labelledby="measurement-title">
+            <p class="section-number">01 / The measurement</p>
+            <h2 id="measurement-title">A tiny shift at the<br>edge of the spectrum</h2>
+            <div class="prose">
+              <p class="lead">Neutrinos are so light that their mass is hard to measure directly. KATRIN looks for their subtle influence on the energy carried away by electrons in tritium beta decay.</p>
+              <p>When a tritium nucleus decays, it produces a helium nucleus, an electron, and an electron antineutrino. The available energy is shared between the two particles. Very close to the maximum possible electron energy, even a tiny neutrino mass changes the shape of the spectrum.</p>
+              <p>KATRIN measures that spectrum near its endpoint. The challenge is to separate the small mass-related signal from background and from other effects in the instrument and the model.</p>
+            </div>
+
+            <figure class="spectrum-figure" aria-labelledby="spectrum-caption">
+              <svg viewBox="0 0 760 330" role="img" aria-labelledby="spectrum-title spectrum-desc" xmlns="http://www.w3.org/2000/svg">
+                <title id="spectrum-title">Conceptual tritium beta-decay spectrum</title>
+                <desc id="spectrum-desc">A schematic electron spectrum approaches zero at its endpoint. A close-up at the endpoint illustrates where neutrino mass affects the spectrum.</desc>
+                <text class="wave-axis wave-axis-title" x="74" y="24">Electron count</text>
+                <line class="wave-grid" x1="78" y1="284" x2="725" y2="284" />
+                <line class="wave-grid" x1="78" y1="54" x2="78" y2="284" />
+                <line class="wave-grid" x1="78" y1="168" x2="725" y2="168" />
+                <path class="wave-path spectrum-line" d="M80 70 C160 78, 232 98, 306 128 S452 190, 522 231 S607 270, 652 280" />
+                <path class="spectrum-endpoint" d="M645 278 C664 282, 680 284, 696 284" />
+                <line class="endpoint-mark" x1="652" y1="54" x2="652" y2="284" />
+                <text class="wave-axis" x="656" y="48">endpoint</text>
+                <text class="wave-axis" x="78" y="314">Lower electron energy</text>
+                <text class="wave-axis" x="725" y="314" text-anchor="end">Higher energy →</text>
+              </svg>
+              <figcaption id="spectrum-caption">Conceptual sketch of the beta spectrum, not KATRIN data. The neutrino-mass signature is sought at the high-energy endpoint.</figcaption>
+            </figure>
+          </section>
+
+          <section class="chapter" id="instrument" aria-labelledby="instrument-title">
+            <p class="section-number">02 / A 70 m experiment</p>
+            <h2 id="instrument-title">Following electrons<br>across a vast instrument</h2>
+            <div class="prose">
+              <p>Tritium decays in an intense source at one end of KATRIN’s beamline. Magnetic fields guide the electrons toward a giant electrostatic spectrometer, which acts as a precise energy filter. Electrons with enough energy pass through to the detector.</p>
+              <p>By changing the filter setting and counting transmitted electrons, the experiment traces the spectrum near its endpoint. That measurement depends on many connected systems working together—from the tritium source and magnetic guidance to the spectrometer, detector, and detailed response model.</p>
+            </div>
+            <figure class="beamline-figure">
+              <img src="https://newscenter.lbl.gov/wp-content/uploads/2022/02/13_The_70m_long_KATRIN_beamline_edited_NC.jpg" width="1600" height="433" loading="lazy" alt="Diagram of KATRIN’s 70-meter beamline, with the tritium source at the left and detector at the right.">
+              <figcaption>KATRIN’s 70 m beamline, from the tritium source to the detector. Credit: KATRIN Collaboration / Berkeley Lab News Center.</figcaption>
+            </figure>
+          </section>
+
+          <section class="chapter" id="bayesian" aria-labelledby="bayesian-title">
+            <p class="section-number">03 / Bayesian analysis</p>
+            <h2 id="bayesian-title">Exploring the full<br>space of possibilities</h2>
+            <div class="prose">
+              <p>A fit can identify parameter values that best describe the measured spectrum. Bayesian analysis asks a complementary question: after seeing the data, how probable are different values of the neutrino mass and other model parameters?</p>
+              <p>The calculation combines a likelihood, which describes how well each parameter choice predicts the data, with prior information. The result is a posterior distribution. It can reveal how uncertainty is shared among parameters and assign probability to mass values that remain possible.</p>
+              <p>The second data release added 744 live hours. KATRIN ran its tritium source at nominal strength, while improved vacuum in the main spectrometer cut background near the endpoint by 25%.</p>
+              <p>The Berkeley Lab team led by Björn Lehnert used Bayesian methods to study the spectrum. The first campaign’s posterior became the prior for the second, so the analysis could combine what both data sets said about the neutrino mass.</p>
+              <p>The combined Bayesian posterior gave an upper limit of 0.73 eV/c<sup>2</sup> at 90% credibility. KATRIN’s other analysis teams used frequentist methods; their combined limit was 0.8 eV/c<sup>2</sup> at 90% confidence. The independent approaches were consistent. Probability estimates from the Bayesian analysis also supported cosmological studies.</p>
+              <p>The posterior could travel beyond the detector, too. We explored using the KATRIN result alongside cosmic microwave background and baryon acoustic oscillation data in cosmological MCMC analyses with MontePython and CLASS.</p>
+            </div>
+            <div class="bayesian-result">
+              <span class="eyebrow">Berkeley Lab Bayesian analysis / combined data</span>
+              <strong>&lt; 0.73 <small>eV/c<sup>2</sup></small></strong>
+              <p>90% posterior upper limit. The first data set’s posterior was used as the prior for the second.</p>
+            </div>
+            <div class="analysis-flow" aria-label="Bayesian analysis workflow">
+              <div><span>01</span><strong>KATRIN spectrum</strong><small>two measurement campaigns</small></div>
+              <span class="flow-arrow" aria-hidden="true">→</span>
+              <div><span>02</span><strong>MCMC on Cori</strong><small>sample the model’s possibilities</small></div>
+              <span class="flow-arrow" aria-hidden="true">→</span>
+              <div><span>03</span><strong>Neutrino-mass limit</strong><small>&lt; 0.73 eV at 90% credibility</small></div>
+            </div>
+          </section>
+
+          <section class="chapter" id="mcmc" aria-labelledby="mcmc-title">
+            <p class="section-number">04 / My contribution</p>
+            <h2 id="mcmc-title">Making Bayesian analysis<br>work at scale</h2>
+            <div class="prose">
+              <p class="lead">With Leonard Köllenberger, Björn Lehnert, and Weiran Xu, I helped develop KATRIN-MCMC, a modular Python framework for Bayesian analysis across multiple measurement periods.</p>
+              <p>My contributions included statistical models for parameter estimation and systematic effects, an early MCMC framework with KaFit, model validation, and uncertainty quantification. We connected the analysis to Fitrium first, with compatibility for Netrium planned.</p>
+              <p>The framework separated the likelihood model, sampler, and priors. It supported emcee and UltraNest, saved chains in HDF5 so runs could resume, and summarized marginal distributions, modes, medians, means, highest-density intervals, and correlations. Convergence and burn-in checks were still in development in this project snapshot.</p>
+              <p>The early KNM1–5 run was a preliminary statistical-only proof of concept: 136 parameters, 272 walkers, 29 million samples, and 28 GB of chain data. Full statistical-plus-systematic sampling still needed faster model evaluations.</p>
+              <p class="source-note">Details are from the 2021 KATRIN-MCMC and Berkeley contribution presentations. These prototype results are not the collaboration’s final fit.</p>
+            </div>
+            <aside class="hpc-feature" aria-label="Ann-Kathrin Schuetz's high-performance computing work">
+              <div class="hpc-feature-label">
+                <span class="eyebrow">My high-performance computing work</span>
+                <strong>Cori</strong>
+                <span class="hpc-facility"><a href="https://www.nersc.gov/" target="_blank" rel="noopener">NERSC</a> / Berkeley Lab</span>
+              </div>
+              <p>I used NERSC’s Cori supercomputer to run KATRIN Bayesian MCMC chains. Each chain repeatedly evaluated the spectrum model across a high-dimensional parameter space, turning model speed and compute capacity into practical limits on the analysis. NERSC is a U.S. Department of Energy Office of Science user facility.</p>
+            </aside>
+            <div class="framework-grid" aria-label="KATRIN-MCMC framework components">
+              <div><span class="eyebrow">Model</span><h3>Mass and systematics</h3><p>Statistical models connected through Fitrium and KaFit; Netrium compatibility was planned.</p></div>
+              <div><span class="eyebrow">Sampling</span><h3>Chains at scale</h3><p>emcee and UltraNest explored the posterior with priors suited to the parameters.</p></div>
+              <div><span class="eyebrow">Analysis</span><h3>Uncertainty, not one number</h3><p>HDF5 chains supported posterior summaries, correlations, and continued runs.</p></div>
+            </div>
+            <div class="sampling-benchmark" role="group" aria-labelledby="benchmark-title">
+              <div class="benchmark-intro">
+                <span class="eyebrow">Early KaFit benchmark</span>
+                <h3 id="benchmark-title">Systematics changed the compute cost</h3>
+                <p>Adding systematic effects reduced throughput by a factor of about 33 in this early benchmark.</p>
+              </div>
+              <div class="benchmark-rates" role="img" aria-label="Sampling rate fell from about 40 samples per second with statistical terms only to about 1.2 samples per second with statistics and systematic effects.">
+                <div class="benchmark-rate">
+                  <div class="benchmark-rate-label"><span>Statistics only</span><strong>~40 <small>samples/s</small></strong></div>
+                  <div class="benchmark-track"><span class="benchmark-fill benchmark-fill-fast"></span></div>
+                </div>
+                <div class="benchmark-rate">
+                  <div class="benchmark-rate-label"><span>Statistics + systematics</span><strong>~1.2 <small>samples/s</small></strong></div>
+                  <div class="benchmark-track"><span class="benchmark-fill benchmark-fill-slow"></span></div>
+                </div>
+              </div>
+              <p class="benchmark-note">This early KaFit version made statistical-only sampling practical; performance work by Weiran Xu later improved the path to full-model runs.</p>
+            </div>
+            <aside class="scale-projection" aria-label="Projected scale of a future full KATRIN fit">
+              <div class="scale-projection-heading">
+                <span class="eyebrow">Full-fit scale / 2021 planning estimate</span>
+                <h3>From prototype to the full data set</h3>
+              </div>
+              <div class="scale-projection-metrics">
+                <div><strong>~1,000</strong><span>free parameters<br>projected</span></div>
+                <div><strong>~10<sup>11</sup></strong><span>likelihood evaluations<br>projected</span></div>
+              </div>
+              <p>A separate KNM1 timing estimate put 500,000 samples at about 1.5 months with an eight-second response-function call. This was a planning estimate, not measured Cori wall time.</p>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <section class="chapter result-chapter" id="result" aria-labelledby="result-title">
+        <p class="section-number">05 / Results over time</p>
+        <h2 id="result-title">Each data release<br>sharpens the limit</h2>
+        <div class="result-panel">
+          <div><span class="eyebrow">KATRIN / 2025 combined result</span><strong>&lt; 0.45 <small>eV/c<sup>2</sup></small></strong></div>
+          <p>The latest published upper limit on the effective electron-antineutrino mass at 90% confidence, based on five measurement campaigns and 259 days of data: 36 million electrons in total.</p>
+        </div>
+        <ol class="limit-history" aria-label="KATRIN neutrino-mass limits">
+          <li><span>2019 / First campaign</span><strong>&lt; 1.1 eV</strong><p>First direct KATRIN upper limit.</p></li>
+          <li><span>2021 data / Published 2022</span><strong>&lt; 0.8 eV</strong><p>Combined frequentist limit; Berkeley’s Bayesian analysis found &lt; 0.73 eV at 90% credibility.</p></li>
+          <li><span>2025 / Five campaigns</span><strong>&lt; 0.45 eV</strong><p>Limit from 259 measurement days and 36 million electrons.</p></li>
+        </ol>
+        <div class="prose">
+          <p>The 0.8 eV result was KATRIN’s first direct laboratory measurement to reach the sub-eV range. Later, the collaboration combined five campaigns to tighten the limit to 0.45 eV. The newer result extends the experiment’s progress beyond the Bayesian analysis work described here.</p>
+          <p class="source-note">Sources: KATRIN Collaboration, <a href="https://doi.org/10.1038/s41567-021-01463-1" target="_blank" rel="noopener">Nature Physics (2022) ↗</a> and <a href="https://doi.org/10.1126/science.adq9592" target="_blank" rel="noopener">Science (2025) ↗</a>; Berkeley Lab reports on the <a href="https://nuclearscience.lbl.gov/2021/07/01/katrin-lowers-the-neutrino-mass-ceiling/" target="_blank" rel="noopener">2021 Bayesian analysis ↗</a>, <a href="https://newscenter.lbl.gov/2022/02/14/berkeley-lab-researchers-computational-facilities-play-key-role-in-barrier-breaking-neutrino-mass-measurement/" target="_blank" rel="noopener">2022 result ↗</a>, and <a href="https://nuclearscience.lbl.gov/2025/04/17/direct-neutrino-mass-measurement-based-on-259-days-of-katrin-data/" target="_blank" rel="noopener">2025 update ↗</a>.</p>
+        </div>
+      </section>
+    </article>
+
+    <footer class="site-footer">
+      <div class="footer-main">
+        <div><p class="eyebrow">About the author</p><h2>Ann-Kathrin Schuetz</h2><p>I develop computational methods for physics analyses, from Bayesian inference to large-scale scientific computing.</p></div>
+        <div><p class="eyebrow">KATRIN-MCMC collaborators</p><p>Leonard Köllenberger · Björn Lehnert<br>Weiran Xu</p><div class="credit-links"><a href="https://nuclearscience.lbl.gov/2021/07/01/katrin-lowers-the-neutrino-mass-ceiling/" target="_blank" rel="noopener">Bayesian analysis ↗</a><a href="https://doi.org/10.1126/science.adq9592" target="_blank" rel="noopener">2025 Science paper ↗</a></div></div>
+      </div>
+      <div class="footer-bottom"><span>KATRIN / Neutrino mass</span><a href="#top">Back to top ↑</a></div>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="My work on LEGEND-200 low-mass front-end electronics: photolithography, trace etching, germanium sputtering, dicing, electrical testing, and assembly.">
+  <title>LMFE production and testing | Ann-Kathrin Schuetz</title>
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="../../">Ann-Kathrin Schuetz<span>Research portfolio</span></a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="../../">Home</a>
+      <a href="../../about/">About</a>
+      <a href="../">Projects</a>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap lmfe-page">
+    <article>
+      <header class="project-intro">
+        <p class="eyebrow">Detector electronics / Fabrication &amp; testing</p>
+        <h1>LMFE production and testing</h1>
+        <p class="project-subtitle">The current front end for LEGEND-200</p>
+        <p class="intro-copy">At Berkeley Lab, I took part across the production and testing of the low-mass front end (LMFE) for germanium detectors. My work covered trace etching, photoresist coating and photolithography, germanium sputtering, wafer dicing, electrical measurements, and assembly of the boards and cables.</p>
+        <p class="project-meta">Ann-Kathrin Schuetz · Lawrence Berkeley National Laboratory · LEGEND collaboration</p>
+      </header>
+
+      <nav class="project-contents" aria-label="On this page">
+        <a href="#electronics">01 / The electronics</a>
+        <a href="#production">02 / Production stages</a>
+        <a href="#checks">03 / Testing &amp; documentation</a>
+      </nav>
+
+      <section class="project-section" id="electronics" aria-labelledby="electronics-title">
+        <p class="eyebrow">01 / The electronics</p>
+        <h2 id="electronics-title">What the LMFE does</h2>
+        <div class="prose">
+          <p>The LMFE is the input stage of the charge-sensitive preamplifier used in LEGEND-200. It sits close to the germanium detector and contains a junction field-effect transistor (JFET) and the feedback elements. The rest of the preamplifier, CC4, is located farther away.</p>
+          <p>The detector produces charge when radiation deposits energy in it. The preamplifier converts that charge into a voltage pulse. Its feedback capacitance sets the charge-to-voltage gain, while an amorphous-germanium feedback resistor provides the discharge path that allows the output to recover after a pulse.</p>
+          <p>Keeping the input stage close to the detector limits stray capacitance and its contribution to electronic noise. At the same time, material near the detector can contribute radioactive background. The LMFE uses a small silica substrate and a low-mass implementation of the input and feedback components to address both constraints.</p>
+        </div>
+        <figure class="readout-overview">
+          <div class="readout-chain" role="img" aria-label="Simplified readout: germanium detector, nearby LMFE containing the JFET and feedback elements, then the remote CC4 preamplifier stage.">
+            <div class="readout-block"><span>Sensor</span><strong>Germanium detector</strong><p>Charge from an energy deposit</p></div>
+            <span class="chain-arrow" aria-hidden="true">→</span>
+            <div class="readout-block front-end"><span>Close to the detector</span><strong>LMFE</strong><p>JFET input stage &amp; feedback elements</p></div>
+            <span class="chain-arrow" aria-hidden="true">→</span>
+            <div class="readout-block"><span>Farther away</span><strong>CC4</strong><p>Remaining preamplifier circuitry</p></div>
+          </div>
+          <figcaption>Simplified functional grouping of the current readout. The LMFE and CC4 form the preamplifier together; this diagram does not show circuit wiring or the feedback connections.</figcaption>
+        </figure>
+        <div class="prose">
+          <p>Producing an LMFE therefore combines thin-film fabrication with component integration, electrical verification, and careful mechanical handling. A patterned board still needs its transistor, cable connections, and checks before it becomes a complete front-end assembly.</p>
+        </div>
+      </section>
+
+      <section class="project-section" id="production" aria-labelledby="production-title">
+        <p class="eyebrow">02 / Production stages</p>
+        <h2 id="production-title">My work through the production process</h2>
+        <div class="prose section-intro">
+          <p>I worked as part of the production team across wafer processing, testing, and final assembly. The stages below group that work by purpose. Photolithography, cleaning, inspection, and electrical checks recur as the layers and assemblies are built.</p>
+        </div>
+
+        <ol class="production-steps">
+          <li>
+            <span class="step-number" aria-hidden="true">01</span>
+            <div><h3>Photoresist coating and photolithography</h3>
+              <p>I worked on substrate preparation and spin-coating with photoresist, a light-sensitive protective layer. Mask alignment, exposure, and development transfer a pattern into the resist, defining which areas are protected during subsequent processing.</p>
+              <p>The resist pattern has to line up with the existing features. Microscope inspection helps identify contamination, defects in the coating, or misalignment before further processing.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number" aria-hidden="true">02</span>
+            <div><h3>Trace etching</h3>
+              <p>I participated in etching the metal layer to form the conductive traces and contact pads. The patterned resist protects the areas to be retained while exposed material is removed.</p>
+              <p>After processing and resist removal, inspection checks that the intended features remain and that unwanted material has been cleared. These traces and pads provide the electrical connections for the later assembly.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number" aria-hidden="true">03</span>
+            <div><h3>Germanium sputtering and resistor patterning</h3>
+              <p>My fabrication work also included germanium sputtering: depositing the thin amorphous-germanium layer used for the feedback resistor. Further photolithography and etching define the resistor pattern.</p>
+              <p>This resistor is part of the analog signal path. Its electrical properties affect feedback recovery and noise, so the deposited and patterned film is followed by electrical characterization.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number" aria-hidden="true">04</span>
+            <div><h3>Wafer-level inspection and electrical probing</h3>
+              <p>Before separating the boards, I took part in microscope inspection, feedback-resistance measurements, and recording the results for each device. The probe station allows electrical contact to the small pads while the boards are still on the substrate.</p>
+              <p>Establishing reliable probe contact matters: a poor contact can resemble a device problem. The measurements and inspection records provide a basis for following each board through the remaining production stages.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number" aria-hidden="true">05</span>
+            <div><h3>Dicing and cleaning</h3>
+              <p>I set up and operated the dicing saw to separate the processed substrates into individual LMFE boards. This involved mounting the substrate, aligning the cuts under the microscope, and handling the pieces after separation.</p>
+              <p>A protective coating helps protect the processed surfaces during cutting. Afterwards, I worked on removing that coating, cleaning the boards, and transferring them into fixtures for component integration.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number" aria-hidden="true">06</span>
+            <div><h3>Preparing boards for JFET integration</h3>
+              <p>I prepared and loaded the individual boards into the bonding fixtures, supported the JFET integration work, and inspected the assemblies under the microscope. Specialist colleagues carried out JFET attachment and wire bonding.</p>
+              <p>My part included handling and transporting the prepared boards, checking their condition before and after integration, and keeping the components protected between operations.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number" aria-hidden="true">07</span>
+            <div><h3>Cable and mechanical assembly</h3>
+              <p>I checked cable continuity and conductor identification, threaded and secured the cables in their holders, and placed the LMFE boards into the assemblies. Under the microscope, I formed and positioned the fine wires over the contact pads and worked on the conductive-epoxy connections.</p>
+              <p>The assembly work required attention to the existing wire bonds, the placement of the cable ends, and mechanical strain. Inspection continued after the connections were made.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number" aria-hidden="true">08</span>
+            <div><h3>Final testing and preparation for shipment</h3>
+              <p>I performed final electrical measurements on completed board-and-cable assemblies, including resistance and JFET junction checks. I also inspected the mechanical fit, checked identification, and prepared the assemblies for protected storage and shipment.</p>
+              <p>Measurements and observations were recorded against the corresponding board and cable. This connected the final assembly back to its fabrication and inspection history.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section class="project-section" id="checks" aria-labelledby="checks-title">
+        <p class="eyebrow">03 / Testing &amp; documentation</p>
+        <h2 id="checks-title">Checks throughout fabrication and assembly</h2>
+        <div class="prose">
+          <p>Testing was part of the production process at several stages. Wafer-level measurements checked the patterned resistor; cable tests checked the interconnects; final measurements checked the assembled front end. Visual inspection complemented these measurements by checking surfaces, pads, component placement, and connections.</p>
+        </div>
+        <dl class="check-list">
+          <div><dt>Electrical measurements</dt><dd>Feedback resistance, cable continuity, conductor identification, and transistor checks before and after assembly.</dd></div>
+          <div><dt>Microscope inspection</dt><dd>Patterned features, surface cleanliness, contact pads, wire bonds, and completed cable connections.</dd></div>
+          <div><dt>Handling and mechanical fit</dt><dd>Protection of the thin boards and wire bonds, cable strain, fixture contact, and fit within the assembly holders.</dd></div>
+          <div><dt>Production records</dt><dd>Device and cable identification, measurement results, inspection notes, and observations carried forward between stages.</dd></div>
+        </dl>
+        <div class="prose">
+          <p>This work gave me practical experience with how fabrication, electrical behavior, and mechanical integration affect one another. For example, an electrical measurement depends on making good contact without damaging a pad, and a completed cable connection must remain intact during handling and packaging.</p>
+        </div>
+      </section>
+
+      <footer class="article-footer">
+        <p>Production work carried out as part of the Berkeley Lab LEGEND electronics team.</p>
+        <a class="text-link" href="../">Back to all projects <span aria-hidden="true">→</span></a>
+      </footer>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner"><p>Ann-Kathrin Schuetz · Research portfolio</p><p><a href="../../about/">About</a> · <a href="../">Projects</a></p></div>
+  </footer>
+</body>
+</html>

@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="About Ann-Kathrin Schuetz and her work in computational physics.">
+  <meta name="description" content="Ann-Kathrin Schuetz works on machine learning for physical systems, with experience in simulation, computer vision, robot learning, sensors, and scientific computing.">
   <title>About | Ann-Kathrin Schuetz</title>
   <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -18,26 +19,81 @@
     </nav>
   </header>
 
-  <main id="main" class="wrap page-main">
-    <p class="eyebrow">About</p>
-    <h1 class="page-title">Physics questions, computational tools.</h1>
-    <p class="page-intro">I work on computational methods for physics analyses, bringing statistical models, scientific software, and large-scale computing together.</p>
-    <div class="about-grid">
-      <div class="about-copy">
-        <p>My projects span particle physics and astrophysics. In KATRIN, I contributed to statistical models and a modular MCMC framework for Bayesian neutrino-mass analyses, and used NERSC’s Cori supercomputer to run chains.</p>
-        <p>In gravitational-wave astrophysics, I work on computational models that connect merging black holes to the lives of massive stars. The common thread is using computation to explore complex parameter spaces and make uncertainty part of the result.</p>
-        <p>Explore the <a href="../projects/">project pages</a> for more detail.</p>
+  <main id="main" class="wrap about-page">
+    <section class="about-hero" aria-labelledby="about-title">
+      <div class="about-intro">
+        <p class="eyebrow">About me</p>
+        <h1 id="about-title">Ann-Kathrin<br>Schuetz.</h1>
       </div>
-      <aside class="about-aside" aria-label="Areas of work">
-        <h2>Areas of work</h2>
-        <ul>
-          <li>Bayesian inference and MCMC</li>
-          <li>High-performance and scientific computing</li>
-          <li>Neutrino-mass analysis</li>
-          <li>Gravitational-wave populations</li>
+      <div class="portrait-frame">
+        <img class="portrait" src="assets/ann-kathrin-schuetz.jpg" width="678" height="960" alt="Ann-Kathrin Schuetz" fetchpriority="high">
+      </div>
+      <div class="about-summary">
+        <p class="about-lead">I build machine learning for physical systems.</p>
+        <p class="about-introduction">I combine ML research with simulation and hands-on hardware development. My projects span computer vision, reinforcement learning for robotics, and models that make expensive physical simulations practical.</p>
+        <p class="current-role">Postdoctoral researcher<br><span>Lawrence Berkeley National Laboratory · Since 2021</span></p>
+        <ul class="profile-links" aria-label="Find me online">
+          <li><a href="https://www.linkedin.com/in/ann-kathrin-schuetz-phd/">LinkedIn <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://github.com/annkasch">GitHub <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://scholar.google.com/citations?user=o2zYzQ4AAAAJ&amp;hl=en">Google Scholar <span aria-hidden="true">↗</span></a></li>
         </ul>
-      </aside>
-    </div>
+      </div>
+    </section>
+
+    <section class="about-story about-section" aria-labelledby="story-title">
+      <div class="section-label"><p class="eyebrow">How I work</p><h2 id="story-title">Models, measurements,<br>and machines.</h2></div>
+      <div class="biography">
+        <p>I like working across the boundary between a model and the system it describes. My background in experimental physics taught me to connect algorithms with noisy measurements, imperfect simulations, and the hardware producing the data. It also made me care about practical questions: how much computation a method needs, how quickly it can respond, and how to tell when its predictions are reliable.</p>
+        <p>At Berkeley Lab, I develop ML methods for physical simulation and sensor data. My work includes surrogate models that reduce simulation cost, deep-learning classifiers for sensor waveforms, and an LLM agent that turns incomplete engineering documentation into validated 3D simulation geometries. I build research software in Python and C++, and run distributed simulation and training pipelines at NERSC.</p>
+        <p>Computer vision and robotics bring these interests together. In UC Berkeley’s Master of Information and Data Science program, I worked on aerial image detection and decentralized robot-and-drone coordination for search and rescue. In my independent Animal2robot project, I’m exploring how motion extracted from dog videos can inform robot locomotion, working with Isaac Lab, ROS 2, and my own Unitree Go2.</p>
+        <p>I also build the measurement systems themselves: low-noise electronics, cleanroom fabrication, hardware testing, and data acquisition. That experience gives me a concrete view of the constraints a learning system has to work within. Alongside the technical work, I’ve mentored students and represented early-career researchers in an international collaboration.</p>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="work-title">
+      <div class="about-section-heading"><p class="eyebrow">A few concrete examples</p><h2 id="work-title">What that looks like in practice.</h2></div>
+      <div class="work-notes">
+        <article class="work-note">
+          <p class="note-index">01 / Computer vision &amp; multi-agent learning</p>
+          <h3>Perception for a coordinated search.</h3>
+          <p>For OmniSearch, a master’s project on wildfire search and rescue, I trained a YOLO detector to find human survivors in aerial imagery. I also built a dynamic simulator and used multi-agent reinforcement learning to coordinate robot and drone teams without a central controller.</p>
+          <a class="text-link" href="https://github.com/olavrenin-data-scientist/omnisearch">Explore OmniSearch <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="work-note">
+          <p class="note-index">02 / Robot learning</p>
+          <h3>Learning movement from video.</h3>
+          <p>Animal2robot is my early-stage project connecting dog pose and gait estimation with reinforcement learning for quadruped locomotion. I’m developing the pipeline in Isaac Lab and working with ROS 2 toward deploying learned policies on my Unitree Go2.</p>
+          <a class="text-link" href="https://github.com/annkasch/animal2robot">Follow Animal2robot <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="work-note">
+          <p class="note-index">03 / ML &amp; physical simulation</p>
+          <h3>Making expensive simulation practical.</h3>
+          <p>I developed RESuM, a surrogate model combining simulations of different fidelity with calibrated uncertainty. In a detector-shielding study, it found a design with 66.5% less simulated background using 3.3% of the conventional compute. I also applied it to inference for binary black-hole populations.</p>
+          <p class="work-recognition">First-author paper · ICLR 2025 Spotlight</p>
+          <a class="text-link" href="https://proceedings.iclr.cc/paper_files/paper/2025/file/c3909e3abe8ebdb20c42a42ce0bc907d-Paper-Conference.pdf">Read the RESuM paper <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="work-note">
+          <p class="note-index">04 / Sensors &amp; hardware</p>
+          <h3>From raw signals to decisions.</h3>
+          <p>I developed deep-learning waveform classifiers to distinguish sensor signals from noise and optimized inference latency toward integration with data acquisition. On the hardware side, I led low-noise electronics from design and cleanroom fabrication through testing, installation, and commissioning.</p>
+          <a class="text-link" href="https://scholar.google.com/citations?user=o2zYzQ4AAAAJ&amp;hl=en">See related publications <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="about-section background-section" aria-labelledby="background-title">
+      <div class="section-label"><p class="eyebrow">Background</p><h2 id="background-title">Research and training.</h2></div>
+      <dl class="background-list">
+        <div><dt><span class="background-date">2021–present</span>Lawrence Berkeley National Laboratory</dt><dd>Postdoctoral researcher. Machine learning, physical simulation, sensor systems, and high-performance computing.</dd></div>
+        <div><dt><span class="background-date">2026</span>University of California, Berkeley</dt><dd>Master of Information and Data Science. Work spanning machine learning, computer vision, generative AI, and ML at scale.</dd></div>
+        <div><dt><span class="background-date">2014–2021</span>University of Tübingen</dt><dd>PhD in Physics, 2019; postdoctoral research, 2019–2021. Earlier BSc and MSc studies in physics at Tübingen.</dd></div>
+      </dl>
+    </section>
+
+    <section class="about-contact" aria-labelledby="contact-title">
+      <div><p class="eyebrow">Let’s connect</p><h2 id="contact-title">Building ML for the physical world?</h2><p>I’m interested in opportunities in machine learning, physical systems, computer vision, and robotics—especially where models meet sensors, simulation, or hardware.</p></div>
+      <a class="contact-link" href="https://www.linkedin.com/in/ann-kathrin-schuetz-phd/">Find me on LinkedIn <span aria-hidden="true">↗</span></a>
+    </section>
   </main>
 
   <footer class="site-footer">

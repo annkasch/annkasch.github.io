@@ -1,0 +1,78 @@
+/* About-page layout uses the portfolio's shared colors and typefaces. */
+.about-hero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, .8fr); grid-template-areas: "intro portrait" "summary portrait"; column-gap: 90px; row-gap: 29px; align-items: center; padding: 82px 0 88px; }
+.about-intro { grid-area: intro; }
+.about-summary { grid-area: summary; }
+.about-intro > .eyebrow { margin-bottom: 23px; }
+.about-intro h1 { font-size: clamp(3.8rem, 7.3vw, 6.2rem); line-height: 1.02; margin-bottom: 0; }
+.about-lead { max-width: 610px; font: 400 clamp(1.35rem, 2.3vw, 1.8rem)/1.5 var(--serif); letter-spacing: -.02em; margin-bottom: 19px; }
+.about-introduction { max-width: 570px; color: var(--muted); font-size: 1.02rem; line-height: 1.85; margin-bottom: 28px; }
+.current-role { color: var(--ink); font-size: .78rem; font-weight: 600; line-height: 1.8; margin-bottom: 25px; }
+.current-role span { color: var(--muted); font-size: .75rem; font-weight: 400; }
+.profile-links { display: flex; flex-wrap: wrap; gap: 16px 25px; list-style: none; padding: 0; margin: 0; }
+.profile-links a { display: inline-flex; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); color: var(--accent-dark); font-size: .77rem; text-decoration: none; }
+.profile-links a:hover { border-color: var(--accent); }
+.portrait-frame { grid-area: portrait; width: 100%; max-width: 390px; justify-self: end; padding: 12px; background: var(--warm); }
+.portrait { display: block; width: 100%; height: auto; }
+.about-section { padding: 57px 0 61px; border-top: 1px solid var(--line); }
+.about-story, .background-section { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.3fr); gap: 90px; }
+.about-section h2, .about-contact h2 { font: 400 clamp(1.8rem, 3.1vw, 2.65rem)/1.15 var(--serif); letter-spacing: -.035em; margin: 10px 0 0; }
+.section-label > .eyebrow, .about-section-heading > .eyebrow { font-size: .63rem; margin-bottom: 15px; }
+.biography { max-width: 710px; }
+.biography p { color: #354e52; font-size: .98rem; line-height: 1.9; margin-bottom: 23px; }
+.biography p:last-child { margin-bottom: 0; }
+.about-section-heading { margin-bottom: 33px; }
+.work-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 38px 44px; }
+.work-note { display: flex; flex-direction: column; border-top: 2px solid var(--accent); padding-top: 20px; }
+.note-index { font-size: .59rem; line-height: 1.7; letter-spacing: .07em; text-transform: uppercase; color: var(--accent-dark); margin-bottom: 16px; }
+.work-note h3 { font: 400 1.65rem/1.2 var(--serif); letter-spacing: -.03em; margin-bottom: 17px; }
+.work-note > p:not(.note-index) { font-size: .88rem; line-height: 1.85; color: var(--muted); margin-bottom: 20px; }
+.work-note > p.work-recognition { font-size: .69rem; color: var(--accent-dark); margin-top: -4px; }
+.work-note .text-link { display: inline-flex; align-self: flex-start; gap: 13px; line-height: 1.7; margin-top: auto; }
+.background-list { margin: 0; }
+.background-list > div { padding: 23px 0; border-bottom: 1px solid var(--line); }
+.background-list > div:first-child { padding-top: 0; }
+.background-list > div:last-child { border: 0; padding-bottom: 0; }
+.background-list dt { font-size: .96rem; font-weight: 600; line-height: 1.65; }
+.background-date { display: block; margin-bottom: 8px; color: var(--accent-dark); font-size: .66rem; font-weight: 500; letter-spacing: .04em; }
+.background-list dd { margin: 8px 0 0; color: var(--muted); font-size: .86rem; line-height: 1.85; }
+.about-contact { display: flex; justify-content: space-between; align-items: center; gap: 45px; padding: 33px 36px; margin: 12px 0 80px; background: var(--soft); }
+.about-contact .eyebrow { font-size: .61rem; margin-bottom: 10px; }
+.about-contact h2 { font-size: clamp(1.7rem, 2.5vw, 2.1rem); margin-bottom: 16px; }
+.about-contact p:last-child { max-width: 650px; color: var(--muted); font-size: .88rem; line-height: 1.8; margin-bottom: 0; }
+.contact-link { display: inline-flex; gap: 28px; flex-shrink: 0; padding-bottom: 8px; border-bottom: 1px solid var(--accent); color: var(--accent-dark); font-size: .78rem; text-decoration: none; }
+@media (max-width: 1000px) {
+  .about-hero, .about-story, .background-section { column-gap: 45px; }
+  .about-hero { grid-template-columns: minmax(0, 1.2fr) minmax(240px, .8fr); }
+  .about-intro h1 { font-size: clamp(3.3rem, 7vw, 5.3rem); }
+  .work-notes { gap: 25px; }
+  .work-note h3 { font-size: 1.45rem; }
+}
+@media (max-width: 760px) {
+  .about-hero { grid-template-columns: 1fr; grid-template-areas: "intro" "portrait" "summary"; gap: 30px; padding: 53px 0 45px; }
+  .about-intro h1 { font-size: clamp(3.8rem, 12vw, 5.3rem); }
+  .about-lead { font-size: 1.5rem; }
+  .about-introduction { font-size: .96rem; }
+  .portrait-frame { max-width: 300px; justify-self: start; padding: 10px; }
+  .about-story, .background-section { grid-template-columns: 1fr; gap: 28px; }
+  .about-section { padding: 38px 0 43px; }
+  .about-section h2 { font-size: 2rem; }
+  .biography p { font-size: .95rem; }
+  .work-notes { grid-template-columns: 1fr; gap: 32px; }
+  .work-note h3 { font-size: 1.6rem; }
+  .work-note > p:not(.note-index) { font-size: .92rem; }
+  .work-note .text-link { font-size: .77rem; }
+  .about-contact { flex-direction: column; align-items: flex-start; gap: 23px; padding: 26px 24px; margin-bottom: 55px; }
+}
+@media (max-width: 360px) {
+  .about-intro h1 { font-size: 3.4rem; }
+  .profile-links { gap: 18px; }
+}
+@media print {
+  .site-header, .site-footer, .about-contact { display: none; }
+  .about-hero { padding-block: 20px; }
+  .about-intro h1 { font-size: 3.5rem; }
+  .about-hero { gap: 35px; }
+  .about-story, .background-section { gap: 35px; }
+  .about-section { padding-block: 28px; }
+  .work-note, .background-list > div { break-inside: avoid; }
+}

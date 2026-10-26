@@ -35,11 +35,15 @@
 .background-list dt { font-size: .96rem; font-weight: 600; line-height: 1.65; }
 .background-date { display: block; margin-bottom: 8px; color: var(--accent-dark); font-size: .66rem; font-weight: 500; letter-spacing: .04em; }
 .background-list dd { margin: 8px 0 0; color: var(--muted); font-size: .86rem; line-height: 1.85; }
-.about-contact { display: flex; justify-content: space-between; align-items: center; gap: 45px; padding: 33px 36px; margin: 12px 0 80px; background: var(--soft); }
+.about-contact { display: grid; gap: 25px; padding: 33px 36px; margin: 12px 0 80px; background: var(--soft); }
 .about-contact .eyebrow { font-size: .61rem; margin-bottom: 10px; }
 .about-contact h2 { font-size: clamp(1.7rem, 2.5vw, 2.1rem); margin-bottom: 16px; }
-.about-contact p:last-child { max-width: 650px; color: var(--muted); font-size: .88rem; line-height: 1.8; margin-bottom: 0; }
-.contact-link { display: inline-flex; gap: 28px; flex-shrink: 0; padding-bottom: 8px; border-bottom: 1px solid var(--accent); color: var(--accent-dark); font-size: .78rem; text-decoration: none; }
+.about-contact-copy-main > p:not(.eyebrow) { max-width: 650px; color: var(--muted); font-size: .88rem; line-height: 1.8; margin-bottom: 0; }
+.about-contact-copy { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+.about-contact-copy-main { max-width: 720px; }
+.contact-link { display: inline-flex; flex-shrink: 0; gap: 28px; margin-bottom: 5px; padding-bottom: 8px; border-bottom: 1px solid var(--accent); color: var(--accent-dark); font-size: .78rem; text-decoration: none; }
+.about-contact-image { width: 100%; margin: 0; overflow: hidden; border: 1px solid var(--line); background: #fff; }
+.about-contact-image img { display: block; width: 100%; height: auto; }
 @media (max-width: 1000px) {
   .about-hero, .about-story, .background-section { column-gap: 45px; }
   .about-hero { grid-template-columns: minmax(0, 1.2fr) minmax(240px, .8fr); }
@@ -61,7 +65,9 @@
   .work-note h3 { font-size: 1.6rem; }
   .work-note > p:not(.note-index) { font-size: .92rem; }
   .work-note .text-link { font-size: .77rem; }
-  .about-contact { flex-direction: column; align-items: flex-start; gap: 23px; padding: 26px 24px; margin-bottom: 55px; }
+  .about-contact { gap: 20px; padding: 26px 24px; margin-bottom: 55px; }
+  .about-contact-copy { align-items: flex-start; flex-direction: column; gap: 20px; }
+  .contact-link { margin-bottom: 0; }
 }
 @media (max-width: 360px) {
   .about-intro h1 { font-size: 3.4rem; }

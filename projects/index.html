@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Projects in physics, LMFE production, simulation, scientific machine learning, and multi-agent learning for coordinated search and rescue.">
+  <meta name="description" content="Projects grouped by rare-event methods, detector sensors, high-performance computing, scientific machine learning, and robotics.">
   <title>Projects | Ann-Kathrin Schuetz</title>
   <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -21,47 +22,76 @@
   </header>
 
   <main id="main" class="wrap page-main">
-    <p class="eyebrow">Research portfolio</p>
+    <p class="eyebrow">Selected work</p>
     <h1 class="page-title">Projects</h1>
-    <p class="page-intro">Explore projects and perspectives across physics, simulation, and applied machine learning, with methods and computing at the center.</p>
+    <p class="page-intro">Research, engineering, and graduate projects in physics, scientific computing, and robotics.</p>
 
-    <div class="project-list">
-      <a class="project-card" href="katrin/">
-        <span class="eyebrow">01 · Particle physics · Bayesian inference</span>
-        <h3>Weighing the weightless: KATRIN and neutrino mass</h3>
-        <p>How statistical models, MCMC, and NERSC computing supported Bayesian analysis of the KATRIN tritium spectrum.</p>
-        <span class="card-link">Open the KATRIN project →</span>
-      </a>
-      <a class="project-card" href="black-hole-binaries/">
-        <span class="eyebrow">02 · Astrophysics · Gravitational waves</span>
-        <h3>Digging in spacetime: massive stars and black holes</h3>
-        <p>Using gravitational-wave observations and computational population models to study the massive stars behind black-hole mergers.</p>
-        <span class="card-link">Open the astrophysics project →</span>
-      </a>
-      <a class="project-card" href="scientific-ml/">
-        <span class="eyebrow">03 · Scientific ML · Methods &amp; perspectives</span>
-        <h3>The hidden work behind AI for science.</h3>
-        <p>What changes when ML enters a scientific pipeline? Data generation, physical structure, computing bottlenecks, and the demands of scientific validation.</p>
-        <span class="card-link">Read the essay →</span>
-      </a>
-      <a class="project-card" href="https://www.ischool.berkeley.edu/programs/mids/capstone/2026b-summer/omnisearch-simulation-platform-test-coordinated-drone-and">
-        <span class="eyebrow">04 · Multi-agent learning · UC Berkeley MIDS capstone</span>
-        <h3>OmniSearch: simulating coordinated drone and ground-robot search</h3>
-        <p>A team capstone project testing drone and ground-robot coordination for wildfire search and rescue in simulation. The platform combines multi-agent reinforcement learning and perception to evaluate search strategies, fleet composition, and resilience to communication loss.</p>
-        <span class="card-link">View the Berkeley capstone project ↗</span>
-      </a>
-      <a class="project-card" href="lmfe-production/">
-        <span class="eyebrow">05 · Detector electronics · Fabrication &amp; testing</span>
-        <h3>LMFE production and testing</h3>
-        <p>Production of the current LEGEND-200 front end: photoresist and photolithography, trace etching, germanium sputtering, dicing, electrical testing, and board-and-cable assembly.</p>
-        <span class="card-link">Explore LMFE production →</span>
-      </a>
-      <a class="project-card" href="rare-events/">
-        <span class="eyebrow">06 · Simulation methods · Rare events</span>
-        <h3>Estimating rare-event probabilities</h3>
-        <p>An introduction to rare-event counting, the variance reduction of conditional Monte Carlo, and neural-network estimates of conditional hit probabilities.</p>
-        <span class="card-link">Read the methods article →</span>
-      </a>
+    <div class="project-groups">
+      <section class="project-group" aria-labelledby="rare-events-group">
+        <div class="project-group-heading"><p class="eyebrow">01 / Probability and astrophysics</p><h2 id="rare-events-group">Rare events</h2></div>
+        <div class="project-grid project-group-grid">
+          <a class="project-card" href="rare-events/">
+            <span class="eyebrow">Probability estimation · Simulation methods</span>
+            <h3>Estimating rare-event probabilities</h3>
+            <p>An introduction to rare-event counting, conditional Monte Carlo, and neural-network estimates of conditional hit probabilities.</p>
+            <span class="card-link">Read the methods article →</span>
+          </a>
+          <a class="project-card" href="black-hole-binaries/">
+            <span class="eyebrow">Gravitational-wave astrophysics</span>
+            <h3>Digging in spacetime: massive stars and black holes</h3>
+            <p>Using gravitational-wave observations and computational population models to study the massive stars behind black-hole mergers.</p>
+            <span class="card-link">Open the astrophysics project →</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="project-group" aria-labelledby="sensors-group">
+        <div class="project-group-heading"><p class="eyebrow">02 / Detector hardware</p><h2 id="sensors-group">Sensors</h2></div>
+        <div class="project-grid project-group-grid">
+          <a class="project-card" href="lmfe-production/">
+            <span class="eyebrow">LEGEND-200 · Fabrication and testing</span>
+            <h3>LMFE production and testing</h3>
+            <p>Production of the current LEGEND-200 front end: photolithography, trace etching, germanium sputtering, electrical checks, and assembly.</p>
+            <span class="card-link">Explore LMFE production →</span>
+          </a>
+          <div class="project-card">
+            <span class="eyebrow">Future LEGEND-1000 readout · Characterization</span>
+            <h3>ASIC readout electronics</h3>
+            <p>Prototype characterization for the future LEGEND-1000 readout, including signal formation, low-noise amplification, and cooled-detector tests.</p>
+            <span class="card-link">Project page in preparation</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="project-group" aria-labelledby="hpc-group">
+        <div class="project-group-heading"><p class="eyebrow">03 / Computing and analysis</p><h2 id="hpc-group">HPC and machine learning in science</h2></div>
+        <div class="project-grid project-group-grid">
+          <a class="project-card" href="scientific-ml/">
+            <span class="eyebrow">Scientific ML · Methods and perspectives</span>
+            <h3>The hidden work behind AI for science.</h3>
+            <p>Data generation, physical structure, computing bottlenecks, and scientific validation in machine-learning pipelines.</p>
+            <span class="card-link">Read the essay →</span>
+          </a>
+          <a class="project-card" href="katrin/">
+            <span class="eyebrow">Particle physics · Bayesian inference and HPC</span>
+            <h3>Weighing the weightless: KATRIN and neutrino mass</h3>
+            <p>Statistical models, MCMC, and NERSC computing for Bayesian analysis of the KATRIN tritium spectrum.</p>
+            <span class="card-link">Open the KATRIN project →</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="project-group" aria-labelledby="masters-group">
+        <div class="project-group-heading"><p class="eyebrow">04 / Graduate study</p><h2 id="masters-group">UC Berkeley master’s project</h2></div>
+        <div class="project-grid project-group-grid">
+          <a class="project-card" href="https://www.ischool.berkeley.edu/programs/mids/capstone/2026b-summer/omnisearch-simulation-platform-test-coordinated-drone-and">
+            <span class="eyebrow">Master of Information and Data Science · Team capstone</span>
+            <h3>OmniSearch: simulating coordinated drone and ground-robot search</h3>
+            <p>A team project on coordinating robot and drone teams for wildfire search and rescue in simulation, including perception and resilience to communication loss.</p>
+            <span class="card-link">View the Berkeley capstone project ↗</span>
+          </a>
+        </div>
+      </section>
     </div>
   </main>
 

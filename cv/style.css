@@ -1,0 +1,44 @@
+.cv-page { padding-top: clamp(60px, 8vw, 94px); }
+.cv-opening { max-width: 850px; padding-bottom: 56px; }
+.cv-opening .page-title { margin: 8px 0 12px; }
+.cv-headline { margin-bottom: 15px; color: var(--ink); font: 400 clamp(1.2rem, 2vw, 1.55rem)/1.45 var(--serif); }
+.cv-summary { max-width: 760px; margin-bottom: 24px; color: var(--muted); font-size: 1rem; line-height: 1.8; }
+.cv-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-bottom: 21px; }
+.cv-button { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 11px; padding: 11px 16px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-size: .78rem; font-weight: 650; text-decoration: none; }
+.cv-button:hover { border-color: var(--accent); }
+.cv-button-primary { border-color: var(--ink); background: var(--ink); color: #fff; }
+.cv-button-primary:hover { border-color: var(--accent-dark); background: var(--accent-dark); color: #fff; }
+.cv-links { display: flex; flex-wrap: wrap; gap: 10px 23px; margin: 0; padding: 0; list-style: none; }
+.cv-links a, .cv-project a, .cv-publications a { color: var(--accent-dark); font-size: .82rem; font-weight: 600; text-decoration: none; }
+.cv-section { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(0, 1.7fr); gap: 48px; padding: 38px 0 42px; border-top: 1px solid var(--line); }
+.cv-section-heading .eyebrow { margin-bottom: 9px; }
+.cv-section-heading h2 { max-width: 290px; margin: 0; font: 400 clamp(1.65rem, 2.5vw, 2.15rem)/1.17 var(--serif); letter-spacing: -.035em; }
+.cv-section-body { color: #354e52; font-size: .89rem; line-height: 1.75; }
+.cv-entry + .cv-entry { margin-top: 35px; padding-top: 28px; border-top: 1px solid var(--line); }
+.cv-entry-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 18px; align-items: baseline; }
+.cv-entry-heading h3, .cv-project h3, .cv-education h3 { margin: 0; color: var(--ink); font: 400 1.25rem/1.35 var(--serif); }
+.cv-entry-heading p { margin: 0; color: var(--muted); font-size: .78rem; }
+.cv-role { margin: 4px 0 12px; color: var(--muted); font-size: .82rem; font-style: italic; }
+.cv-entry ul { display: grid; gap: 9px; margin: 0; padding-left: 19px; }
+.cv-projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.cv-project { padding: 21px; border: 1px solid var(--line); background: #fff; }
+.cv-project h3 { margin-bottom: 9px; }
+.cv-project p { margin-bottom: 15px; }
+.cv-publications p { margin: 0 0 15px; }
+.cv-publications p:last-child { margin-bottom: 0; }
+.cv-education { display: grid; gap: 16px; }
+.cv-education h3 { font-size: 1.05rem; }
+.cv-education p { margin: 2px 0 0; color: var(--muted); }
+.cv-skills p { margin: 0 0 12px; }
+.cv-skills p:last-child { margin-bottom: 0; }
+@media (max-width: 760px) {
+  .cv-page { padding-top: 58px; }
+  .cv-opening { padding-bottom: 40px; }
+  .cv-section { grid-template-columns: 1fr; gap: 18px; padding: 30px 0 34px; }
+  .cv-section-heading h2 { max-width: 100%; }
+}
+@media (max-width: 540px) {
+  .cv-projects { grid-template-columns: 1fr; }
+  .cv-entry-heading { display: block; }
+  .cv-entry-heading p { margin-top: 3px; }
+}

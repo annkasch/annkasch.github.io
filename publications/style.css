@@ -1,0 +1,29 @@
+.publications-page { padding-top: clamp(60px, 8vw, 94px); }
+.publications-opening { padding-bottom: 42px; }
+.publications-opening .page-title { margin: 8px 0 0; }
+.publications-opening .page-intro { margin-bottom: 14px; }
+.source-document { color: var(--accent-dark); font-size: .82rem; font-weight: 650; text-decoration: none; }
+.page-contents { display: flex; flex-wrap: wrap; gap: 9px 21px; margin-top: 30px; padding: 15px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.page-contents a { color: var(--muted); font-size: .76rem; font-weight: 600; text-decoration: none; }
+.page-contents a:hover, .source-document:hover { color: var(--accent); }
+.record-section { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(0, 1.7fr); gap: 48px; padding: 38px 0 46px; border-top: 1px solid var(--line); scroll-margin-top: 25px; }
+.record-heading .eyebrow { margin-bottom: 9px; }
+.record-heading h2 { max-width: 310px; margin: 0; font: 400 clamp(1.65rem, 2.5vw, 2.15rem)/1.17 var(--serif); letter-spacing: -.035em; }
+.record-body { color: #354e52; font-size: .86rem; line-height: 1.75; }
+.record-subheading { margin: 27px 0 13px; color: var(--ink); font: 400 1.25rem/1.3 var(--serif); }
+.record-subheading:first-child { margin-top: 0; }
+.publication-list, .dated-list { display: grid; gap: 12px; margin: 0; padding-left: 22px; }
+.publication-list li, .dated-list li { padding-left: 4px; }
+.publication-list a { color: var(--accent-dark); font-weight: 600; text-decoration: none; }
+.record-details { margin: 12px 0 0; border: 1px solid var(--line); background: #fff; }
+.record-details summary { padding: 12px 15px; color: var(--ink); cursor: pointer; font-size: .84rem; font-weight: 650; }
+.record-details[open] summary { border-bottom: 1px solid var(--line); }
+.record-details .publication-list, .record-details .dated-list { padding: 16px 22px 18px 42px; }
+.record-details .publication-list { gap: 11px; }
+.record-details .dated-list { gap: 10px; }
+@media (max-width: 760px) {
+  .publications-page { padding-top: 58px; }
+  .publications-opening { padding-bottom: 32px; }
+  .record-section { grid-template-columns: 1fr; gap: 18px; padding: 30px 0 36px; }
+  .record-heading h2 { max-width: 100%; }
+}

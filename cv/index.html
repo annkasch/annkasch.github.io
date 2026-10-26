@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Curriculum vitae of Ann-Kathrin Schuetz: machine learning for physical systems, scientific simulation, sensors, and robotics.">
+  <title>CV | Ann-Kathrin Schuetz</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="../">Ann-Kathrin Schuetz<span>Research portfolio</span></a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="../">Home</a>
+      <a href="../about/">About</a>
+      <a href="../projects/">Projects</a>
+      <a href="./" aria-current="page">CV</a>
+      <a href="../publications/">Publications</a>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap page-main cv-page">
+    <section class="cv-opening" aria-labelledby="cv-title">
+      <p class="eyebrow">Curriculum vitae</p>
+      <h1 id="cv-title" class="page-title">Ann-Kathrin Schuetz</h1>
+      <p class="cv-headline">Research scientist in physical AI, scientific simulation, and real-world sensors</p>
+      <p class="cv-summary">I develop machine-learning methods for physical systems and connect them with simulation, measurements, and hardware. My work spans rare-event probability estimation, scientific inference, computer vision, robot learning, low-noise electronics, and high-performance computing.</p>
+      <div class="cv-actions">
+        <a class="cv-button cv-button-primary" href="assets/Ann-Kathrin_Schuetz_CV.pdf" download>Download CV (PDF) <span aria-hidden="true">↓</span></a>
+        <a class="cv-button" href="mailto:annkaschue@gmail.com">Email me</a>
+      </div>
+      <ul class="cv-links" aria-label="Professional links">
+        <li><a href="https://www.linkedin.com/in/ann-kathrin-schuetz-phd/">LinkedIn <span aria-hidden="true">↗</span></a></li>
+        <li><a href="https://github.com/annkasch">GitHub <span aria-hidden="true">↗</span></a></li>
+        <li><a href="https://scholar.google.com/citations?user=o2zYzQ4AAAAJ&amp;hl=en">Google Scholar <span aria-hidden="true">↗</span></a></li>
+      </ul>
+    </section>
+
+    <section class="cv-section" aria-labelledby="experience-title">
+      <div class="cv-section-heading"><p class="eyebrow">01 / Experience</p><h2 id="experience-title">Research and development</h2></div>
+      <div class="cv-section-body">
+        <article class="cv-entry">
+          <div class="cv-entry-heading"><h3>Lawrence Berkeley National Laboratory</h3><p>May 2021–present</p></div>
+          <p class="cv-role">Postdoctoral Researcher · Research Scientist</p>
+          <ul>
+            <li>Developed RESuM, a machine-learning method for estimating rare-event probabilities from simulation and supporting detector design. In a shielding study, it reduced simulated background by 66.5% using 3.3% of the standard compute; the work received an ICLR 2025 Spotlight.</li>
+            <li>Applied the method to binary black-hole population inference, reducing compute by 98% and enabling high-dimensional analysis of merger outcomes rarer than 1 in 10,000.</li>
+            <li>Built an LLM-based pipeline that turns incomplete detector documentation into validated 3D geometries and runnable simulations.</li>
+            <li>Developed neural waveform classifiers for germanium sensors and optimized inference latency for data-acquisition use.</li>
+            <li>Led low-noise electronics through design, cleanroom fabrication, testing, installation, and commissioning.</li>
+            <li>Built research software in Python and C++ and ran distributed simulation and training workloads at NERSC using Slurm, CUDA, and OpenMP.</li>
+            <li>Served as Early Career Representative for the LEGEND collaboration (2021–2023) and mentored students.</li>
+          </ul>
+        </article>
+
+        <article class="cv-entry">
+          <div class="cv-entry-heading"><h3>University of Tübingen, Germany</h3><p>Jan 2014–May 2021</p></div>
+          <p class="cv-role">Postdoctoral Researcher (2019–2021) · PhD Researcher (2014–2019)</p>
+          <ul>
+            <li>Contributed to electric-field and charge-drift simulations for semiconductor sensors and developed signal-processing methods to separate signal from noise.</li>
+            <li>Developed a Bayesian model combining heterogeneous data and systematic uncertainties to quantify individual noise sources.</li>
+            <li>Built C++ Monte Carlo simulations of particle transport, radioactive decays, and cosmic-ray interactions in complex 3D geometries, with validation against measurements.</li>
+            <li>Developed a photosensor data pipeline from data acquisition and digital signal processing to real-time noise flagging.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="cv-section" aria-labelledby="projects-title">
+      <div class="cv-section-heading"><p class="eyebrow">02 / Applied projects</p><h2 id="projects-title">Robotics and machine learning</h2></div>
+      <div class="cv-section-body cv-projects">
+        <article class="cv-project">
+          <h3>Animal2robot</h3>
+          <p>Independent early-stage project connecting dog pose and gait estimation with reinforcement learning for quadruped locomotion. Developing the pipeline in Isaac Lab and ROS 2 toward deployment on a Unitree Go2.</p>
+          <a href="https://github.com/annkasch/animal2robot">Project code <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="cv-project">
+          <h3>OmniSearch</h3>
+          <p>UC Berkeley Master of Information and Data Science team capstone on wildfire search and rescue. Built a dynamic simulator and multi-agent reinforcement-learning system for coordinating drone and ground-robot teams, and trained a detector to identify survivors in aerial images.</p>
+          <a href="https://github.com/olavrenin-data-scientist/omnisearch">Project code <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="cv-section" aria-labelledby="publications-title">
+      <div class="cv-section-heading"><p class="eyebrow">03 / Selected work</p><h2 id="publications-title">Publications</h2></div>
+      <div class="cv-section-body cv-publications">
+        <p><strong>Schuetz, A.-K.</strong> et al. “RESuM: Rare Event Surrogate Model for Physics Detector Design.” <em>International Conference on Learning Representations</em>, 2025. Spotlight. <a href="https://proceedings.iclr.cc/paper_files/paper/2025/file/c3909e3abe8ebdb20c42a42ce0bc907d-Paper-Conference.pdf">Paper <span aria-hidden="true">↗</span></a></p>
+        <p>Kim, H., Mak, S., <strong>Schuetz, A.-K.</strong>, and Poon, A. W. P. “Efficient optimization of expensive black-box simulators via marginal means, with application to neutrino detector design.” arXiv:2508.01834, 2025. <a href="https://arxiv.org/abs/2508.01834">Preprint <span aria-hidden="true">↗</span></a></p>
+      </div>
+    </section>
+
+    <section class="cv-section" aria-labelledby="education-title">
+      <div class="cv-section-heading"><p class="eyebrow">04 / Education</p><h2 id="education-title">Academic training</h2></div>
+      <div class="cv-section-body cv-education">
+        <div><h3>University of California, Berkeley</h3><p>Master of Information and Data Science · 2026</p></div>
+        <div><h3>University of Tübingen, Germany</h3><p>PhD in Physics · 2019 · magna cum laude</p></div>
+        <div><h3>University of Tübingen, Germany</h3><p>BSc and MSc in Physics · 2013</p></div>
+      </div>
+    </section>
+
+    <section class="cv-section" aria-labelledby="skills-title">
+      <div class="cv-section-heading"><p class="eyebrow">05 / Technical skills</p><h2 id="skills-title">Methods and tools</h2></div>
+      <div class="cv-section-body cv-skills">
+        <p><strong>Machine learning:</strong> PyTorch, TensorFlow, scikit-learn, transformers, diffusion models, VAEs, CNNs, multimodal learning, LLM fine-tuning, RAG, knowledge graphs.</p>
+        <p><strong>Probabilistic modeling and simulation:</strong> Bayesian inference, MCMC, Gaussian processes, uncertainty quantification, surrogate models, experimental design, Monte Carlo, Geant4.</p>
+        <p><strong>Robotics and perception:</strong> Isaac Lab, Isaac Sim, VMAS, ROS 2, reinforcement learning, multi-agent coordination, path planning, YOLO, stereo geometry, point clouds.</p>
+        <p><strong>Signals and hardware:</strong> waveform analysis, digital signal processing, low-noise electronics, data acquisition, cleanroom fabrication, sensor characterization, low-latency inference.</p>
+        <p><strong>Software and computing:</strong> Python, C++, Julia, R, SQL, Bash, Linux, Git, Docker, Kubernetes, CUDA, Slurm, OpenMP, distributed computing at NERSC.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner"><p>Ann-Kathrin Schuetz · Curriculum vitae</p><p><a href="../about/">About</a> · <a href="../projects/">Projects</a> · <a href="../publications/">Publications</a> · <a href="assets/Ann-Kathrin_Schuetz_CV.pdf">PDF version</a></p></div>
+  </footer>
+</body>
+</html>

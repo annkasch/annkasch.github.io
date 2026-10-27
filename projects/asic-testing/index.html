@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Germanium detector readout electronics: charge-sensitive preamplifiers, resistive feedback, electronic noise, the L1K65 ASIC architecture, and prototype characterization at Berkeley Lab.">
+  <title>ASIC readout electronics for germanium detectors | Ann-Kathrin Schuetz</title>
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="../../">Ann-Kathrin Schuetz<span>Research portfolio</span></a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="../../">Home</a>
+      <a href="../../about/">About</a>
+      <a href="../">Projects</a>
+      <a href="../../cv/">CV</a>
+      <a href="../../publications/">Publications</a>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap asic-page">
+    <article>
+      <header class="project-cover">
+        <div class="cover-copy">
+          <p class="eyebrow">Hardware / ASIC characterization</p>
+          <h1>ASIC readout electronics</h1>
+          <p class="cover-subtitle">Prototype characterization for the future LEGEND-1000 readout</p>
+          <p class="cover-lead">At Berkeley Lab, I characterized the L1K65 prototype being developed for the future LEGEND-1000 readout, using pulser measurements, digital waveform analysis, and a cooled germanium detector. LEGEND-200 currently uses a low-mass front end (LMFE), whose production and testing I also worked on.</p>
+          <p class="current-readout-link"><a class="text-link" href="../lmfe-production/">LMFE production and testing for LEGEND-200 <span aria-hidden="true">→</span></a></p>
+          <p class="project-meta">Ann-Kathrin Schuetz · Lawrence Berkeley National Laboratory<br>Presented for the LEGEND collaboration · DNP, October 2024</p>
+          <a class="text-link" href="#signal-formation">Readout principles and measurements <span aria-hidden="true">↓</span></a>
+        </div>
+        <figure class="cover-photo">
+          <a href="assets/asic-carrier.webp" aria-label="Open the ASIC carrier photograph at full size"><img src="assets/asic-carrier.webp" width="940" height="1253" alt="Prototype readout ASIC wire-bonded near the center of a carrier board with test connections." fetchpriority="high"></a>
+          <figcaption>The L1K65 prototype on its carrier board. The chip itself measures 1 × 2 mm. Photograph from the presentation, slide 7.</figcaption>
+        </figure>
+      </header>
+
+      <nav class="project-contents" aria-label="On this page">
+        <a href="#signal-formation">01 / Detector signals</a>
+        <a href="#preamplifier">02 / Preamplifier &amp; noise</a>
+        <a href="#requirements">03 / Readout integration</a>
+        <a href="#architecture">04 / ASIC architecture</a>
+        <a href="#test-stand">05 / Test setup</a>
+        <a href="#bench-tests">06 / Waveform processing</a>
+        <a href="#repeatability">07 / Pulse measurements</a>
+        <a href="#detector-tests">08 / Detector results</a>
+      </nav>
+
+      <section class="project-section" id="signal-formation" aria-labelledby="signal-title">
+        <div class="section-heading"><p class="eyebrow">01 / Detector signals</p><h2 id="signal-title">Signal formation in germanium</h2></div>
+        <div class="intro-layout">
+          <div class="prose">
+            <p>When radiation deposits energy in a germanium detector, it creates electron–hole pairs. The number of pairs is proportional to the deposited energy. A bias voltage establishes an electric field in the depleted detector volume, causing the electrons and holes to drift toward their respective electrodes.</p>
+            <p>The moving carriers induce current on the electrodes throughout their drift. The Shockley–Ramo theorem describes this current in terms of carrier motion and the electrode’s weighting field. The pulse shape therefore depends on where the interaction occurred and how the charges move through the detector.</p>
+            <p>The recorded waveform includes the response of the readout electronics. In a linear model, it is the detector current convolved with the electronics’ impulse response, with noise added. Measuring that response is necessary for both energy estimation and pulse-shape analysis.</p>
+          </div>
+          <figure>
+            <a href="assets/signal-formation.webp" aria-label="Open the detector signal-formation diagram"><img src="assets/signal-formation.webp" width="780" height="525" alt="Biased semiconductor diagram showing the depletion region and an incident gamma ray creating an electron and a hole that move in opposite directions." loading="lazy"></a>
+            <figcaption>Signal formation in a biased semiconductor, from slide 3. Carrier motion induces the current measured by the readout.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="project-section" id="preamplifier" aria-labelledby="preamplifier-title">
+        <div class="section-heading"><p class="eyebrow">02 / Preamplifier &amp; noise</p><h2 id="preamplifier-title">Charge-sensitive amplification and feedback</h2></div>
+        <div class="prose">
+          <p>A charge-sensitive preamplifier integrates the detector current on a feedback capacitor, C<sub>f</sub>. For a charge pulse collected much faster than the feedback discharge, the output step is approximately proportional to the total charge Q, with a magnitude Q/C<sub>f</sub>. The feedback capacitance sets the charge-to-voltage gain.</p>
+          <p>In a conventional resistive-feedback circuit, a resistor R<sub>f</sub> sits in parallel with C<sub>f</sub>. It provides a discharge path so the amplifier returns to its baseline after a pulse. The resulting exponential decay has time constant τ<sub>f</sub> = R<sub>f</sub>C<sub>f</sub>.</p>
+        </div>
+        <figure class="circuit-figure">
+          <a href="assets/resistive-feedback.webp" aria-label="Open the resistive-feedback preamplifier circuit"><img src="assets/resistive-feedback.webp" width="1111" height="473" alt="Detector connected to the input transistor of a preamplifier, with a resistor and capacitor in parallel in the feedback path." loading="lazy"></a>
+          <figcaption>The resistive-feedback preamplifier circuit from slide 6. The input transistor senses the detector signal; the feedback capacitor and resistor determine integration and recovery.</figcaption>
+        </figure>
+        <div class="equation-pair" aria-label="Ideal charge gain and feedback decay time">
+          <p>|ΔV<sub>out</sub>| ≈ Q / C<sub>f</sub></p>
+          <p>τ<sub>f</sub> = R<sub>f</sub>C<sub>f</sub></p>
+        </div>
+        <div class="prose">
+          <p>The resistor contributes thermal (Johnson) noise and can introduce excess noise. A larger resistance reduces its thermal current-noise contribution but lengthens recovery. Long pulse tails increase overlap between events and must be accounted for during amplitude estimation. Pole-zero correction compensates for the exponential response before digital shaping.</p>
+          <h3>Electronic noise and shaping time</h3>
+          <p>Equivalent noise charge (ENC) expresses the readout noise as an equivalent charge at the input. It allows noise contributions to be compared on the same scale as the detector signal. The presentation separates three contributions:</p>
+        </div>
+        <div class="noise-layout">
+          <dl class="measurement-list">
+            <div><dt>Series voltage noise</dt><dd>The input transistor and amplifier contribute voltage noise. Its charge-equivalent effect increases with the total input capacitance, including the detector, transistor, feedback, and stray capacitances. A longer shaping time suppresses the white series-noise contribution.</dd></div>
+            <div><dt>Parallel current noise</dt><dd>Detector leakage current, the feedback resistor, and amplifier current noise contribute at the input. For a given filter family, their contribution increases with shaping time.</dd></div>
+            <div><dt>Flicker noise, 1/f</dt><dd>Low-frequency noise associated with the devices and materials contributes a term that is approximately independent of shaping time in the simplified model.</dd></div>
+          </dl>
+          <figure>
+            <a href="assets/noise-components.webp" aria-label="Open the electronic noise and shaping diagram"><img src="assets/noise-components.webp" width="1080" height="1231" alt="Preamplifier and shaper above a noise plot: voltage noise decreases with shaping time, current noise increases, and a constant flicker-noise term contributes to the total minimum." loading="lazy"></a>
+            <figcaption>Noise contributions and their combined dependence on shaping time, from slide 21. This is the introductory noise model, separate from the prototype measurements below.</figcaption>
+          </figure>
+        </div>
+        <div class="prose">
+          <p>For fixed input capacitance and a given filter family, the simplified dependence can be written as ENC²(τ<sub>s</sub>) ≈ A/τ<sub>s</sub> + B + Cτ<sub>s</sub>. The terms represent white series, flicker, and parallel noise. Their balance produces an optimum shaping time; the coefficients depend on the electronics, detector, and filter.</p>
+          <p>Keeping the input connection short limits stray capacitance. The detector’s own capacitance and leakage current also matter, so a noise measurement with only the preamplifier does not determine the performance of the complete detector system.</p>
+        </div>
+      </section>
+
+      <section class="project-section" id="requirements" aria-labelledby="requirements-title">
+        <div class="section-heading"><p class="eyebrow">03 / Readout integration</p><h2 id="requirements-title">The existing front end and the ASIC approach</h2></div>
+        <div class="prose">
+          <p>The current LEGEND-200 readout uses a low-mass front-end board (LMFE) close to the detector, with the rest of the preamplifier, CC4, farther away. The LMFE contains a junction field-effect transistor (JFET) and feedback elements. Its proximity to the detector limits input capacitance; placing the larger electronics farther away reduces their radioactive contribution near the sensor.</p>
+          <p>The LBNL front end described in the talk uses a silica substrate, a low-capacitance JFET, and an amorphous-germanium feedback resistor. This is a discrete implementation of the input and feedback components introduced above.</p>
+          <p>The ASIC approach for LEGEND-1000 brings more of the amplification into a small integrated circuit close to the detector. Here, ASIC means application-specific integrated circuit. Integration is intended to reduce material and external component count while retaining the noise and timing performance needed by the detector.</p>
+        </div>
+        <div class="figure-pair">
+          <figure>
+            <a href="assets/split-readout.webp" aria-label="Open the split front-end readout diagram"><img src="assets/split-readout.webp" width="1193" height="458" alt="Split readout arrangement with the detector and low-mass input transistor and feedback components connected to a separate CC4 amplifier." loading="lazy"></a>
+            <figcaption>LEGEND-200: the low-mass input stage is near the detector, while CC4 is farther away. Diagram from slide 5.</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/integrated-readout.webp" aria-label="Open the integrated ASIC readout diagram"><img src="assets/integrated-readout.webp" width="1125" height="443" alt="Integrated readout concept with detector input, feedback elements, and amplifier located together in an ASIC." loading="lazy"></a>
+            <figcaption>LEGEND-1000 concept: integrate the readout close to the detector in a small ASIC. Diagram from slide 5.</figcaption>
+          </figure>
+        </div>
+        <div class="prose">
+          <p>The intended environment is liquid argon. The circuit must also drive long cables and minimize external components, including the components normally used for power regulation. These constraints set the requirements for the amplifier, differential output buffer, and low-dropout voltage regulator (LDO).</p>
+        </div>
+        <div class="table-scroll" role="region" aria-label="Readout design requirements" tabindex="0">
+          <table>
+            <caption>System requirements presented in 2024 · design targets, not measured results</caption>
+            <thead><tr><th scope="col">Requirement</th><th scope="col">Target</th><th scope="col">Engineering consequence</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Operating environment</th><td>Cryogenic liquid argon</td><td>Components must function at the intended temperature.</td></tr>
+              <tr><th scope="row">External components</th><td>Minimize component count</td><td>Integrate feedback and power regulation while limiting material near the sensor.</td></tr>
+              <tr><th scope="row">Baseline noise</th><td>&lt; 1 keV with a detector</td><td>The complete sensor and readout determine the noise budget.</td></tr>
+              <tr><th scope="row">Dynamic range</th><td>10 MeV at about 2 V amplitude</td><td>Small signals and large deposits must fit within the readout range.</td></tr>
+              <tr><th scope="row">Signal transmission</th><td>Differential output over 10 m / 50 Ω cables</td><td>The output stage must drive the cable while preserving the signal.</td></tr>
+              <tr><th scope="row">Pulse timing</th><td>About 100 ns rise; a few hundred μs decay</td><td>Resolve the pulse onset and recover between events.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="project-section" id="architecture" aria-labelledby="architecture-title">
+        <div class="section-heading"><p class="eyebrow">04 / ASIC architecture</p><h2 id="architecture-title">The L1K65 prototype</h2></div>
+        <div class="prose">
+          <p>The 1 × 2 mm prototype was fabricated in a TSMC 65 nm process. It combines a charge-sensitive amplifier (CSA), voltage reference, differential output buffer, selectable feedback elements, and power management. The process includes thick-oxide devices intended to improve tolerance to high-voltage discharges.</p>
+          <p>The CSA integrates the detector charge. The buffer provides positive and negative signal outputs for differential transmission. A test capacitor allows a pulser to inject a controlled charge at the input. Power regulation and bias generation support the analog signal path; noise from these circuits can couple into the measurement.</p>
+        </div>
+        <figure class="architecture-figure">
+          <a href="assets/asic-architecture.webp" aria-label="Open the ASIC architecture diagram"><img src="assets/asic-architecture.webp" width="1370" height="676" alt="L1K65 architecture with detector input to the charge-sensitive amplifier, test-pulse capacitor, differential output buffer, LDO and bias generation, and cable interfaces." loading="lazy"></a>
+          <figcaption>System-level readout architecture from slide 23. The +5 V label belongs to this system concept; the prototype supply range specified on slide 7 is 2.5–2.8 V.</figcaption>
+        </figure>
+        <div class="device-detail">
+          <figure>
+            <a href="assets/asic-die.webp" aria-label="Open the ASIC die photograph at full size"><img src="assets/asic-die.webp" width="817" height="426" alt="Microscope photograph of the rectangular L1K65 die, showing bond pads and integrated circuit structures." loading="lazy"></a>
+            <figcaption>The prototype die, slide 7. The talk credits Marcos Turqueti and Dario Gnani for ASIC design, with circuit simulations credited to Dario Gnani.</figcaption>
+          </figure>
+          <div class="prose">
+            <h3>Feedback and operating parameters</h3>
+            <p>The feedback capacitor is specified as 540 fF ± 10%. Internal feedback resistances of 200, 400, 600, and 800 MΩ correspond to nominal decay constants of 108, 216, 324, and 432 μs. The prototype also supports an external feedback resistor.</p>
+            <p>The specified supply range is 2.5–2.8 V. The noise design considered detector loads of 4–10 pF with 20 pA leakage current. The CSA, buffer, and voltage reference can be operated individually or together, allowing their contributions to be investigated during testing.</p>
+          </div>
+        </div>
+        <div class="prose">
+          <h3>Circuit simulations</h3>
+          <p>The simulations presented in the talk compare input loads of 2.5 and 5 pF with a semi-Gaussian shaping filter. Increasing the capacitance increases the series-noise contribution and shifts the minimum toward longer shaping times. Series and parallel white noise were expected to dominate, with an additional flicker-noise contribution.</p>
+        </div>
+        <div class="figure-pair">
+          <figure>
+            <a href="assets/noise-simulation-2p5pf.webp" aria-label="Open the simulated noise at 2.5 picofarads"><img src="assets/noise-simulation-2p5pf.webp" width="910" height="627" alt="Simulated series, parallel, flicker, and total input-referred noise versus filter peaking time for a 2.5 picofarad load at 85 kelvin." loading="lazy"></a>
+            <figcaption>Simulated noise contributions for a 2.5 pF load at 85 K. Slide 8, simulations by Dario Gnani.</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/noise-simulation-5pf.webp" aria-label="Open the simulated noise at 5 picofarads"><img src="assets/noise-simulation-5pf.webp" width="1020" height="704" alt="Simulated noise contributions for a 5 picofarad load at 85 kelvin, showing a higher minimum and a shift to longer filter peaking time." loading="lazy"></a>
+            <figcaption>The corresponding 5 pF simulation. These are circuit predictions, separate from the room-temperature pulser scan. Slide 8.</figcaption>
+          </figure>
+        </div>
+        <div class="prose">
+          <h3>Bandwidth and power regulation</h3>
+          <p>The timing simulations on slide 9 showed a bandwidth of about 100 MHz and an exponential recovery of about 130 μs. For the proposed 100 MS/s analog-to-digital converter (ADC), the analog bandwidth would need to be limited below the 50 MHz Nyquist frequency to prevent aliasing. This filtering has to occur before digitization.</p>
+          <p>The first LDO topology was another source of noise: simulations showed that its internal feedback could make regulator noise dominate the signal path. The presentation therefore identified a different regulator topology as a design change. These simulations guided further development alongside the prototype measurements.</p>
+        </div>
+      </section>
+
+      <section class="project-section" id="test-stand" aria-labelledby="test-stand-title">
+        <div class="section-heading"><p class="eyebrow">05 / Test setup</p><h2 id="test-stand-title">Characterization setup at Berkeley Lab</h2></div>
+        <div class="setup-layout">
+          <div class="prose">
+            <p>My focus in this work was experimental characterization: bench testing, waveform analysis, and detector measurements. A test pulser provides repeatable inputs so the electronics can be examined before adding the variability of a physical detector.</p>
+            <p>At Berkeley Lab, the setup combined the ASIC with a pulser and power supply, waveform measurement equipment, and a shaper and multichannel analyzer. For detector tests, the prototype replaced the commercial front end in a cryogenic point-contact germanium detector setup.</p>
+            <p>The initial measurements used an <strong>external feedback resistor</strong>. Cold functional tests showed practically identical linearity behavior, as reported in the talk. This was an early characterization stage, with further tests planned for the final operating environment.</p>
+          </div>
+          <figure class="setup-photo">
+            <a href="assets/test-stand.webp" aria-label="Open the annotated test-stand photograph at full size"><img src="assets/test-stand.webp" width="580" height="615" alt="Annotated Berkeley Lab test stand identifying the multichannel analyzer and shaper, power supply and pulser, point-contact detector, front-end cable, and liquid nitrogen." loading="lazy"></a>
+            <figcaption>The detector test stand at LBNL, slide 11. PPC means p-type point-contact germanium detector; LN marks the liquid-nitrogen supply.</figcaption>
+          </figure>
+        </div>
+        <ol class="signal-chain" aria-label="Simplified readout and analysis sequence">
+          <li><span>01</span><strong>Input</strong><p>Injected test pulse or charge from the detector</p></li>
+          <li><span>02</span><strong>ASIC</strong><p>Charge converted into an amplified voltage pulse</p></li>
+          <li><span>03</span><strong>Acquisition</strong><p>Record the waveform for analysis</p></li>
+          <li><span>04</span><strong>Processing</strong><p>Correct the decay and apply a shaping filter</p></li>
+          <li><span>05</span><strong>Measurement</strong><p>Estimate amplitude, noise, and timing</p></li>
+        </ol>
+      </section>
+
+      <section class="project-section" id="bench-tests" aria-labelledby="bench-title">
+        <div class="section-heading"><p class="eyebrow">06 / Waveform processing</p><h2 id="bench-title">Pulser tests and digital filtering</h2></div>
+        <div class="prose">
+          <p class="lead">The bench tests used a 0.5 V pulser setting. Repeated waveforms reveal the fast onset and exponential recovery of the readout. Pole-zero correction compensates for that decay before estimating pulse amplitude with a trapezoidal filter.</p>
+          <p>The 0.5 V value specifies the test-pulser input. The output amplitudes depend on the injection and readout configuration. The figures show the acquired pulses and the effect of pole-zero correction.</p>
+        </div>
+        <div class="figure-pair">
+          <figure>
+            <a href="assets/pulser-waveforms.webp" aria-label="Open the pulser waveforms at full resolution"><img src="assets/pulser-waveforms.webp" width="1630" height="840" alt="Five closely overlapping bench-test waveforms with a fast rising edge and an exponential decay over several hundred microseconds." loading="lazy"></a>
+            <figcaption>Repeated bench-test pulses. Amplitude is shown in arbitrary units. Original plot from slide 12.</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/pole-zero-correction.webp" aria-label="Open the pole-zero correction plot at full resolution"><img src="assets/pole-zero-correction.webp" width="1284" height="853" alt="Comparison of a decaying voltage pulse before pole-zero correction and a nearly flat step after correction." loading="lazy"></a>
+            <figcaption>Pole-zero correction removes the exponential tail, making the recovered step suitable for subsequent shaping. Slide 12.</figcaption>
+          </figure>
+        </div>
+        <div class="prose">
+          <h3>Choosing a shaping time</h3>
+          <p>A longer shaping time can suppress fast voltage noise, but it also integrates more current noise and extends the time occupied by a pulse. Detector capacitance, leakage current, and the feedback network change the optimum. A filter tuned on the bench therefore needs to be checked again with the detector attached.</p>
+          <p>I scanned shaping time and flat-top duration using <strong>1,000 waveforms</strong>. For this room-temperature pulser configuration, the noise minimum lay near a <strong>3 μs shaping time</strong> with a <strong>0.2 μs flat top</strong>. These settings describe the measured scan, rather than a universal optimum for the chip.</p>
+        </div>
+        <div class="figure-pair">
+          <figure>
+            <a href="assets/noise-map.webp" aria-label="Open the shaping-time and flat-top noise scan"><img src="assets/noise-map.webp" width="1630" height="830" alt="Heatmap of equivalent noise charge versus shaping time and flat-top time, with the lowest noise near 3 microseconds shaping and 0.2 microseconds flat top." loading="lazy"></a>
+            <figcaption>Equivalent noise charge (ENC) expresses readout noise as an equivalent input charge. The scan compares filter settings for the same pulser dataset. Slide 12.</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/shaping-scan.webp" aria-label="Open the noise curve at fixed flat-top duration"><img src="assets/shaping-scan.webp" width="1630" height="926" alt="Noise curve at 0.2 microseconds flat-top time, falling to a minimum near 3 microseconds shaping time before rising again." loading="lazy"></a>
+            <figcaption>Noise versus shaping time at a fixed 0.2 μs flat top, with a minimum near 3 μs. Slide 12.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="project-section" id="repeatability" aria-labelledby="repeatability-title">
+        <div class="section-heading"><p class="eyebrow">07 / Pulse measurements</p><h2 id="repeatability-title">Amplitude, baseline noise, and timing</h2></div>
+        <div class="prose">
+          <p>For the pulser dataset, I examined distributions of baseline noise, filtered amplitude, rise time, and decay time. The amplitude distribution measures repeatability at a fixed input, while the timing distributions characterize the pulse response.</p>
+        </div>
+        <div class="measurement-layout">
+          <dl class="measurement-list">
+            <div><dt>Baseline noise</dt><dd>The distribution of baseline σ tracks variation in the noise level across recorded waveforms.</dd></div>
+            <div><dt>Filtered amplitude</dt><dd><strong>σ = 0.2 mV</strong> for repeated pulses at the 0.5 V pulser setting.</dd></div>
+            <div><dt>Rise time, t<sub>90</sub> − t<sub>10</sub></dt><dd>Approximately <strong>75 ns</strong>, read from the bench-test distribution.</dd></div>
+            <div><dt>Decay time</dt><dd>Approximately <strong>130 μs</strong>, read from the bench-test distribution.</dd></div>
+          </dl>
+          <figure>
+            <a href="assets/amplitude-distribution.webp" aria-label="Open the filtered-amplitude histogram"><img src="assets/amplitude-distribution.webp" width="699" height="449" alt="Histogram of trapezoidal-filter amplitudes centered near 225.5 millivolts, labeled with a standard deviation of 0.2 millivolts." loading="lazy"></a>
+            <figcaption>Amplitude distribution from slide 13. Its width measures pulser-test repeatability in voltage; it is distinct from an energy resolution measured with a detector.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="project-section" id="detector-tests" aria-labelledby="detector-title">
+        <div class="section-heading"><p class="eyebrow">08 / Detector results</p><h2 id="detector-title">Cobalt-60 measurements with a cooled detector</h2></div>
+        <div class="prose">
+          <p class="lead">The next test connected the readout to a point-contact germanium detector at <strong>88 K</strong> and measured a cobalt-60 source. Its known gamma-ray lines provide a check of the complete detector and electronics chain.</p>
+          <p>The preliminary spectrum resolved the 1173.2 and 1332.5 keV lines. Their widths combine contributions from the detector, electronics, and the shaping used for this measurement.</p>
+        </div>
+        <figure class="spectrum">
+          <a href="assets/cobalt-spectrum.webp" aria-label="Open the original cobalt-60 spectrum"><img src="assets/cobalt-spectrum.webp" width="1451" height="511" alt="Measured cobalt-60 spectrum with two prominent peaks near acquisition channels 10800 and 12300." loading="lazy"></a>
+          <figcaption>The original spectrum from slide 14. The horizontal axis is acquisition channel, not calibrated energy. The two main peaks correspond to the cobalt-60 lines reported below.</figcaption>
+        </figure>
+        <div class="table-scroll" role="region" aria-label="Preliminary energy-resolution measurements" tabindex="0">
+          <table class="results-table">
+            <caption>Preliminary detector results reported in October 2024</caption>
+            <thead><tr><th scope="col">Gamma-ray energy</th><th scope="col">Measured peak width (FWHM)</th><th scope="col">Relative width</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">1173.2 keV</th><td>2.8 keV</td><td>≈ 0.24%</td></tr>
+              <tr><th scope="row">1332.5 keV</th><td>3.0 keV</td><td>≈ 0.23%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="prose">
+          <p class="small-note">FWHM is the full width of a peak at half its maximum height. Relative widths above are calculated as FWHM divided by line energy, using the rounded values reported in the talk.</p>
+          <p>The talk attributed the resolution mainly to the detector and the default shaper used in the measurement. The result demonstrated operation with a cooled detector; it did not isolate the ASIC’s intrinsic noise or establish performance in the final liquid-argon installation.</p>
+        </div>
+      </section>
+
+      <section class="closing-section" aria-labelledby="status-title">
+        <h2 id="status-title">Status in October 2024</h2>
+        <div class="prose">
+          <p>The prototype had undergone room-temperature bench characterization, cold functional tests, and preliminary spectroscopy with a germanium detector. Further optimization and testing in liquid argon were planned. The results reported here describe that stage of development.</p>
+        </div>
+      </section>
+
+      <section class="project-sources" id="sources" aria-labelledby="sources-title">
+        <h2 id="sources-title">Source &amp; collaboration</h2>
+        <p>Based on Ann-Kathrin Schuetz’s talk, <cite>Characterization of ASIC-based signal readout electronics for LEGEND-1000</cite>, presented on behalf of the LEGEND collaboration at the 2024 Fall Meeting of the APS Division of Nuclear Physics in Boston, 9 October 2024.</p>
+        <p>Signal formation and readout principles: slides 3–6 and 17–21. Prototype layout, noise simulations, and timing: slides 7–10. Architecture: slide 23. Test stand and measurements: slides 11–14. Outlook: slide 15. ASIC design and circuit simulations are collaboration work, credited above. Photographs, circuit diagrams, and plots are extracted from the presentation’s PDF export; panels are cropped without redrawing their contents.</p>
+        <a class="text-link" href="../">Back to all projects <span aria-hidden="true">→</span></a>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner"><p>Ann-Kathrin Schuetz · Research portfolio</p><p><a href="../../about/">About</a> · <a href="../">Projects</a></p></div>
+  </footer>
+</body>
+</html>

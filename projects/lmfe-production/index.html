@@ -40,7 +40,6 @@
         <div class="standfirst">
           <p>The low-mass front end (LMFE) is the first stage of the readout electronics for LEGEND-200’s germanium detectors.</p>
           <p>From 2021 to 2022, I ran LMFE production at Berkeley Lab as one of a two-person team, taking the boards from bare silica wafers through thin-film fabrication, wafer-level testing, and cable integration to assemblies ready for installation at the experiment.</p>
-          <p class="current-readout-link"><a class="text-link" href="../asic-testing/">ASIC readout development for LEGEND-1000 <span aria-hidden="true">→</span></a></p>
         </div>
       </header>
 
@@ -91,7 +90,7 @@
         </div>
         <div class="figure-pair">
           <figure style="--ar: 2.348">
-            <a href="../asic-testing/assets/resistive-feedback.webp" aria-label="Open the resistive-feedback circuit"><img src="../asic-testing/assets/resistive-feedback.webp" width="1111" height="473" alt="Detector connected to the JFET input of an amplifier, with a resistor and capacitor in parallel between the amplifier output and the input." loading="lazy"></a>
+            <a href="assets/resistive-feedback.webp" aria-label="Open the resistive-feedback circuit"><img src="assets/resistive-feedback.webp" width="1111" height="473" alt="Detector connected to the JFET input of an amplifier, with a resistor and capacitor in parallel between the amplifier output and the input." loading="lazy"></a>
             <figcaption>Resistive-feedback preamplifier: the detector drives the JFET input; R<sub>f</sub> and C<sub>f</sub> in parallel (shaded) form the feedback.</figcaption>
           </figure>
           <figure style="--ar: 1.910">
@@ -185,9 +184,6 @@
           </div>
           <figcaption>Left: CAD rendering of the LEGEND-200 detector array, with the germanium detectors stacked in strings. Right: the readout chain for one detector, from bottom to top. The LMFE next to the detector holds the JFET, R<sub>f</sub>, C<sub>f</sub>, and C<sub>p</sub>; four pico-coax cables connect it to the CC4 above the array, which drives a differential signal through the cryostat flange to the data acquisition. Rendering: LEGEND collaboration.</figcaption>
         </figure>
-        <div class="prose">
-          <p>The <a href="../asic-testing/">ASIC page</a> covers noise and shaping in more detail, along with the integrated readout being developed for LEGEND-1000.</p>
-        </div>
       </section>
 
       <section class="project-section" id="front-end" aria-labelledby="front-end-title">
@@ -224,7 +220,7 @@
         <div class="prose">
           <h3>Why these components</h3>
           <p>Electronic noise at the input comes in two main forms. <strong>Series noise</strong> from the input transistor turns into an equivalent charge in proportion to the total capacitance at the input: detector, JFET, feedback, and stray wiring. Mounting a low-capacitance JFET directly next to the detector keeps this term small. <strong>Parallel noise</strong> comes from the detector’s leakage current and from the thermal noise of the feedback resistor. The resistor’s contribution falls as its resistance rises, which is why the LMFE uses a gigaohm resistor. The cost is a long decay time after each pulse, which pole-zero correction handles in the digital processing.</p>
-          <p>This front-end design has reached noise levels of 200 eV FWHM with large p-type point-contact (PPC) detectors in MAJORANA, 150 eV with a BEGe detector, and 85 eV with a small PPC detector, or 55 eV without a detector. Reducing noise further, with less material near the detector, is the motivation for the <a href="../asic-testing/">integrated ASIC readout</a> under development for LEGEND-1000.</p>
+          <p>This front-end design has reached noise levels of 200 eV FWHM with large p-type point-contact (PPC) detectors in MAJORANA, 150 eV with a BEGe detector, and 85 eV with a small PPC detector, or 55 eV without a detector. Reducing noise further, with less material near the detector, is the motivation for the integrated ASIC readout under development for LEGEND-1000.</p>
         </div>
       </section>
 

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183339">
+  <meta name="description" content="Connecting rare-event methods from physics with reinforcement learning: importance sampling, conditional Monte Carlo, their failure modes, and a combined estimator.">
+  <title>Hunting the improbable: rare-event physics and reinforcement learning | Ann-Kathrin Schuetz</title>
+  <link rel="stylesheet" href="../../style.css?v=20261027">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <link rel="stylesheet" href="style.css?v=20261027">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true}],throwOnError:false})"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <section class="photo-cover" aria-labelledby="essay-title">
+    <header class="site-header">
+      <a class="brand" href="../../">Ann-Kathrin Schuetz<span>Research portfolio</span></a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../../">Home</a>
+        <a href="../../about/">About</a>
+        <a href="../" aria-current="page">Projects</a>
+        <a href="../../cv/">CV</a>
+        <a href="../../publications/">Publications</a>
+      </nav>
+    </header>
+    <img class="photo-cover-image" src="assets/rare-events-rl-cover.jpg" width="2400" height="1339" fetchpriority="high" alt="The author writing about rare-event estimation and RESuM on a chalkboard propped against a hay bale in a field at sunset, with a laptop beside her" aria-describedby="cover-caption">
+    <div class="photo-cover-copy">
+      <p class="eyebrow">Essay · Rare events and reinforcement learning</p>
+      <h1 id="essay-title">Hunting the <em>improbable</em></h1>
+      <p class="photo-cover-subtitle">What rare-event physics can teach reinforcement learning</p>
+      <p class="photo-cover-deck">Importance sampling, conditional Monte Carlo, where each one quietly fails, and an idea for combining them.</p>
+      <p class="photo-cover-meta">Ann-Kathrin Schuetz · October 27, 2026</p>
+    </div>
+  </section>
+  <p class="photo-cover-caption" id="cover-caption">Looking for needles in haystacks, quite literally.</p>
+
+  <main id="main" class="wrap">
+    <article>
+      <div class="cover-topics" aria-label="Essay keywords"><span>Importance sampling</span><span>Conditional Monte Carlo</span><span>Soft RL</span><span>Doubly robust estimation</span></div>
+
+      <div class="essay-layout">
+        <aside class="contents">
+          <nav aria-label="Essay sections">
+            <p class="eyebrow">Sections</p>
+            <ol>
+              <li><a href="#shared-problem">The problem we share</a></li>
+              <li><a href="#two-strategies">Two ways to fight rarity</a></li>
+              <li><a href="#rl-connection">The RL connection</a></li>
+              <li><a href="#importance-sampling">Where importance sampling bites</a></li>
+              <li><a href="#conditional-mc">Conditional Monte Carlo is not free</a></li>
+              <li><a href="#combined">A combined idea</a></li>
+              <li><a href="#open-questions">Open questions</a></li>
+              <li><a href="#closing">Closing</a></li>
+            </ol>
+            <a class="contents-sources" href="#sources">References ↗</a>
+          </nav>
+        </aside>
+
+        <div class="essay-body">
+          <section class="chapter" id="introduction" aria-label="Introduction">
+            <div class="prose">
+              <p>For years, my research has revolved around events that almost never happen. In searches like neutrinoless double-beta decay, the signal may never appear at all, and the backgrounds that could fake it are themselves so rare that simulating enough of them can take millions of CPU hours. Most of the work is not about the physics of the rare event itself. It is about how to learn anything useful when nearly every sample you draw tells you “nothing happened.”</p>
+              <p>Over the past months I have been looking at reinforcement learning with that lens, and I keep recognising my own problems. A sparse reward that a random policy almost never reaches is a rare event. So is a catastrophic failure that a safe policy must avoid. And many of the tools RL uses to deal with them turn out to be close relatives of the tools rare-event physics has used for decades, sometimes literally the same mathematics under a different name.</p>
+              <p>This post is about that connection: what the two fields share, where a popular route, importance sampling done the RL way, can quietly go wrong, what my own work on detector design suggests instead, and a combined idea I think is worth exploring.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="shared-problem" aria-labelledby="shared-problem-title">
+            <p class="section-number">1 · The problem we share</p>
+            <h2 id="shared-problem-title">The problem we share</h2>
+            <div class="prose">
+              <p>Suppose an outcome happens with probability one in a million. If you estimate it by brute force, simulating and counting how often it occurs, you need on the order of a hundred million samples to get the answer to within 10%. The relative error scales like 1/√(N·p): the rarer the event, the more samples you burn for each bit of information.</p>
+              <p>In detector design this is painfully concrete. A background study for a single detector configuration can require simulating tens of millions of particles, and a design study needs many configurations. In RL, the same wall appears when an agent must discover a reward it has almost never seen, or when we want to certify that a policy fails less than once in a million episodes.</p>
+              <p>Both fields have converged on the same two strategies for getting around it.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="two-strategies" aria-labelledby="two-strategies-title">
+            <p class="section-number">2 · Two strategies</p>
+            <h2 id="two-strategies-title">Two ways to fight rarity</h2>
+            <div class="prose">
+              <p><strong>Strategy 1: change what you sample (importance sampling).</strong> Instead of simulating events from their natural distribution, you sample from a biased one that makes the rare outcome common, then correct each sample with a weight, the ratio of the true to the biased probability. In theory there is a perfect bias: the natural dynamics conditioned on the rare outcome. Under it, every sample hits the target and every weight equals the answer, so a single sample would be enough.</p>
+              <p><strong>Strategy 2: change what you count (conditional Monte Carlo).</strong> Keep sampling from the natural distribution, but instead of recording a hit or a miss, record the <em>probability</em> of a hit given what you know about the event: its starting position, direction, energy. If X is the 0/1 outcome and φ the event’s conditions, you average E[X | φ] instead of X. The law of total variance shows why this helps:</p>
+            </div>
+            <div class="math-block">$$\mathrm{Var}(X) = \underbrace{\mathbb{E}_{\varphi}\left[p(\varphi)\left(1-p(\varphi)\right)\right]}_{\text{hit-or-miss noise}} + \underbrace{\mathrm{Var}_{\varphi}\left(p(\varphi)\right)}_{\text{variation across events}}$$</div>
+            <div class="prose">
+              <p>Conditional Monte Carlo removes the first term entirely. For rare events, that term is almost all of the variance. In a simple toy example on my <a href="../rare-events/">project page</a>, the variance drops by a factor of about 200. This is a special case of the Rao–Blackwell theorem: conditioning never hurts, and it helps most when the outcome is noisy given the conditions.</p>
+              <p>The catch is that you rarely know E[X | φ]. A single simulation gives you one 0 or one 1, not a probability. This is where machine learning comes in: a network trained with binary cross-entropy on (conditions, outcome) pairs learns, in the limit of enough data, exactly this conditional probability. That is the core idea behind <a href="https://arxiv.org/abs/2410.03873">RESuM</a>, the rare-event surrogate model we developed for detector design.</p>
+              <p>Both strategies are perfect in theory. Both depend on knowing something we do not know. The interesting question is how they behave when that knowledge is imperfect.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="rl-connection" aria-labelledby="rl-connection-title">
+            <p class="section-number">3 · The RL connection</p>
+            <h2 id="rl-connection-title">RL already uses both strategies</h2>
+            <div class="prose">
+              <p>What surprised me most is that reinforcement learning contains both strategies, often without naming them.</p>
+              <p><strong>Policies as importance samplers.</strong> In KL-regularized (“soft”) RL, an agent maximizes reward while paying a penalty for deviating from some reference dynamics. Give it a reward of 1 for reaching a rare target and 0 otherwise, and the optimal policy is exactly the perfect importance sampler from Strategy 1: the natural dynamics conditioned on success. The soft value function is the logarithm of the success probability from each state, and the soft-RL objective is a lower bound on the log-probability of the rare event, tight at the optimum [1, 2]. Physicists have already turned this around and used RL to learn samplers for rare trajectories [3].</p>
+              <p><strong>Value functions as conditional expectations.</strong> A value function V(s) is the expected outcome given the current state, and it is trained by regression on observed outcomes, whose minimizer is exactly that conditional expectation. Evaluating a policy by averaging a learned value function over sampled starting states, instead of averaging the noisy returns themselves, <em>is</em> conditional Monte Carlo, with the starting state playing the role of the event conditions φ. Critics in actor-critic methods and bootstrapped value estimates are the same Rao–Blackwell idea applied at every step.</p>
+            </div>
+            <div class="essay-table-wrap"><table class="essay-table">
+              <tr><th>Rare-event physics</th><th>Reinforcement learning</th></tr>
+              <tr><td>Importance sampling with a learned bias</td><td>A policy trained with KL-regularized RL</td></tr>
+              <tr><td>The perfect sampler (dynamics conditioned on the rare event)</td><td>The optimal soft policy</td></tr>
+              <tr><td>Probability of success from each state</td><td>The (exponentiated) soft value function</td></tr>
+              <tr><td>Conditional Monte Carlo with a learned E[X | φ]</td><td>Averaging a learned value function instead of raw returns</td></tr>
+              <tr><td>Weight degeneracy over long trajectories</td><td>Variance of off-policy evaluation growing with the horizon</td></tr>
+            </table></div>
+            <div class="prose">
+              <p>So the question “should we use importance sampling or conditional Monte Carlo?” is not only a physics question. It is also the question “should we trust the policy’s reweighted rollouts, or the critic?” And the answer from rare-event physics is more nuanced than either field usually admits.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="importance-sampling" aria-labelledby="importance-sampling-title">
+            <p class="section-number">4 · Failure modes of importance sampling</p>
+            <h2 id="importance-sampling-title">Where importance sampling à la RL bites</h2>
+            <div class="prose">
+              <p>The perfect importance sampler is a beautiful object, and the soft-RL connection makes it look within reach: just train a policy. In practice, building a good proposal is where things go wrong, and in our detector studies importance sampling turned out to be <em>more</em> expensive than the alternatives. <span class="draft-placeholder">[Add your demonstration here: setup, cost comparison and link.]</span> The reasons generalize well beyond detectors.</p>
+              <ul>
+                <li><strong>You need signal to find the signal.</strong> To learn where the rare outcome lives, the proposal has to be fitted to samples of it. At the start you have a handful, maybe none. Any distribution built from a few hits is a guess about a region you have barely seen. In RL this is the familiar cold-start problem of sparse rewards, but for rare-event estimation it is the central obstacle, not a detail.</li>
+                <li><strong>Local minima and missed channels.</strong> Rare outcomes often arise through several unrelated pathways. The standard soft-RL objective is mode-seeking: once the learned bias finds one pathway, it has little incentive to look for others. The estimate is then biased low, and nothing in the samples warns you, because the missed region simply never shows up.</li>
+                <li><strong>Discontinuous physics.</strong> In a detector, whether a neutron is captured, crosses a boundary or deposits enough energy to trigger is often an abrupt, discrete event. A smooth parametric bias fitted to such a landscape can be badly mismatched, and so can a smooth policy in an environment with contacts and thresholds.</li>
+                <li><strong>Weights that explode.</strong> When the proposal does not match the true signal distribution, a few samples carry enormous weights. The variance can exceed that of brute-force sampling, sometimes without bound, while the running estimate still looks deceptively stable. This is the same phenomenon RL practitioners know as the instability of off-policy evaluation over long horizons.</li>
+                <li><strong>Every design needs a new proposal.</strong> A bias tuned for one detector geometry, or one policy, is not optimal for the next. A design scan means rebuilding the sampler again and again.</li>
+                <li><strong>You must reach inside the simulator.</strong> Importance sampling requires changing and tracking the simulator’s internal randomness. That is easy in a toy model and hard in a full Geant4 simulation of particle showers.</li>
+              </ul>
+              <p>None of this makes importance sampling wrong. It makes it fragile in exactly the regime where it is advertised as most useful: very rare, multimodal outcomes in complex simulators.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="conditional-mc" aria-labelledby="conditional-mc-title">
+            <p class="section-number">5 · Limits of conditioning</p>
+            <h2 id="conditional-mc-title">Conditional Monte Carlo is not free either</h2>
+            <div class="prose">
+              <p>It would be convenient to stop here and declare conditional Monte Carlo the winner. It would also be wrong. Its guarantee holds only if the learned probability is the true one, and learning p(θ, φ) without bias is hard precisely for rare events: the network sees very few positive examples, and it tends to be least well calibrated in the low-probability tail where the answer lives.</p>
+              <p>The two strategies fail in mirror-image ways:</p>
+            </div>
+            <div class="essay-table-wrap"><table class="essay-table">
+              <tr><th></th><th>Importance sampling</th><th>Conditional Monte Carlo</th></tr>
+              <tr><td><strong>What it needs to know</strong></td><td>The dynamics conditioned on the rare outcome</td><td>The probability of the outcome given each event’s conditions</td></tr>
+              <tr><td><strong>If that knowledge is imperfect</strong></td><td>Stays unbiased, but variance grows, possibly without bound</td><td>Stays low-variance, but becomes biased</td></tr>
+              <tr><td><strong>How errors show up</strong></td><td>As noise, or as a confidently wrong answer when a channel is missed</td><td>As a systematic offset that more samples will not reveal</td></tr>
+              <tr><td><strong>What protects you</strong></td><td>Weight diagnostics, effective sample size</td><td>Calibration checks and validation against raw counts</td></tr>
+            </table></div>
+            <p class="essay-callout">In short: importance sampling turns model error into variance; conditional Monte Carlo turns it into bias.</p>
+            <div class="prose">
+              <p>That is why in RESuM we validated coverage on independent high-fidelity simulations, and why the multi-fidelity model keeps the raw counts alongside the network’s predictions. The learned probability is a powerful tool, but it has to be checked against reality.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="combined" aria-labelledby="combined-title">
+            <p class="section-number">6 · A combined idea</p>
+            <h2 id="combined-title">Defensive, conditional, doubly robust</h2>
+            <div class="prose">
+              <p>If importance sampling fails through variance and conditional Monte Carlo through bias, the natural question is whether each can cover the other’s weakness. Here is a sketch of how I would combine them. None of the ingredients is new on its own; what interests me is putting them together for rare-event design and, by extension, for evaluating RL policies.</p>
+            </div>
+            <div class="essay-step"><p><strong>1. Condition first.</strong> Learn the probability p̂(θ, φ) of the rare outcome given the event conditions and design, as in RESuM. Averaging p̂ over many sampled conditions φ costs almost nothing, because it needs no simulation at all, only network evaluations.</p></div>
+            <div class="essay-step">
+              <p><strong>2. Bias only the conditions, and only defensively.</strong> To decide which events to actually simulate, sample their conditions from a mixture of the natural distribution g and a version tilted toward where the network expects hits:</p>
+              <div class="math-block">$$q(\varphi) = \alpha\, g(\varphi) + (1-\alpha)\, \frac{g(\varphi)\, \hat{p}(\theta, \varphi)}{Z}$$</div>
+              <p>This importance sampling acts on a low-dimensional, physically meaningful space, the source distribution, not on the simulator’s internals, so the simulator stays a black box. Because a fraction α of samples always comes from the natural distribution, no region of φ is ever abandoned, and every weight g/q is bounded by 1/α. This is the classic “defensive” mixture [4].</p>
+            </div>
+            <div class="essay-step">
+              <p><strong>3. Correct the bias with raw outcomes.</strong> Combine the cheap conditional average with an importance-weighted correction from the events actually simulated:</p>
+              <div class="math-block">$$\hat{P} = \frac{1}{M} \sum_{k=1}^{M} \hat{p}(\theta, \varphi_k) + \frac{1}{n} \sum_{j=1}^{n} \frac{g(\varphi_j)}{q(\varphi_j)} \left[ X_j - \hat{p}(\theta, \varphi_j) \right], \qquad \varphi_k \sim g,\; \varphi_j \sim q$$</div>
+              <p>The second term measures and removes whatever bias the network has, so the estimate is unbiased for <em>any</em> p̂, while its variance shrinks the better p̂ becomes. This is the structure of control variates and of the “doubly robust” estimators used in causal inference and off-policy RL [5, 6].</p>
+            </div>
+            <div class="essay-step"><p><strong>4. Iterate.</strong> The tilted samples land where hits are likely, so they deliver exactly the positive examples the network lacks in the tail. Retrain p̂, update the mixture, repeat. Because p̂ is conditioned on the design θ, what is learned for one design carries over to the next.</p></div>
+            <div class="prose">
+              <p>How this answers the risks above:</p>
+            </div>
+            <div class="essay-table-wrap"><table class="essay-table">
+              <tr><th>Risk</th><th>How the combination addresses it</th></tr>
+              <tr><td>Too few signal samples to build a proposal</td><td>The proposal comes from a model trained on all events, and the defensive share keeps exploring</td></tr>
+              <tr><td>Missed channels, local minima</td><td>The natural share of samples never abandons any region of event conditions</td></tr>
+              <tr><td>Exploding weights</td><td>Weights are bounded by 1/α</td></tr>
+              <tr><td>Network bias</td><td>Removed by the raw-outcome correction</td></tr>
+              <tr><td>Redesigning the sampler per design</td><td>One network, conditioned on the design</td></tr>
+              <tr><td>Access to simulator internals</td><td>Only the source distribution is biased; the simulator stays a black box</td></tr>
+            </table></div>
+            <div class="prose">
+              <p>In RL terms, the same recipe evaluates a policy without reweighting anything inside its rollouts: the critic plays the role of p̂, the starting states or scenarios play the role of φ, and a defensive, critic-guided choice of which scenarios to roll out supplies the corrections.</p>
+              <p>The idea has a clear limit. It helps when much of the rarity is explained by the event conditions φ. If the rarity lives deep inside the dynamics, so that even well-chosen starting conditions almost never lead to a hit, the correction term stays noisy. That is the regime where some form of biasing inside the trajectory, carefully defended, may still be needed.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="open-questions" aria-labelledby="open-questions-title">
+            <p class="section-number">7 · Open questions</p>
+            <h2 id="open-questions-title">Open questions</h2>
+            <div class="prose">
+              <p>This is a sketch, not a result, and several questions would need answering before I would trust it:</p>
+              <ul>
+                <li><strong>Independence.</strong> The correction term is only unbiased if p̂ is not trained on the same events it corrects. Cross-fitting, training on one half and correcting on the other, handles this, at some cost in data.</li>
+                <li><strong>How much rarity φ explains.</strong> The approach shines when the event conditions carry most of the information about the outcome. Measuring that share for a given problem, via the two terms of the variance decomposition, would tell you in advance whether it is worth it.</li>
+                <li><strong>Choosing α.</strong> Too small and the weights grow; too large and the tilt does little. Adapting α as p̂ improves seems natural.</li>
+                <li><strong>Sequential problems.</strong> For RL, the open question is how far to push conditioning beyond the starting state, and whether a defended, critic-guided bias inside trajectories can avoid the failure modes listed above.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="chapter" id="closing" aria-labelledby="closing-title">
+            <p class="section-number">8 · Closing</p>
+            <h2 id="closing-title">Closing</h2>
+            <div class="prose">
+              <p>The deepest lesson I take from rare-event physics is not a particular estimator. It is a habit: every shortcut around rarity rests on knowledge you do not fully have, and the honest question is how its errors will show up. Importance sampling hides them in its weights; conditional Monte Carlo hides them in its bias. RL inherits both, through its policies and its critics. Building estimators that make those errors visible, and correct them, seems to me one of the most useful things the two communities could do together.</p>
+              <p>If you work on rare events in RL, safety evaluation or simulation-based design and want to discuss or test these ideas, I would be glad to hear from you on <a href="https://www.linkedin.com/in/ann-kathrin-schuetz-phd/">LinkedIn</a>.</p>
+            </div>
+          </section>
+
+          <section class="references" id="sources" aria-labelledby="sources-title">
+            <p class="eyebrow">References</p>
+            <h2 id="sources-title">References</h2>
+            <ol>
+              <li>E. Todorov, “Efficient computation of optimal actions,” <em>PNAS</em> 106(28), 11478–11483 (2009).</li>
+              <li>S. Levine, “Reinforcement Learning and Control as Probabilistic Inference: Tutorial and Review,” arXiv:1805.00909 (2018).</li>
+              <li>D. C. Rose, J. F. Mair and J. P. Garrahan, “A reinforcement learning approach to rare trajectory sampling,” <em>New Journal of Physics</em> 23, 013013 (2021), <a href="https://arxiv.org/abs/2005.12890">arXiv:2005.12890</a>.</li>
+              <li>T. Hesterberg, “Weighted average importance sampling and defensive mixture distributions,” <em>Technometrics</em> 37(2), 185–194 (1995).</li>
+              <li>M. Dudík, J. Langford and L. Li, “Doubly robust policy evaluation and learning,” <em>ICML</em> (2011).</li>
+              <li>A. N. Angelopoulos, S. Bates, C. Fannjiang, M. I. Jordan and T. Zrnic, “Prediction-powered inference,” <em>Science</em> 382 (2023).</li>
+              <li>A.-K. Schuetz, A. W. P. Poon and A. Li, “RESuM: A Rare Event Surrogate Model for Physics Detector Design,” <em>ICLR</em> (2025), <a href="https://arxiv.org/abs/2410.03873">arXiv:2410.03873</a>.</li>
+            </ol>
+            <div class="related-reading">
+              <p class="eyebrow">Related</p>
+              <a href="../rare-events/"><span>Estimating rare-event probabilities: conditional Monte Carlo and learned hit probabilities</span><span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner"><p>Ann-Kathrin Schuetz · Research portfolio</p><p><a href="../">Projects</a> · <a href="../../">Home</a></p></div>
+  </footer>
+</body>
+</html>

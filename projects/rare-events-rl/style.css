@@ -1,0 +1,68 @@
+/* Essay styles extend the rare-events article; additions cover the hero image, tables, and display math. */
+@import url("../rare-events/style.css");
+
+/* Full-bleed photo cover; the title sits over the hay bale on the left so the chalkboard stays visible. */
+.photo-cover { position: relative; isolation: isolate; min-height: 640px; height: min(92svh, 980px); overflow: hidden; background: #15130f; color: #fffaf0; }
+.photo-cover-image { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 62% 50%; }
+.photo-cover::after { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(12 14 12 / .3), transparent 18%), linear-gradient(90deg, rgb(12 14 12 / .5), rgb(12 14 12 / .2) 34%, transparent 50%), rgb(12 14 12 / .36); content: ""; }
+.photo-cover .site-header, .photo-cover-copy { text-shadow: 0 1px 14px rgb(0 0 0 / .45); }
+.photo-cover .site-header { position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-color: rgb(255 250 240 / .28); }
+.photo-cover .brand, .photo-cover .site-nav a { color: #fffaf0; }
+.photo-cover .brand span, .photo-cover .site-nav a { color: rgb(255 250 240 / .78); }
+.photo-cover .site-nav a[aria-current="page"], .photo-cover .site-nav a:hover { color: #fffaf0; text-decoration: underline; text-underline-offset: 5px; }
+.photo-cover-copy { position: absolute; left: max(32px, calc((100% - 1160px) / 2)); bottom: clamp(48px, 8vh, 88px); width: min(460px, 34%); }
+.photo-cover-copy .eyebrow { margin: 0 0 16px; color: #ecc79c; }
+.photo-cover-copy h1 { margin: 0 0 16px; color: #fffaf0; font: 400 clamp(3rem, 6.2vw, 5.6rem)/.98 var(--serif); letter-spacing: -.05em; }
+.photo-cover-copy h1 em { color: #ecc79c; }
+.photo-cover-subtitle { margin: 0 0 18px; font: 400 clamp(1.15rem, 1.7vw, 1.5rem)/1.35 var(--serif); letter-spacing: -.015em; }
+.photo-cover-deck { margin: 0 0 20px; color: #fffaf0; font-size: .9rem; line-height: 1.65; }
+.photo-cover-meta { margin: 0; padding-top: 14px; border-top: 1px solid rgb(255 250 240 / .45); color: #fffaf0; font-size: .7rem; letter-spacing: .04em; }
+.photo-cover-caption { width: min(1160px, calc(100% - 64px)); margin: 0 auto; padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .68rem; line-height: 1.6; }
+.cover-topics { padding-top: 18px; }
+
+.prose ul { margin: 0 0 20px; padding-left: 1.2em; }
+.prose li { margin-bottom: 11px; }
+
+.math-block { max-width: 760px; margin: 6px 0 22px; padding: 14px 18px; overflow-x: auto; overflow-y: hidden; border-left: 2px solid var(--accent); background: var(--soft); }
+
+.essay-table-wrap { max-width: 760px; margin: 8px 0 28px; overflow-x: auto; border: 1px solid var(--line); background: #fff; }
+.essay-table { width: 100%; border-collapse: collapse; font-size: .76rem; line-height: 1.65; text-align: left; }
+.essay-table th, .essay-table td { padding: 11px 14px; border-top: 1px solid var(--line); vertical-align: top; }
+.essay-table tr:first-child th { border-top: 0; background: var(--soft); color: var(--accent-dark); font-weight: 650; }
+.essay-table td { color: #354e52; }
+.essay-table td strong { color: var(--ink); }
+
+.essay-callout { max-width: 760px; margin: 0 0 24px; padding: 16px 19px; border-left: 2px solid var(--accent); background: var(--soft); color: var(--ink); font: 400 clamp(1.05rem, 1.8vw, 1.3rem)/1.55 var(--serif); }
+
+.essay-step { max-width: 760px; margin: 0 0 16px; padding: 17px 20px; background: #fff; border-top: 2px solid var(--accent); }
+.essay-step > p { color: #354e52; font-size: .9rem; line-height: 1.8; }
+.essay-step > p:last-child { margin-bottom: 0; }
+.essay-step .math-block { margin-bottom: 16px; }
+
+.draft-placeholder { padding: 1px 6px; border: 1px dashed var(--accent); background: var(--warm); font-size: .85em; }
+
+.references > ol { list-style: none; counter-reset: ref; padding: 0; margin: 22px 0 28px; }
+.references > ol li { position: relative; padding: 13px 0 13px 34px; border-top: 1px solid var(--line); counter-increment: ref; font-size: .75rem; line-height: 1.7; }
+.references > ol li::before { position: absolute; left: 0; top: 13px; color: var(--accent-dark); content: "[" counter(ref) "]"; font-weight: 600; }
+.references > ol a { color: var(--accent-dark); }
+
+@media (max-width: 860px) {
+  .photo-cover-copy { width: min(440px, 52%); }
+}
+/* On phones the photo stacks above the title, as on the astrophysics page. */
+@media (max-width: 760px) {
+  .photo-cover { height: auto; min-height: 0; }
+  .photo-cover-image { position: relative; display: block; height: clamp(300px, 72vw, 460px); object-position: 72% 50%; }
+  .photo-cover::after { display: none; }
+  .photo-cover .site-header { position: static; width: auto; transform: none; padding: 20px; border: 0; }
+  .photo-cover .site-nav { gap: 6px 18px; }
+  .photo-cover-copy { position: relative; left: auto; bottom: auto; width: auto; padding: 4px 20px 34px; }
+  .photo-cover-copy h1 { font-size: clamp(2.6rem, 12vw, 3.6rem); }
+  .photo-cover-caption { width: auto; margin: 0 20px; }
+}
+@media (max-width: 540px) {
+  .essay-table { font-size: .7rem; }
+  .essay-table th, .essay-table td { padding: 9px 10px; }
+  .essay-step { padding: 14px 15px; }
+  .math-block { padding: 12px; }
+}

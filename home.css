@@ -46,3 +46,28 @@
 .home-highlight-venue { color: var(--ink); font: 400 clamp(1.6rem, 2.6vw, 2.2rem)/1 var(--serif); letter-spacing: -.02em; text-transform: none; }
 .home-highlight-pill { padding: 5px 12px; border-radius: 999px; background: #a44f27; color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: .12em; }
 @media (max-width: 760px) { .home-highlight-badge { flex-direction: row; align-items: center; } }
+
+/* Talk preview in the ICLR highlight. */
+.home-highlight { grid-template-columns: max-content minmax(0, 1fr) minmax(260px, .8fr); align-items: center; }
+.home-highlight-video { position: relative; display: block; overflow: hidden; border-radius: 4px; background: #111; box-shadow: 0 8px 24px rgb(24 51 57 / .18); }
+.home-highlight-video img { display: block; width: 100%; height: auto; transition: transform .25s ease, opacity .25s ease; }
+.home-highlight-video:hover img { transform: scale(1.02); opacity: .92; }
+.home-highlight-video-label { position: absolute; left: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; border-radius: 999px; background: #a44f27; color: #fff; font-size: .72rem; font-weight: 650; letter-spacing: .04em; box-shadow: 0 3px 10px rgb(0 0 0 / .25); }
+.home-highlight-play { width: 0; height: 0; margin-left: 4px; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent #fff; }
+.home-highlight-venue { white-space: nowrap; }
+@media (max-width: 1000px) { .home-highlight { grid-template-columns: minmax(130px, .3fr) minmax(0, 1fr); } .home-highlight-video { grid-column: 1 / -1; max-width: 560px; } }
+@media (max-width: 760px) { .home-highlight { grid-template-columns: 1fr; } .home-highlight-video { grid-column: auto; } }
+@media (prefers-reduced-motion: reduce) { .home-highlight-video img { transition: none; } }
+
+/* Text-only introduction (no portrait). */
+.home-hero-text { grid-template-columns: minmax(0, 1fr); }
+.home-hero-text h1 { max-width: 900px; }
+.home-hero-text .home-lede { max-width: 760px; }
+
+/* ICLR highlight placed after featured work. */
+.home-featured { padding-bottom: 56px; }
+.home-highlight { margin: 0 0 96px; }
+
+.home-lede a { color: var(--accent-dark); text-decoration-color: var(--accent); }
+
+.home-hero-cleanroom img { object-position: 50% 30%; }

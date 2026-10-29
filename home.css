@@ -1,0 +1,32 @@
+/* Home page: rare-events positioning, photo, featured work. */
+.home-hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(36px, 5vw, 72px); align-items: center; padding: clamp(56px, 8vw, 104px) 0 clamp(56px, 7vw, 88px); }
+.home-hero h1 { max-width: 620px; margin: 14px 0 28px; font-size: clamp(3rem, 5.6vw, 5.2rem); line-height: 1; }
+.home-lede { max-width: 600px; margin: 0 0 16px; color: #354e52; font-size: clamp(.98rem, 1.25vw, 1.08rem); line-height: 1.8; }
+.home-links { display: flex; flex-wrap: wrap; gap: 22px; margin: 28px 0 0; }
+.home-links a { color: var(--accent-dark); font-size: .78rem; font-weight: 650; letter-spacing: .04em; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 4px; }
+.home-links a:hover { color: var(--ink); border-color: var(--ink); }
+.home-hero-photo { margin: 0; aspect-ratio: 4 / 5; overflow: hidden; background: #15130f; }
+.home-hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 100% 50%; }
+
+.home-featured { padding: 48px 0 96px; border-top: 1px solid var(--line); }
+.home-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+.home-section-head h2 { margin: 0; font: 400 clamp(1.9rem, 3vw, 2.6rem)/1.1 var(--serif); letter-spacing: -.03em; }
+.featured-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.featured-card { display: flex; flex-direction: column; border: 1px solid var(--line); background: #fff; text-decoration: none; transition: border-color .18s ease, transform .18s ease; }
+.featured-card:hover { border-color: var(--accent); transform: translateY(-3px); color: inherit; }
+.featured-media { display: block; aspect-ratio: 4 / 3; overflow: hidden; background: #fff; }
+.featured-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.featured-media-figure img { object-fit: contain; padding: 10px 14px; }
+.featured-kind { margin: 20px 22px 8px; color: var(--accent-dark); font-size: .62rem; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
+.featured-card h3 { margin: 0 22px 10px; font: 400 1.35rem/1.25 var(--serif); letter-spacing: -.02em; }
+.featured-card p { margin: 0 22px 24px; color: var(--muted); font-size: .84rem; line-height: 1.7; }
+
+@media (max-width: 900px) {
+  .home-hero { grid-template-columns: 1fr; }
+  .home-hero-photo { aspect-ratio: 16 / 10; max-width: 640px; }
+  .featured-grid { grid-template-columns: 1fr; max-width: 560px; }
+}
+@media (prefers-reduced-motion: reduce) { .featured-card { transition: none; } }
+.home-hero-portrait { max-width: 440px; justify-self: end; width: 100%; }
+.home-hero-portrait img { object-position: 50% 20%; }
+@media (max-width: 900px) { .home-hero-portrait { justify-self: start; aspect-ratio: 4 / 5; max-width: 360px; } }

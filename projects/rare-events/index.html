@@ -72,6 +72,7 @@
             <h2 id="question-title">1,000 simulated events, 3 hits</h2>
             <p class="section-lead">What is the hit probability, and how well do we know it?</p>
             <div class="prose">
+              <p>Searching for rare events is often described as looking for a needle in a haystack. In physics, finding one needle is rarely the goal. We want to know how many needles the haystack holds: how often the rare event happens, and how precisely we know it.</p>
               <p>Many questions in physics come down to a small probability that has to be estimated by simulation: how often a background particle reaches the sensitive region of a detector, how often a simulated binary star ends up as a merging black-hole pair, how often a transient is bright enough to be detected. In each case, a simulation draws one event at a time and records whether it produced the outcome of interest, a <em>hit</em>, or not.</p>
               <p>Suppose we simulate 1,000 events for one detector design and 3 of them produce a hit. The natural estimate is to count:</p>
             </div>
@@ -93,6 +94,7 @@
 
             <div class="prose">
               <p>The relative error of a count of \(m\) hits is roughly \(1/\sqrt{m}\), so three hits give about ±58%. Yet the simulation knows much more than this: for every one of the 997 misses, we still know where the particle started, in which direction it moved, and with what energy. <strong>Counting ignores all of it.</strong></p>
+              <p>In the haystack picture, we have searched 1,000 straws, found three needles and kept only the tally. Whatever the other 997 straws could tell us about how close each came to being a needle is thrown away.</p>
             </div>
           </section>
 
@@ -107,6 +109,7 @@
               <p class="equation">$$\varepsilon \approx \frac{1}{\sqrt{Np}} \quad\Longrightarrow\quad N \approx \frac{1}{p\,\varepsilon^{2}}$$</p>
             </div>
             <div class="prose">
+              <p>Put differently, a 1% error takes about \(1/\varepsilon^{2} = 10{,}000\) hits, however rare they are. The rarer the needle, the more hay has to be searched to find that many.</p>
               <p>For \(p = 10^{-6}\), a 1% error needs \(10^{10}\) simulated events for a single detector design. Comparing 100 designs needs \(10^{12}\). At 0.01 CPU-seconds per event, that is \(10^{10}\) CPU-seconds: about 3.2 years on 100 cores. Design studies stop being iterative and become compute-bound.</p>
               <p>This is not a niche problem. Rare-event rates enter forecasts across physics and astronomy, and the precision of those forecasts shapes real decisions.</p>
               <p>The <a href="https://rubinobservatory.org/for-scientists/rubin-101/the-legacy-survey-of-space-and-time-lsst">Vera C. Rubin Observatory</a> will repeatedly image the southern sky during a ten-year survey. Among the brief transients it looks for are <em>kilonovae</em>: optical and infrared flashes from the merger of two neutron stars. Their light fades within days, so whether one is detected depends on its brightness and distance, and on when and how often that patch of sky is observed. One <a href="https://doi.org/10.3847/1538-4357/ae244e">Rubin simulation study</a> forecasts about 42 ± 4 detections per year; only 7–11% of its simulated light curves pass a stricter alert criterion. Estimates like these rest on simulating very many sources, of which only a small fraction count as detections.</p>

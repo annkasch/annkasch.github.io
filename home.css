@@ -40,3 +40,9 @@
 .home-highlight-links a { color: var(--accent-dark); font-size: .78rem; font-weight: 650; letter-spacing: .04em; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 4px; }
 .home-highlight-links a:hover { color: var(--ink); border-color: var(--ink); }
 @media (max-width: 760px) { .home-highlight { grid-template-columns: 1fr; gap: 10px; } }
+
+/* ICLR Spotlight: larger venue name and a pill around "Spotlight", on the light band. */
+.home-highlight-badge { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin: 2px 0 0; }
+.home-highlight-venue { color: var(--ink); font: 400 clamp(1.6rem, 2.6vw, 2.2rem)/1 var(--serif); letter-spacing: -.02em; text-transform: none; }
+.home-highlight-pill { padding: 5px 12px; border-radius: 999px; background: #a44f27; color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: .12em; }
+@media (max-width: 760px) { .home-highlight-badge { flex-direction: row; align-items: center; } }

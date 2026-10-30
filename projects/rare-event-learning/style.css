@@ -1,0 +1,46 @@
+/* Learning in the rare-event regime: extends the rare-events method page. */
+@import url("../rare-events/style.css");
+
+/* Wide cover image: keep the person and speech bubble in view. */
+.photo-cover-image { object-position: 62% 50%; }
+.photo-cover-copy { width: min(480px, 36%); }
+
+.prose ul { margin: 0 0 20px; padding-left: 1.2em; }
+.prose li { margin-bottom: 10px; }
+
+.lr-figure { margin: 26px 0 30px; padding: 16px 16px 12px; border: 1px solid var(--line); background: #fff; }
+.lr-figure img { display: block; width: 100%; height: auto; margin: 0 auto; }
+.lr-figure-narrow img { max-width: 680px; }
+.lr-figure figcaption { margin: 12px 0 0; color: var(--muted); font-size: .69rem; line-height: 1.75; }
+
+@media (max-width: 760px) {
+  .photo-cover-copy { width: auto; right: 20px; }
+}
+
+/* Benchmark sub-sections. */
+.sub-heading { margin: 34px 0 14px; font: 400 clamp(1.3rem, 2vw, 1.6rem)/1.25 var(--serif); letter-spacing: -.02em; }
+
+/* "What the benchmark shows": highlighted lessons chapter. */
+.findings-summary { counter-reset: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin: 0 0 30px; padding: 0; list-style: none; border-left: 3px solid var(--accent); background: var(--soft); }
+.findings-summary li { position: relative; padding: 20px 22px 20px 58px; color: #354e52; font-size: .86rem; line-height: 1.65; }
+.findings-summary li:nth-child(n+3) { border-top: 1px solid var(--line); }
+.findings-summary li:nth-child(even) { border-left: 1px solid var(--line); }
+.findings-summary li::before { position: absolute; left: 22px; top: 16px; color: var(--accent-dark); font: 400 1.6rem/1 var(--serif); content: counter(list-item); }
+.findings-summary strong { display: block; margin-bottom: 4px; color: var(--ink); font: 400 1.08rem/1.3 var(--serif); }
+.finding-heading { display: flex; align-items: baseline; gap: 12px; margin: 34px 0 12px; font: 400 clamp(1.25rem, 2vw, 1.5rem)/1.25 var(--serif); letter-spacing: -.02em; }
+.finding-heading span { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font: 650 .8rem/1 var(--sans); transform: translateY(-2px); }
+@media (max-width: 760px) { .findings-summary { grid-template-columns: 1fr; } .findings-summary li:nth-child(even) { border-left: 0; } .findings-summary li + li { border-top: 1px solid var(--line); } }
+
+/* Method boxes: one per model, stacked full width. */
+.method-box { margin: 0 0 16px; padding: 20px 24px 8px; border-left: 3px solid var(--mc, var(--line)); background: #fff; }
+.method-box.is-fail { --mc: #9cacab; --mv: #52666a; --mvb: #eef2f0; }
+.method-box.is-partial { --mc: #d7a98d; --mv: #8a4425; --mvb: #f8ece4; }
+.method-box.is-good { --mc: var(--accent); --mv: var(--accent-dark); --mvb: var(--soft); }
+.method-box header { display: grid; grid-template-columns: 1fr auto; align-items: start; column-gap: 16px; margin-bottom: 12px; }
+.method-family { grid-column: 1; margin: 0 0 4px; color: var(--muted); font-size: .62rem; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
+.method-box h4 { grid-column: 1; margin: 0; font: 400 1.3rem/1.3 var(--serif); letter-spacing: -.01em; }
+.method-verdict { grid-column: 2; grid-row: 1 / span 2; align-self: center; padding: 4px 11px; border-radius: 999px; background: var(--mvb); color: var(--mv); font-size: .66rem; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.method-box dl { margin: 0; }
+.method-box dt { margin: 0 0 3px; color: var(--ink); font-size: .64rem; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
+.method-box dd { margin: 0 0 14px; color: #354e52; font-size: .84rem; line-height: 1.72; }
+@media (max-width: 760px) { .photo-cover-image { object-position: 68% 50%; } }

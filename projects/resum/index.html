@@ -14,6 +14,7 @@
 </head>
 <body class="page-rare-events page-resum">
   <a class="skip-link" href="#main">Skip to content</a>
+  <section class="photo-cover" aria-labelledby="essay-title">
   <header class="site-header">
     <a class="brand" href="../../">Ann-Kathrin Schuetz<span>Research portfolio</span></a>
     <nav class="site-nav" aria-label="Main navigation">
@@ -24,25 +25,32 @@
       <a href="../../publications/">Publications</a>
     </nav>
   </header>
+    <img class="photo-cover-image" src="assets/cover.jpg" width="2400" height="1340" fetchpriority="high" alt="Illustration of the LEGEND detector in its underground cavern: a cutaway of the cryostat with the germanium detector array in the centre, surrounded by a water tank with light sensors, and an incoming cosmic muon producing a shower of particles inside the cryostat." aria-describedby="cover-caption">
+    <div class="photo-cover-copy">
+      <p class="resum-badge"><span class="resum-venue">ICLR 2025</span><span class="resum-pill">Spotlight</span></p>
+      <h1 id="essay-title">RESuM: a <em>rare‑event</em> surrogate model for detector design</h1>
+      <p class="photo-cover-deck">How do you optimize a detector when the background you want to minimize is so rare that most simulations never see it? RESuM found a LEGEND neutron moderator with two thirds less neutron-induced background for 3.3% of the compute.</p>
+      <p class="photo-cover-meta">Ann-Kathrin Schuetz, Alan W. P. Poon, Aobo Li · Lawrence Berkeley National Laboratory and UC San Diego</p>
+    </div>
+  </section>
+  <p class="photo-cover-caption" id="cover-caption">A cosmic muon entering the LEGEND cryostat. The neutrons it creates are the background RESuM helps to shield against.</p>
 
   <main id="main" class="wrap">
-    <section class="resum-hero" aria-labelledby="essay-title">
-      <div class="resum-hero-copy">
-        <p class="resum-badge"><span class="resum-venue">ICLR 2025</span><span class="resum-pill">Spotlight</span></p>
-        <h1 id="essay-title">RESuM: a <em>rare‑event</em> surrogate model for detector design</h1>
-        <p class="resum-deck">How do you optimize a detector when the quantity you want to minimize is a background so rare that most simulations never see it? RESuM turns noisy, mostly-zero simulation counts into a smooth, uncertainty-aware model of the design space, and found a LEGEND neutron moderator with two thirds less neutron-induced background for 3.3% of the compute.</p>
-        <p class="resum-authors">Ann-Kathrin Schuetz, Alan W. P. Poon, Aobo Li · Lawrence Berkeley National Laboratory and UC San Diego</p>
+    <section class="resum-talk" aria-label="Paper, code and talk">
+      <a class="resum-hero-video" href="https://slideslive.com/39034831/a-rare-event-surrogate-model-resum-for-physics-detector-design" aria-label="Watch the ICLR 2025 talk on RESuM (opens SlidesLive)">
+        <img src="../assets/resum-iclr-talk.jpg" width="1280" height="725" loading="lazy" alt="Still from the ICLR 2025 talk: Ann-Kathrin Schuetz presenting, next to the title slide A Rare Event Surrogate Model (RESuM) for Physics Detector Design.">
+        <span class="resum-play"><span class="resum-play-icon" aria-hidden="true"></span>Watch the ICLR talk</span>
+      </a>
+      <div>
+        <p class="eyebrow">Published at ICLR 2025 as a Spotlight</p>
+        <p class="resum-talk-text">RESuM turns noisy, mostly-zero simulation counts into a smooth, uncertainty-aware model of the design space. The paper, the code and the conference talk are linked here.</p>
         <p class="resum-links">
           <a href="https://openreview.net/forum?id=lqTILjL6lP">Paper ↗</a>
           <a href="https://arxiv.org/abs/2410.03873">arXiv ↗</a>
           <a href="https://github.com/annkasch/resum-legend">Code ↗</a>
-          <a href="https://slideslive.com/39034831/a-rare-event-surrogate-model-resum-for-physics-detector-design">Watch the talk ↗</a>
+          <a href="https://slideslive.com/39034831/a-rare-event-surrogate-model-resum-for-physics-detector-design">Talk ↗</a>
         </p>
       </div>
-      <a class="resum-hero-video" href="https://slideslive.com/39034831/a-rare-event-surrogate-model-resum-for-physics-detector-design" aria-label="Watch the ICLR 2025 talk on RESuM (opens SlidesLive)">
-        <img src="../assets/resum-iclr-talk.jpg" width="1280" height="725" fetchpriority="high" alt="Still from the ICLR 2025 talk: Ann-Kathrin Schuetz presenting, next to the title slide A Rare Event Surrogate Model (RESuM) for Physics Detector Design.">
-        <span class="resum-play"><span class="resum-play-icon" aria-hidden="true"></span>Watch the ICLR talk</span>
-      </a>
     </section>
 
     <article>
@@ -76,6 +84,14 @@
             <div class="prose">
               <p>LEGEND searches for neutrinoless double-beta decay in germanium, a process that, if it exists, has a half-life of more than \(10^{26}\) years. Its next stage, LEGEND-1000, aims for a background below \(10^{-5}\) counts per keV, kilogram and year. At that level, every background source has to be designed away before the experiment is built.</p>
               <p>One of the hardest is cosmogenic. Cosmic muons that reach the underground laboratory create neutrons in and around the detector, and a neutron captured on germanium-76 produces germanium-77, whose decay can mimic the signal. At the Gran Sasso laboratory, this background alone is expected to exceed LEGEND-1000’s total background goal; at the deeper SNOLAB it would be about 60 times smaller. Short of moving deeper or tagging every germanium-77 production at the cost of live time, the remedy is a <strong>neutron moderator</strong>: a shield around the detector array that slows neutrons down so that they are captured on argon instead of germanium.</p>
+            </div>
+            <figure class="resum-figure resum-shower" aria-labelledby="shower-caption">
+              <div class="resum-shower-grid">
+                <video src="assets/neutron-shower.mp4" poster="assets/neutron-shower-poster.jpg" width="624" height="740" autoplay muted loop playsinline aria-label="Animation of a simulated neutron shower in the LEGEND detector, shown in the radius–height plane. Neutrons spread from where the muon entered, through the liquid argon and the cryostat into the water tank, and are captured one by one; by the end, about 400 have been captured on argon or hydrogen and one on germanium."></video>
+                <figcaption id="shower-caption"><strong>One muon, one neutron shower.</strong> A Geant4 simulation of the neutrons created by a single cosmic muon, in the radius–height plane of the detector, from 1 ns to 10 ms. Most neutrons are captured on argon (green) in the cryostat or on hydrogen (blue) in the water tank. Of more than 400 captures, exactly one is on germanium (red), the background that matters. The orange line marks where a neutron moderator would sit.<span class="resum-shower-note">Simulating enough showers to count such captures precisely is what makes every design evaluation expensive.</span></figcaption>
+              </div>
+            </figure>
+            <div class="prose">
               <p>Two families of moderators were on the table, a closed cylinder around the detector array and a turbine of separate panels. Both are part of one continuous design space with five parameters, which you can try out here:</p>
             </div>
             <figure class="resum-figure moderator-explorer" aria-labelledby="moderator-caption">

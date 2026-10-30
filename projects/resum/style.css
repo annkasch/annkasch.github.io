@@ -99,3 +99,36 @@ a.resum-app:hover { transform: translateX(3px); color: inherit; }
 .mx-presets button { padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--soft); color: var(--accent-dark); font: 600 .68rem var(--sans); cursor: pointer; }
 .mx-presets button:hover { border-color: var(--accent); }
 @media (max-width: 700px) { .moderator-explorer .mx-wrap { grid-template-columns: 1fr; } }
+
+/* Photo cover (LEGEND neutron shower) and talk strip below it. */
+.page-resum .photo-cover-image { object-position: 62% 50%; }
+.page-resum .photo-cover::after { background: linear-gradient(180deg, rgb(8 10 16 / .45), transparent 22%), linear-gradient(90deg, rgb(8 10 16 / .82), rgb(8 10 16 / .55) 38%, rgb(8 10 16 / .1) 62%), rgb(8 10 16 / .2); }
+.page-resum .photo-cover-copy { width: min(520px, 42%); }
+.page-resum .photo-cover-copy h1 em { color: #f0a77e; }
+.page-resum .photo-cover .resum-venue { color: #fffaf0; }
+.resum-talk { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(24px, 4vw, 48px); align-items: center; padding: 40px 0 44px; }
+.resum-talk-text { max-width: 560px; margin: 8px 0 18px; color: #354e52; font-size: .98rem; line-height: 1.75; }
+@media (max-width: 760px) {
+  .page-resum .photo-cover-copy { width: auto; right: 20px; }
+  .resum-talk { grid-template-columns: 1fr; }
+}
+.page-resum .photo-cover-copy { width: min(440px, 34%); }
+.page-resum .photo-cover-copy h1 { font-size: clamp(2.4rem, 4.4vw, 4rem); }
+.page-resum .photo-cover-image { object-position: 75% 50%; }
+@media (max-width: 760px) { .page-resum .photo-cover-copy { left: 20px; } .page-resum .photo-cover-image { object-position: 50% 50%; } }
+.page-resum .photo-cover-copy { left: auto; right: max(32px, calc((100% - 1160px) / 2)); }
+.page-resum .photo-cover::after { background: linear-gradient(180deg, rgb(8 10 16 / .45), transparent 22%), linear-gradient(270deg, rgb(8 10 16 / .85), rgb(8 10 16 / .6) 36%, rgb(8 10 16 / .05) 60%), rgb(8 10 16 / .15); }
+@media (max-width: 760px) { .page-resum .photo-cover-copy { right: 20px; left: 20px; } }
+@media (max-width: 760px) { .page-resum .photo-cover-copy { width: auto; left: 20px; right: 20px; } .page-resum .photo-cover-copy h1 { font-size: 2.6rem; } }
+.page-resum .photo-cover { min-height: 460px; height: min(62svh, 620px); }
+.page-resum .photo-cover { min-height: 540px; height: min(66svh, 640px); }
+.page-resum .photo-cover-copy { bottom: clamp(32px, 5vh, 56px); }
+.page-resum .photo-cover-copy h1 { font-size: clamp(2.1rem, 3.3vw, 3.1rem); margin-bottom: 14px; }
+.page-resum .photo-cover-copy .resum-badge { margin-bottom: 12px; }
+.page-resum .photo-cover-deck { font-size: .86rem; margin-bottom: 14px; }
+/* Neutron shower animation. */
+.resum-shower-grid { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 24px; align-items: center; }
+.resum-shower video { display: block; width: 100%; height: auto; }
+.resum-shower figcaption { margin: 0 !important; font-size: .76rem !important; }
+.resum-shower-note { display: block; margin-top: 10px; color: var(--ink); }
+@media (max-width: 700px) { .resum-shower-grid { grid-template-columns: 1fr; } .resum-shower video { max-width: 360px; margin: 0 auto; } }

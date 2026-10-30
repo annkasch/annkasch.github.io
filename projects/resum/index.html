@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183339">
+  <meta name="description" content="RESuM, the Rare Event Surrogate Model (ICLR 2025 Spotlight): a conditional neural process and a multi-fidelity Gaussian process that optimize detector designs when the quantity to minimize is a rare-event probability. Applied to the LEGEND neutron moderator, it found a design with 66.5% less neutron-induced background using 3.3% of the compute.">
+  <title>RESuM: Rare Event Surrogate Model | Ann-Kathrin Schuetz</title>
+  <link rel="stylesheet" href="../../style.css?v=20261026">
+  <link rel="stylesheet" href="style.css?v=20261029c">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],ignoredTags:['script','noscript','style','textarea','pre','code','svg'],throwOnError:false})"></script>
+</head>
+<body class="page-rare-events page-resum">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="../../">Ann-Kathrin Schuetz<span>Research portfolio</span></a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="../../">Home</a>
+      <a href="../../about/">About</a>
+      <a href="../" aria-current="page">Projects</a>
+      <a href="../../cv/">CV</a>
+      <a href="../../publications/">Publications</a>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="resum-hero" aria-labelledby="essay-title">
+      <div class="resum-hero-copy">
+        <p class="resum-badge"><span class="resum-venue">ICLR 2025</span><span class="resum-pill">Spotlight</span></p>
+        <h1 id="essay-title">RESuM: a <em>rare‑event</em> surrogate model for detector design</h1>
+        <p class="resum-deck">How do you optimize a detector when the quantity you want to minimize is a background so rare that most simulations never see it? RESuM turns noisy, mostly-zero simulation counts into a smooth, uncertainty-aware model of the design space, and found a LEGEND neutron moderator with two thirds less neutron-induced background for 3.3% of the compute.</p>
+        <p class="resum-authors">Ann-Kathrin Schuetz, Alan W. P. Poon, Aobo Li · Lawrence Berkeley National Laboratory and UC San Diego</p>
+        <p class="resum-links">
+          <a href="https://openreview.net/forum?id=lqTILjL6lP">Paper ↗</a>
+          <a href="https://arxiv.org/abs/2410.03873">arXiv ↗</a>
+          <a href="https://github.com/annkasch/resum-legend">Code ↗</a>
+          <a href="https://slideslive.com/39034831/a-rare-event-surrogate-model-resum-for-physics-detector-design">Watch the talk ↗</a>
+        </p>
+      </div>
+      <a class="resum-hero-video" href="https://slideslive.com/39034831/a-rare-event-surrogate-model-resum-for-physics-detector-design" aria-label="Watch the ICLR 2025 talk on RESuM (opens SlidesLive)">
+        <img src="../assets/resum-iclr-talk.jpg" width="1280" height="725" fetchpriority="high" alt="Still from the ICLR 2025 talk: Ann-Kathrin Schuetz presenting, next to the title slide A Rare Event Surrogate Model (RESuM) for Physics Detector Design.">
+        <span class="resum-play"><span class="resum-play-icon" aria-hidden="true"></span>Watch the ICLR talk</span>
+      </a>
+    </section>
+
+    <article>
+      <section class="in-brief" aria-label="In brief">
+        <div><span>The problem</span><p>Detector designs for rare-event searches are compared by simulating how often a background reaches the detector. That probability is so small that most simulations count zero or a handful of events, and each high-fidelity run costs 170 CPU hours.</p></div>
+        <div><span>The approach</span><p>A conditional neural process turns each simulated event’s 0/1 outcome into a hit probability. A multi-fidelity Gaussian process combines those smooth estimates from cheap simulations with a few expensive ones, and active learning decides where to simulate next.</p></div>
+        <div><span>The result</span><p>For the LEGEND neutron moderator: (66.5 ± 3.5)% less neutron-induced background, 3.3% of the compute of a brute-force search, and uncertainties that cover 69%, 95% and 100% of independent checks at 1σ, 2σ and 3σ.</p></div>
+      </section>
+
+      <div class="essay-layout">
+        <aside class="contents">
+          <nav aria-label="Article sections">
+            <p class="eyebrow">Sections</p>
+            <ol>
+              <li><a href="#problem">The design problem</a></li>
+              <li><a href="#red">Rare-event design</a></li>
+              <li><a href="#model">How RESuM works</a></li>
+              <li><a href="#result">The optimal moderator</a></li>
+              <li><a href="#validation">Validation</a></li>
+              <li><a href="#applications">Beyond LEGEND</a></li>
+            </ol>
+            <a class="contents-sources" href="#sources">References ↗</a>
+          </nav>
+        </aside>
+
+        <div class="essay-body">
+          <section class="chapter" id="problem" aria-labelledby="problem-title">
+            <p class="section-number">1 · Motivation</p>
+            <h2 id="problem-title">Shielding a detector against a background that almost never happens</h2>
+            <p class="section-lead">One background event can matter in an experiment that expects fewer than one signal per year.</p>
+            <div class="prose">
+              <p>LEGEND searches for neutrinoless double-beta decay in germanium, a process that, if it exists, has a half-life of more than \(10^{26}\) years. Its next stage, LEGEND-1000, aims for a background below \(10^{-5}\) counts per keV, kilogram and year. At that level, every background source has to be designed away before the experiment is built.</p>
+              <p>One of the hardest is cosmogenic. Cosmic muons that reach the underground laboratory create neutrons in and around the detector, and a neutron captured on germanium-76 produces germanium-77, whose decay can mimic the signal. At the Gran Sasso laboratory, this background alone is expected to exceed LEGEND-1000’s total background goal; at the deeper SNOLAB it would be about 60 times smaller. Short of moving deeper or tagging every germanium-77 production at the cost of live time, the remedy is a <strong>neutron moderator</strong>: a shield around the detector array that slows neutrons down so that they are captured on argon instead of germanium.</p>
+              <p>Two families of moderators were on the table, a closed cylinder around the detector array and a turbine of separate panels. Both are part of one continuous design space with five parameters, which you can try out here:</p>
+            </div>
+            <figure class="resum-figure moderator-explorer" aria-labelledby="moderator-caption">
+              <div class="mx-wrap">
+                <svg class="mx-svg" viewBox="0 0 530 530" role="img" aria-label="Interactive top view of the turbine-like neutron moderator around the germanium detector array; the sliders change the number of panels, radius, panel length, thickness and angle.">
+                  <defs>
+                    <marker id="mx-a1" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto"><polygon points="10 0, 10 7, 0 3.5" fill="#a44f27"/></marker>
+                    <marker id="mx-a2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#a44f27"/></marker>
+                  </defs>
+                  <rect width="530" height="530" fill="#83989b"/>
+                  <circle cx="265" cy="265" r="265" fill="#b6b6b6"/>
+                  <image href="assets/inner-cryostat.png" x="175" y="175" width="180" height="180"/>
+                  <g id="mx-ghost"></g>
+                  <g id="mx-panels"></g>
+                  <g id="mx-notes"></g>
+                </svg>
+                <div class="mx-controls" id="mx-controls">
+                  <label><span>Panels <i>n</i></span><input type="range" data-k="n" min="4" max="360" value="40"><output>40</output></label>
+                  <label><span>Radius <i>r</i></span><input type="range" data-k="r" min="90" max="265" value="200"><output>200</output></label>
+                  <label><span>Length <i>L</i></span><input type="range" data-k="l" min="1" max="150" value="100"><output>100</output></label>
+                  <label><span>Thickness <i>d</i></span><input type="range" data-k="d" min="1" max="20" value="5"><output>5</output></label>
+                  <label><span>Angle <i>φ</i></span><input type="range" data-k="phi" min="0" max="45" value="20"><output>20°</output></label>
+                  <label class="mx-check"><input type="checkbox" id="mx-explain" checked> Show parameters</label>
+                  <p class="mx-presets"><button type="button" data-p="120,200,11,5,0">Closed ring</button><button type="button" data-p="188,166,8,3,19">Best design</button><button type="button" data-p="40,200,100,5,45">Turbine</button></p>
+                </div>
+              </div>
+              <figcaption id="moderator-caption"><strong>Explore the design space.</strong> Top view of the moderator around the germanium detector array. One parametrization covers a closed ring (many long panels at zero angle) and a turbine of separate panels: number of panels \(n\), radius \(r\), panel length \(L\), thickness \(d\) and panel angle \(\varphi\). Values are in drawing units. “Best design” sets the values of the optimum RESuM found.</figcaption>
+            </figure>
+            <script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var p = { n: 40, r: 200, l: 100, d: 5, phi: 20 };
+  var explain = true;
+  var g = document.getElementById('mx-panels'), gh = document.getElementById('mx-ghost'), gn = document.getElementById('mx-notes');
+  function el(t, a, parent) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; }
+  function draw() {
+    g.textContent = ''; gh.textContent = ''; gn.textContent = '';
+    var step = 360 / p.n, j = Math.floor(p.n * 3 / 4), pj = null;
+    for (var i = 0; i < p.n; i++) {
+      var a = step * i * Math.PI / 180;
+      var x = p.r * Math.cos(a) - p.l / 2 + 265, y = p.r * Math.sin(a) + 265, rot = 90 + step * i;
+      var cx = x + p.l / 2;
+      if (explain) el('rect', { x: x, y: y, width: p.l, height: p.d, fill: '#929292', opacity: .55, transform: 'rotate(' + rot + ' ' + cx + ' ' + y + ')' }, gh);
+      el('rect', { x: x, y: y, width: p.l, height: p.d, fill: '#007d73', transform: 'rotate(' + (rot + p.phi) + ' ' + cx + ' ' + y + ')' }, g);
+      if (i === j) pj = { x: x, y: y, cx: cx, rot: rot };
+    }
+    if (!explain || !pj) return;
+    var s = { stroke: '#a44f27', 'stroke-width': 1.6, fill: 'none' }, t = { fill: '#a44f27', 'font-size': 15, 'font-style': 'italic', 'font-family': 'Georgia, serif' };
+    el('line', Object.assign({ x1: 265, y1: 265, x2: pj.cx, y2: pj.y, 'marker-end': 'url(#mx-a2)' }, s), gn);
+    el('text', Object.assign({ x: (265 + pj.cx) / 2 + 8, y: (265 + pj.y) / 2 }, t), gn).textContent = 'r';
+    var lg = el('g', { transform: 'rotate(' + (pj.rot + p.phi) + ' ' + pj.cx + ' ' + pj.y + ')' }, gn);
+    el('line', Object.assign({ x1: pj.x, y1: pj.y - 8, x2: pj.x + p.l, y2: pj.y - 8, 'marker-start': 'url(#mx-a1)', 'marker-end': 'url(#mx-a2)' }, s), lg);
+    el('text', Object.assign({ x: pj.cx - 4, y: pj.y - 13 }, t), lg).textContent = 'L';
+    el('text', Object.assign({ x: pj.x + p.l + 5, y: pj.y + p.d / 2 + 5 }, t), lg).textContent = 'd';
+    if (p.phi > 2) el('text', Object.assign({ x: pj.x + p.l * 0.12, y: pj.y + p.d + 16 }, t), lg).textContent = 'φ';
+  }
+  var box = document.getElementById('mx-controls');
+  function sync() { box.querySelectorAll('input[type=range]').forEach(function (inp) { inp.value = p[inp.dataset.k]; inp.nextElementSibling.textContent = p[inp.dataset.k] + (inp.dataset.k === 'phi' ? '°' : ''); }); draw(); }
+  box.querySelectorAll('input[type=range]').forEach(function (inp) { inp.addEventListener('input', function () { p[inp.dataset.k] = +inp.value; sync(); }); });
+  document.getElementById('mx-explain').addEventListener('change', function (e) { explain = e.target.checked; draw(); });
+  box.querySelectorAll('button[data-p]').forEach(function (b) { b.addEventListener('click', function () { var v = b.dataset.p.split(',').map(Number); p.n = v[0]; p.r = v[1]; p.l = v[2]; p.d = v[3]; p.phi = v[4]; sync(); }); });
+  draw();
+})();
+            </script>
+            <div class="prose">
+              <p>Finding the best moderator means comparing designs by how much germanium-77 they let through. Each comparison requires a full Geant4 simulation of cosmic muons, the neutrons they create, and the neutrons’ path through the detector. A single high-fidelity run simulates about \(10^7\) muons and costs 170 CPU hours. A grid search over five parameters is out of reach, and at the start only four high-fidelity simulations existed.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="red" aria-labelledby="red-title">
+            <p class="section-number">2 · Formulation</p>
+            <h2 id="red-title">The rare-event design problem</h2>
+            <p class="section-lead">The quantity to minimize is an expected probability that the simulation only ever sees as a handful of counts.</p>
+            <div class="prose">
+              <p>Each simulated event \(i\) has event-specific parameters \(\phi_i\), such as the starting point, direction and energy of a neutron, drawn from a distribution \(g(\phi)\). Under a design \(\theta\) it produces a hit, \(X_i = 1\), with an unknown probability \(t(\theta,\phi_i)\). What we want is the design with the lowest expected hit probability:</p>
+            </div>
+            <div class="equation-block" aria-label="Rare-event design objective">
+              <p class="equation">$$\bar t(\theta) = \int t(\theta,\phi)\,g(\phi)\,d\phi, \qquad \theta^{*} = \arg\min_{\theta\in\Theta}\ \bar t(\theta)$$</p>
+            </div>
+            <div class="prose">
+              <p>The simulation only provides \(y = m/N\), the fraction of \(N\) events that hit. With many events, \(y\) is close to normally distributed around \(\bar t(\theta)\). With the affordable number of events, \(m\) is zero or a small integer, \(y\) takes only the discrete values \(0, 1/N, 2/N, \dots\), and its fluctuations hide the dependence on the design. This is the <strong>rare-event design (RED) problem</strong>: optimizing \(\theta\) when the metric is a rare-event probability and every evaluation is expensive.</p>
+              <p>Standard surrogates struggle with it. A Gaussian process fitted directly to noisy counts underestimates its uncertainty, and importance sampling over \(\phi\) helps the mean but not the coverage (see section 5). For the background behind the counting noise, see <a href="../rare-events/"><em>Estimating rare-event probabilities</em></a>.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="model" aria-labelledby="model-title">
+            <p class="section-number">3 · Method</p>
+            <h2 id="model-title">How RESuM works</h2>
+            <p class="section-lead">Smooth the counts with a neural network, correct the network with a few precise simulations, and let the model choose where to simulate next.</p>
+            <figure class="resum-figure" aria-labelledby="overview-caption">
+              <img src="assets/overview.png" width="1800" height="418" loading="lazy" alt="Diagram of RESuM. Left: low- and high-fidelity simulated events, each with design parameters theta and event parameters phi, are encoded by a conditional neural process, aggregated and decoded into per-event scores. Right: the averaged scores from low- and high-fidelity simulations and the raw high-fidelity counts enter a multi-fidelity Gaussian process that predicts the high-fidelity design metric with an uncertainty band.">
+              <figcaption id="overview-caption"><strong>RESuM in one picture.</strong> A conditional neural process (left) turns every simulated event into a hit-probability score. Averaged per design, these scores from low-fidelity (LF) and high-fidelity (HF) simulations, together with the raw HF counts, train a multi-fidelity Gaussian process (right) that predicts the HF design metric with an uncertainty band.</figcaption>
+            </figure>
+            <div class="prose">
+              <p>RESuM uses two versions of the same Geant4 simulation. A <strong>high-fidelity</strong> run starts from cosmic muons and costs 170 CPU hours. A <strong>low-fidelity</strong> run skips the muons and starts directly from neutrons; at 0.15 CPU hours it is about 1,130 times cheaper, but it produces only 15 to 30 germanium-77 captures. The method has three steps.</p>
+            </div>
+
+            <h3 class="resum-step"><span>1</span>From 0/1 outcomes to hit probabilities</h3>
+            <div class="prose">
+              <p>The counts are noisy because each event contributes only a 0 or a 1. RESuM replaces that outcome with a continuous score \(\beta_i \in [0,1]\) that approximates the event’s hit probability \(t(\theta,\phi_i)\), and averages the scores instead of counting hits:</p>
+            </div>
+            <div class="equation-block" aria-label="CNP design metric">
+              <p class="equation">$$y_{\text{CNP}}(\theta_k) = \frac{1}{N}\sum_{i=1}^{N} \beta_{ki}$$</p>
+            </div>
+            <div class="prose">
+              <p>Every neutron now contributes, including the ones that were not captured, and the dependence on the design becomes visible:</p>
+            </div>
+            <figure class="resum-figure" aria-labelledby="cnp-caption">
+              <img src="assets/cnp-smoothing.png" width="969" height="267" loading="lazy" alt="Two scatter plots of the design metric against moderator radius (left) and number of panels (right). Raw counts from low-fidelity simulations (red) scatter widely with no visible trend. The averaged CNP scores (teal, with error bars) show clear dependencies: lower at intermediate radius and rising with the number of panels.">
+              <figcaption id="cnp-caption"><strong>Smoothing the counts.</strong> The same low-fidelity simulations, summarized two ways and plotted against the moderator radius (left) and the number of panels (right). The raw metric \(y_{\text{Raw}} = m/N\) (red) is dominated by counting noise. The averaged CNP score \(y_{\text{CNP}}\) (teal) reveals the dependence on the design.</figcaption>
+            </figure>
+
+            <h4 class="resum-subhead">Why a conditional neural process</h4>
+            <div class="prose">
+              <p>The scores are learned by a <strong>conditional neural process</strong> (CNP). It encodes labelled events \((\theta, \phi_i, X_i)\) into a shared representation and decodes, for any new event, a mean and a variance from which \(\beta_i\) is drawn. The model has to learn from millions of events and give an uncertainty with every prediction. A Gaussian process gives uncertainties, but its cost grows with the cube of the number of points. A standard neural network scales, but needs more data and gives no uncertainty. A CNP has both: linear cost and a predicted variance.</p>
+            </div>
+            <div class="resum-table-wrap">
+              <table class="resum-table resum-table-compare">
+                <thead><tr><th scope="col"></th><th scope="col">Gaussian process</th><th scope="col">Conditional neural process</th><th scope="col">Neural network</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Cost with \(n\) events</th><td>\(\mathcal{O}(n^3)\)</td><td>\(\mathcal{O}(n)\)</td><td>\(\mathcal{O}(n)\)</td></tr>
+                  <tr><th scope="row">Predicts uncertainty</th><td>yes</td><td>yes</td><td>no</td></tr>
+                  <tr><th scope="row">Works with limited data</th><td>yes</td><td>yes</td><td>no</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4 class="resum-subhead">Why the score behaves like a probability</h4>
+            <div class="prose">
+              <p>The CNP has a clean Bayesian reading. The unknown hit probability \(t(\theta,\phi)\) is a latent variable, and the simulation is a fixed, known decoder that turns it into a Bernoulli outcome. The CNP is the encoder: trained by maximizing the Bernoulli likelihood of the simulated outcomes, it approximates the posterior of \(t(\theta,\phi)\). The whole system is a variational autoencoder whose decoder is physics, which is why the score can be averaged like a probability rather than used only as a ranking.</p>
+            </div>
+            <figure class="resum-figure" aria-labelledby="vae-caption">
+              <img src="assets/vae-analogy.jpg" width="1800" height="736" loading="lazy" alt="Diagram of the connection to a variational autoencoder. Left: the unknown true hit probability t of theta and phi acts as a nominal latent vector; together with the conditions it passes through a probabilistic decoder, the Bernoulli process of the simulation, to produce simulated data x. Middle: the surrogate model q, trained on the simulated data, acts as the probabilistic encoder and gives a posterior distribution from which a latent vector z is sampled. Right: z passes through the same decoder to give surrogate data x prime.">
+              <figcaption id="vae-caption"><strong>RESuM as a variational autoencoder with a physics decoder.</strong> The unknown hit probability \(t(\theta,\phi)\) is the latent variable, and the Bernoulli process of the simulation is the decoder that turns it into simulated outcomes. The CNP, trained by maximizing the likelihood of those outcomes, plays the role of the encoder: it gives a posterior \(q\) over the hit probability. Sampling from it and decoding again would produce surrogate data, so the trained CNP could also serve as a fast simulator.</figcaption>
+            </figure>
+
+            <h4 class="resum-subhead">Learning from one capture in 50,000 neutrons</h4>
+            <div class="prose">
+              <p>Only about one neutron in 50,000 produces germanium-77. To give the network enough to learn from, RESuM uses <strong>mixup</strong>: it trains on virtual events \(\hat x = \lambda x_l + (1-\lambda)x_j\) with labels \(\hat y = \lambda y_l + (1-\lambda) y_j\), always mixing one signal and one background event. With \(\lambda\) drawn uniformly, most virtual events would be half and half, which describes no real neutron. RESuM draws \(\lambda\) from a U-shaped \(B(0.1, 0.1)\) distribution instead, so that virtual events stay close to a real signal or a real background event while the boundary between them is smoothed.</p>
+            </div>
+            <figure class="resum-figure resum-figure-mixup" aria-labelledby="mixup-caption">
+              <img src="assets/mixup.jpg" width="1600" height="1499" loading="lazy" alt="Illustration of mixup. A photo of a cat with label [1, 0] and a photo of a dog with label [0, 1] are blended with lambda 0.5 into a half-cat, half-dog image with label [0.5, 0.5]. Below, two options for the mixing weight lambda: uniformly distributed, which gives an even spread of mixed labels, and U-shaped, which gives mostly labels close to pure signal or pure background.">
+              <figcaption id="mixup-caption"><strong>Mixup in one picture.</strong> Blending a cat (label [1, 0]) and a dog (label [0, 1]) with \(\lambda = 0.5\) gives an image that is half of each, with the label [0.5, 0.5]. With \(\lambda\) drawn uniformly (bottom left), mixed labels spread evenly between the classes. With a U-shaped distribution (bottom right), most virtual events stay signal-dominated or background-dominated, close to a real event.</figcaption>
+            </figure>
+            <div class="prose">
+              <p>The trained network has about 500,000 parameters, trains in about five GPU-hours and scores six million events per second, roughly 200 times faster than simulating them.</p>
+            </div>
+
+            <h3 class="resum-step"><span>2</span>Correcting the network with a few precise simulations</h3>
+            <div class="prose">
+              <p>The CNP score is smooth but not guaranteed to be calibrated, so RESuM does not use it as the answer. It treats it as a cheap, informative, possibly biased <em>fidelity level</em> and lets a <strong>multi-fidelity Gaussian process</strong> learn how it relates to the quantity that matters. Three levels enter: \(y_{\text{CNP}}\) from low-fidelity simulations, \(y_{\text{CNP}}\) from high-fidelity simulations, and the raw count \(y_{\text{Raw}}\) from high-fidelity simulations. Each level is linked to the one below by the autoregressive model of Kennedy and O’Hagan:</p>
+            </div>
+            <div class="equation-block" aria-label="Kennedy–O'Hagan co-kriging">
+              <p class="equation">$$f_{h}(\theta) = \rho_{h-1}\, f_{h-1}(\theta) + \delta_h(\theta), \qquad \delta_h \sim \mathcal{GP}$$</p>
+              <p class="equation-explanation">\(\rho\) scales one fidelity onto the next, and the discrepancy \(\delta(\theta)\) absorbs the part of the bias that varies with the design.</p>
+            </div>
+            <div class="prose">
+              <p>This is the step that makes the network usable. Its bias is corrected at the level of designs, where a high-fidelity run with \(10^7\) muons has an error of a few percent, instead of at the level of single events, where every correction would bring back the full counting noise. The cheap low-fidelity runs cover the design space; the few high-fidelity runs anchor the result. Why per-event correction fails is worked out in <a href="../rare-event-learning/#implications"><em>Learning in the rare-event regime</em></a>.</p>
+            </div>
+
+            <h3 class="resum-step"><span>3</span>Choosing where to simulate next</h3>
+            <div class="prose">
+              <p>Starting from four high-fidelity and about 300 low-fidelity simulations, RESuM adds high-fidelity runs by <strong>active learning</strong>. The next design is the one that most reduces the model’s integrated variance over the design space, balancing exploration of uncertain regions against refinement of promising ones. Designs that cannot be built, with overlapping panels or a moderator that does not fit the cryostat, are excluded from the search. Six iterations were enough to converge.</p>
+            </div>
+            <figure class="resum-figure resum-figure-side" aria-labelledby="al-caption">
+              <img src="assets/active-learning.png" width="660" height="510" loading="lazy" alt="Four stacked panels against moderator radius. The top three show model predictions with uncertainty bands for the low-fidelity CNP metric, the high-fidelity CNP metric and the raw high-fidelity metric, all falling from small radius to a minimum near 200 centimetres. The bottom panel shows the acquisition function for successive active-learning iterations.">
+              <figcaption id="al-caption"><strong>The three fidelity levels and the acquisition function</strong>, projected on the moderator radius. From top: \(y_{\text{CNP}}\) from LF simulations, \(y_{\text{CNP}}\) from HF simulations, and the HF raw metric that RESuM ultimately predicts. Bottom: the acquisition function over the active-learning iterations, which first explores and then concentrates where the optimum is likely.</figcaption>
+            </figure>
+          </section>
+
+          <section class="chapter" id="result" aria-labelledby="result-title">
+            <p class="section-number">4 · Result</p>
+            <h2 id="result-title">The optimal moderator</h2>
+            <p class="section-lead">Two thirds less neutron-induced background, found with 3.3% of the compute.</p>
+            <div class="prose">
+              <p>RESuM converged on a family of good designs. The best one, a ring of 188 short, thin panels at a radius of about 166 cm, reduces the germanium-77 production rate from 0.238 to 0.0798 nuclei per kilogram and year:</p>
+            </div>
+            <div class="result-grid">
+              <div><span>Background reduction</span><strong>(66.5 ± 3.5)%</strong></div>
+              <div><span>Compute used</span><strong>1,747 CPU h</strong></div>
+              <div><span>Brute-force equivalent</span><strong>52,700 CPU h</strong></div>
+            </div>
+            <div class="prose">
+              <p>Several designs reach almost the same background, which is useful in practice: the engineering choice can be made among them.</p>
+            </div>
+            <div class="resum-table-wrap">
+              <table class="resum-table">
+                <caption>The four best moderator designs found by RESuM, with the predicted germanium-77 production rate in nuclei per kilogram and year (without moderator: 0.238).</caption>
+                <thead><tr><th scope="col">Radius r</th><th scope="col">Thickness d</th><th scope="col">Panels n</th><th scope="col">Angle φ</th><th scope="col">Length L</th><th scope="col">Rate</th></tr></thead>
+                <tbody>
+                  <tr><td>165.6 cm</td><td>3.3 cm</td><td>188</td><td>19.3°</td><td>7.5 cm</td><td>0.0798</td></tr>
+                  <tr><td>207.3 cm</td><td>2.8 cm</td><td>120</td><td>3.5°</td><td>3.2 cm</td><td>0.0786</td></tr>
+                  <tr><td>202.2 cm</td><td>2.4 cm</td><td>153</td><td>9.1°</td><td>3.0 cm</td><td>0.0787</td></tr>
+                  <tr><td>164.3 cm</td><td>4.2 cm</td><td>192</td><td>15.4°</td><td>3.1 cm</td><td>0.0784</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="prose">
+              <p>The good designs cluster at two radii, about 165 cm and 200 cm, and favour many short panels at small angles: that keeps enough moderator mass close to the detectors while leaving few straight gaps for neutrons to pass through. Designs with large gaps between panels perform worse.</p>
+              <p>Exploring the same 310 designs with high-fidelity simulations alone would have taken 52,700 CPU hours. RESuM used 310 low-fidelity and 10 high-fidelity simulations, 1,746.5 CPU hours in total, or 3.3% of that cost.</p>
+            </div>
+          </section>
+
+          <section class="chapter" id="validation" aria-labelledby="validation-title">
+            <p class="section-number">5 · Validation</p>
+            <h2 id="validation-title">Why the neural network is needed</h2>
+            <p class="section-lead">Two obvious alternatives, tested on the same 100 independent high-fidelity simulations.</p>
+            <div class="prose">
+              <p>The cleanest test of RESuM is to remove its neural network. A <strong>multi-fidelity Gaussian process on the raw counts</strong> uses exactly the same simulations, but with only a handful of captures per run it cannot tell counting noise from the effect of the design: it fits the noise and reports far too little uncertainty. The textbook remedy for rare events, <strong>adaptive importance sampling</strong>, instead produces more hits by concentrating each low-fidelity run where captures happen. That gives the most accurate mean of all, but the sampler has to be learned again for every design from very few captures, and its uncertainties remain too small. <strong>RESuM</strong> takes neither route: the network extracts the information already contained in every simulated neutron, and the multi-fidelity model corrects its bias with the few precise simulations. It is the only one of the three whose error bars match how often it is actually wrong.</p>
+            </div>
+            <figure class="resum-figure" aria-labelledby="baselines-caption">
+              <img src="assets/baseline-coverage.png?v=3" width="1800" height="1286" loading="lazy" alt="Three panels, each showing the counted background of 100 independent high-fidelity simulations as black points with a model prediction and ±1, ±2 and ±3 sigma bands. RESuM: wide enough bands that contain almost all points. Multi-fidelity Gaussian process: narrow bands that jump around and often miss the points. Importance sampling plus Gaussian process: a smoother prediction close to the points but with bands too narrow to contain many of them.">
+              <figcaption id="baselines-caption"><strong>The same 100 validation simulations, three models</strong>, each trained on 310 LF and 10 HF simulations. Black points are the counted background; bands are the ±1σ (green), ±2σ (yellow) and ±3σ (red) predictions. From top: RESuM, multi-fidelity Gaussian process (MFGP) on raw counts, and importance sampling with MFGP.</figcaption>
+            </figure>
+            <div class="resum-table-wrap">
+              <table class="resum-table">
+                <caption>Coverage on the 100 validation simulations, each model trained on 310 low-fidelity and 10 high-fidelity simulations. A calibrated model contains 68.3%, 95.5% and 99.7% of them within ±1σ, ±2σ and ±3σ.</caption>
+                <thead><tr><th scope="col">Model</th><th scope="col" class="sig">±1σ</th><th scope="col" class="sig">±2σ</th><th scope="col" class="sig">±3σ</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">MF Gaussian process on raw counts</th><td>17%</td><td>33%</td><td>48%</td></tr>
+                  <tr><th scope="row">Adaptive importance sampling + MFGP</th><td>39%</td><td>64%</td><td>86%</td></tr>
+                  <tr class="is-resum"><th scope="row">RESuM</th><td>69%</td><td>95%</td><td>100%</td></tr>
+                  <tr class="is-ideal"><th scope="row">Calibrated</th><td>68.3%</td><td>95.5%</td><td>99.7%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="chapter" id="applications" aria-labelledby="applications-title">
+            <p class="section-number">6 · Impact</p>
+            <h2 id="applications-title">Beyond LEGEND</h2>
+            <p class="section-lead">The rare-event design problem is not specific to one detector. RESuM is now used across neutrino physics, dark matter and astrophysics.</p>
+            <div class="resum-apps">
+              <a class="resum-app" href="../black-hole-binaries/">
+                <span class="resum-app-status is-done">Published</span>
+                <h3>Binary black-hole formation</h3>
+                <p>Population synthesis of massive binary stars, where the outcome of interest, a binary that ends as a merging black-hole pair, is rarer than one in 10,000. RESOLVE adapts RESuM as a likelihood emulator, cutting the compute by 98% and enabling high-dimensional parameter inference.</p>
+                <span class="resum-app-ref">arXiv:2506.00757 · <em>Digging in spacetime</em> →</span>
+              </a>
+              <a class="resum-app" href="https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_216.pdf">
+                <span class="resum-app-status is-done">Published</span>
+                <h3>Neutron shielding for COHERENT</h3>
+                <p>Optimization of detector design parameters for neutrino scattering experiments, where neutron backgrounds again have to be minimized with expensive simulations.</p>
+                <span class="resum-app-ref">NeurIPS 2025 workshop, Machine Learning and the Physical Sciences ↗</span>
+              </a>
+              <div class="resum-app">
+                <span class="resum-app-status">In progress</span>
+                <h3>LEGEND liquid-argon optical map</h3>
+                <p>Modeling how scintillation light from the liquid-argon veto reaches the light sensors.</p>
+              </div>
+              <div class="resum-app">
+                <span class="resum-app-status">In progress</span>
+                <h3>XLZD background simulations</h3>
+                <p>Sensitivity studies for neutrinoless double-beta decay in a next-generation xenon dark-matter detector.</p>
+              </div>
+              <div class="resum-app">
+                <span class="resum-app-status">In progress</span>
+                <h3>DUNE detector response</h3>
+                <p>Systematic uncertainties of the detector response in the Deep Underground Neutrino Experiment.</p>
+              </div>
+            </div>
+            <aside class="related-reading">
+              <p class="eyebrow">The ideas behind RESuM</p>
+              <a href="../rare-events/">Estimating rare-event probabilities: from counting hits to conditional Monte Carlo <span aria-hidden="true">→</span></a>
+              <a href="../rare-event-learning/">Learning in the rare-event regime: why standard machine learning fails, and how RESuM corrects for it <span aria-hidden="true">→</span></a>
+            </aside>
+          </section>
+
+          <section class="references" id="sources" aria-labelledby="sources-title">
+            <p class="eyebrow">References</p>
+            <h2 id="sources-title">Paper, code and methods</h2>
+            <ul>
+              <li><a href="https://openreview.net/forum?id=lqTILjL6lP">Schuetz, A.-K., Poon, A. W. P. &amp; Li, A. (2025). “RESuM: A Rare Event Surrogate Model for Physics Detector Design.”</a><span>International Conference on Learning Representations (ICLR), Spotlight. Also <a href="https://arxiv.org/abs/2410.03873">arXiv:2410.03873</a>.</span></li>
+              <li><a href="https://github.com/annkasch/resum-legend">RESuM code repository.</a><span>GitHub: annkasch/resum-legend.</span></li>
+              <li><a href="https://slideslive.com/39034831/a-rare-event-surrogate-model-resum-for-physics-detector-design">ICLR 2025 talk recording.</a><span>SlidesLive.</span></li>
+              <li><a href="https://arxiv.org/abs/2506.00757">Schuetz, A.-K. et al. (2025). “RESOLVE: Rare Event Surrogate Likelihood for Gravitational Wave Paleontology Parameter Estimation.”</a><span>arXiv:2506.00757.</span></li>
+              <li><a href="https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_216.pdf">Liu, B. Z., Simonaitis-Boyd, S., Schuetz, A.-K., Li, A. &amp; Li, Z. (2025). “Efficient optimization of COHERENT detector design parameters with the Rare Event Surrogate Model (RESuM).”</a><span>Machine Learning and the Physical Sciences Workshop, NeurIPS 2025.</span></li>
+              <li><a href="https://arxiv.org/abs/2107.11462">LEGEND Collaboration (2021). “The Large Enriched Germanium Experiment for Neutrinoless ββ Decay: LEGEND-1000 Preconceptual Design Report.”</a><span>arXiv:2107.11462.</span></li>
+              <li><a href="https://arxiv.org/abs/1807.01613">Garnelo, M. et al. (2018). “Conditional neural processes.”</a><span>International Conference on Machine Learning.</span></li>
+              <li><a href="https://doi.org/10.1093/biomet/87.1.1">Kennedy, M. C. &amp; O’Hagan, A. (2000). “Predicting the output from a complex computer code when fast approximations are available.”</a><span>Biometrika, 87(1), 1–13.</span></li>
+              <li><a href="https://arxiv.org/abs/1710.09412">Zhang, H. et al. (2018). “mixup: Beyond empirical risk minimization.”</a><span>International Conference on Learning Representations.</span></li>
+            </ul>
+            <p class="source-note">Figures are from the RESuM paper. All numbers refer to the LEGEND neutron-moderator study unless stated otherwise.</p>
+          </section>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner"><p>Ann-Kathrin Schuetz · Research portfolio</p><p><a href="../">Projects</a> · <a href="../../">Home</a></p></div>
+  </footer>
+</body>
+</html>

@@ -6,7 +6,7 @@
   <meta name="description" content="Curriculum vitae of Ann-Kathrin Schuetz: machine learning for physical systems, scientific simulation, sensors, and robotics.">
   <title>CV | Ann-Kathrin Schuetz</title>
   <link rel="stylesheet" href="../style.css?v=20261026">
-  <link rel="stylesheet" href="style.css?v=20261026">
+  <link rel="stylesheet" href="style.css?v=20261031">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -25,90 +25,99 @@
     <section class="cv-opening" aria-labelledby="cv-title">
       <p class="eyebrow">Curriculum vitae</p>
       <h1 id="cv-title" class="page-title">Ann-Kathrin Schuetz</h1>
-      <p class="cv-headline">Research scientist in physical AI, scientific simulation, and real-world sensors</p>
-      <p class="cv-summary">I develop machine-learning methods for physical systems and connect them with simulation, measurements, and hardware. My work spans rare-event probability estimation, scientific inference, computer vision, robot learning, low-noise electronics, and high-performance computing.</p>
+      <p class="cv-headline">PhD in Physics | Research Scientist, Physical AI | Simulation, Trustworthy ML &amp; Real-World Sensors</p>
+      <p class="cv-contact"><a href="mailto:annkaschue@gmail.com">annkaschue@gmail.com</a> · +1 (510) 495-7980</p>
+      <ul class="cv-links" aria-label="Professional links">
+        <li><a href="https://www.linkedin.com/in/ann-kathrin-schuetz-phd" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a></li>
+        <li><a href="https://github.com/annkasch" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a></li>
+        <li><a href="https://scholar.google.com/citations?user=o2zYzQ4AAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar <span aria-hidden="true">↗</span></a></li>
+        <li><a href="https://docs.google.com/document/d/1mjS0tZWsUzYqq_sZHqu0Wv3voNOvv9jiuMDN8G46xyY/edit?usp=sharing" target="_blank" rel="noopener">Talks &amp; Papers <span aria-hidden="true">↗</span></a></li>
+      </ul>
+      <p class="cv-summary">I build ML that makes expensive physical simulation fast and reliable enough to drive real engineering decisions, and I test it on hardware I’ve built myself. PhD in physics, five years at Berkeley Lab, UC Berkeley master’s in data science. I work across the whole stack, from sensors and electronics to models and GPU clusters.</p>
       <div class="cv-actions">
         <a class="cv-button cv-button-primary" href="assets/Ann-Kathrin_Schuetz_CV.pdf" download>Download CV (PDF) <span aria-hidden="true">↓</span></a>
         <a class="cv-button" href="mailto:annkaschue@gmail.com">Email me</a>
       </div>
-      <ul class="cv-links" aria-label="Professional links">
-        <li><a href="https://www.linkedin.com/in/ann-kathrin-schuetz-phd/">LinkedIn <span aria-hidden="true">↗</span></a></li>
-        <li><a href="https://github.com/annkasch">GitHub <span aria-hidden="true">↗</span></a></li>
-        <li><a href="https://scholar.google.com/citations?user=o2zYzQ4AAAAJ&amp;hl=en">Google Scholar <span aria-hidden="true">↗</span></a></li>
-      </ul>
+      <div class="cv-highlights" aria-labelledby="highlights-title">
+        <h2 id="highlights-title" class="eyebrow">Highlights</h2>
+        <ul>
+          <li>Built an ML-driven optimization method for rare-event simulations; it found a detector design with <strong>66.5% less noise</strong> using <strong>30× less compute</strong>. First-author <strong>ICLR 2025 Spotlight</strong>; adopted by multiple research collaborations.</li>
+          <li>Showed the method transfers to a different scientific domain: on extremely imbalanced data (under <strong>0.01%</strong> positives), it cut compute by <strong>98%</strong> and enabled previously infeasible high-dimensional parameter inference.</li>
+          <li>Took sensor hardware from design to deployment: electronics, cleanroom fabrication, commissioning. <strong>Berkeley Lab SPOT Award</strong>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cv-section" aria-labelledby="education-title">
+      <div class="cv-section-heading"><h2 id="education-title">Education</h2></div>
+      <div class="cv-section-body cv-education">
+        <div><div class="cv-entry-heading"><h3>University of California, Berkeley</h3><p>2026</p></div><p>Master of Information and Data Science · GPA 3.91</p><p class="cv-note">Coursework: Computer Vision, Applied Machine Learning, Generative AI, Neurosymbolic AI, ML at Scale</p></div>
+        <div><div class="cv-entry-heading"><h3>University of Tübingen (Germany)</h3><p>2019</p></div><p>PhD in Physics</p><p class="cv-note">Degree awarded magna cum laude (with great distinction)</p></div>
+        <div><div class="cv-entry-heading"><h3>University of Tübingen (Germany)</h3><p>2013</p></div><p>BSc and MSc in Physics</p></div>
+      </div>
     </section>
 
     <section class="cv-section" aria-labelledby="experience-title">
-      <div class="cv-section-heading"><p class="eyebrow">01 / Experience</p><h2 id="experience-title">Research and development</h2></div>
+      <div class="cv-section-heading"><h2 id="experience-title">Experience</h2></div>
       <div class="cv-section-body">
         <article class="cv-entry">
-          <div class="cv-entry-heading"><h3>Lawrence Berkeley National Laboratory</h3><p>May 2021–present</p></div>
-          <p class="cv-role">Postdoctoral Researcher · Research Scientist</p>
+          <div class="cv-entry-heading"><h3>Lawrence Berkeley National Laboratory</h3><p>May 2021 – Present</p></div>
+          <p class="cv-role">Postdoctoral Researcher, Research Scientist</p>
           <ul>
-            <li>Developed RESuM, a machine-learning method for estimating rare-event probabilities from simulation and supporting detector design. In a shielding study, it reduced simulated background by 66.5% using 3.3% of the standard compute; the work received an ICLR 2025 Spotlight.</li>
-            <li>Applied the method to binary black-hole population inference, reducing compute by 98% and enabling high-dimensional analysis of merger outcomes rarer than 1 in 10,000.</li>
-            <li>Built an LLM-based pipeline that turns incomplete detector documentation into validated 3D geometries and runnable simulations.</li>
-            <li>Developed neural waveform classifiers for germanium sensors and optimized inference latency for data-acquisition use.</li>
-            <li>Led low-noise electronics through design, cleanroom fabrication, testing, installation, and commissioning.</li>
-            <li>Built research software in Python and C++ and ran distributed simulation and training workloads at NERSC using Slurm, CUDA, and OpenMP.</li>
-            <li>Served as Early Career Representative for the LEGEND collaboration (2021–2023) and mentored students.</li>
+            <li><strong>Made rare-event design optimization affordable.</strong> Built RESuM, an open-source ML surrogate that learns intractable event probabilities directly from simulation and combines physics models of different fidelity to give calibrated, uncertainty-aware predictions. Used it to optimize detector shielding in the search for a nuclear decay with a half-life longer than the age of the universe, cutting rare noise from cosmic-ray showers by <strong>66.5%</strong> at <strong>3.3% of standard compute</strong>. Adopted by multiple scientific collaborations. <span class="cv-inline-links"><a href="https://proceedings.iclr.cc/paper_files/paper/2025/file/c3909e3abe8ebdb20c42a42ce0bc907d-Paper-Conference.pdf" target="_blank" rel="noopener">Paper</a> | <a href="https://github.com/annkasch/resum" target="_blank" rel="noopener">Code</a> | <a href="http://iclr.cc/virtual/2025/poster/28496" target="_blank" rel="noopener">Video</a> | <a href="../projects/resum/">Project page</a></span></li>
+            <li><strong>Replaced a slow simulator with a fast ML stand-in.</strong> Repurposed RESuM as a likelihood emulator for binary black-hole merger outcomes rarer than 1 in 10,000, showing it works beyond design optimization. It cut compute by <strong>98%</strong> and enabled the first full high-dimensional parameter inference, making population-synthesis studies of stellar evolution feasible. <span class="cv-inline-links"><a href="../projects/black-hole-binaries/">Project page</a></span></li>
+            <li><strong>Automated the step from engineering documents to runnable simulation.</strong> Built an LLM agent that turns sparse, incomplete multimodal detector documentation into physically consistent 3D geometries and executable simulations, combining knowledge graphs, hierarchical spatial representations, and automated geometric validation.</li>
+            <li><strong>Brought ML toward real-time sensor decisions.</strong> Developed and benchmarked deep-learning models that classify waveforms (time-series signals) from germanium semiconductor sensors to reject noise, and optimized their inference latency for integration into the data acquisition system.</li>
+            <li><strong>Owned hardware end to end.</strong> Led the design, cleanroom fabrication (thin-film sputtering, photolithography, trace etching), testing, installation, and commissioning of ultra-low-noise electronics and data acquisition systems. <span class="cv-inline-links"><a href="../projects/lmfe-production/">Project page</a></span></li>
+            <li><strong>Built reproducible research software and scaled it on supercomputers.</strong> Wrote research code in Python and C++ (PyTorch, TensorFlow) and ran distributed simulation and training pipelines at NERSC, the U.S. Department of Energy’s national supercomputing center, using Slurm, CUDA, and OpenMP.</li>
+            <li><strong>Led and mentored.</strong> Early Career Representative for the international LEGEND collaboration (2021–2023). Mentored students and presented at international conferences and ML workshops.</li>
           </ul>
         </article>
 
         <article class="cv-entry">
-          <div class="cv-entry-heading"><h3>University of Tübingen, Germany</h3><p>Jan 2014–May 2021</p></div>
+          <div class="cv-entry-heading"><h3>University of Tübingen, Germany</h3><p>Jan 2014 – May 2021</p></div>
           <p class="cv-role">Postdoctoral Researcher (2019–2021) · PhD Researcher (2014–2019)</p>
           <ul>
-            <li>Contributed to electric-field and charge-drift simulations for semiconductor sensors and developed signal-processing methods to separate signal from noise.</li>
-            <li>Developed a Bayesian model combining heterogeneous data and systematic uncertainties to quantify individual noise sources.</li>
-            <li>Built C++ Monte Carlo simulations of particle transport, radioactive decays, and cosmic-ray interactions in complex 3D geometries, with validation against measurements.</li>
-            <li>Developed a photosensor data pipeline from data acquisition and digital signal processing to real-time noise flagging.</li>
+            <li><strong>Simulated semiconductor sensor physics.</strong> Contributed to electric-field and charge-drift simulations of how signals form in semiconductor sensors; developed signal-processing algorithms to separate signal from noise.</li>
+            <li><strong>Pioneered a multivariate Bayesian noise model.</strong> Combined heterogeneous datasets and systematic uncertainties into a unified model quantifying each noise source with full uncertainty estimates.</li>
+            <li><strong>Developed large-scale Monte Carlo simulations.</strong> Built modular C++ frameworks for particle transport, radioactive decays, and cosmic-ray interactions in complex 3D geometries, validated against measured data.</li>
+            <li><strong>Built a real-time sensor data pipeline.</strong> Operated a photosensor data acquisition system and developed its full data flow, from raw signals through digital signal processing to real-time noise flagging.</li>
           </ul>
         </article>
       </div>
     </section>
 
     <section class="cv-section" aria-labelledby="projects-title">
-      <div class="cv-section-heading"><p class="eyebrow">02 / Applied projects</p><h2 id="projects-title">Robotics and machine learning</h2></div>
-      <div class="cv-section-body cv-projects">
-        <article class="cv-project">
-          <h3>Animal2robot</h3>
-          <p>Independent early-stage project connecting dog pose and gait estimation with reinforcement learning for quadruped locomotion. Developing the pipeline in Isaac Lab and ROS 2 toward deployment on a Unitree Go2.</p>
-          <a href="https://github.com/annkasch/animal2robot">Project code <span aria-hidden="true">↗</span></a>
-        </article>
-        <article class="cv-project">
-          <h3>OmniSearch</h3>
-          <p>UC Berkeley Master of Information and Data Science team capstone on wildfire search and rescue. Built a dynamic simulator and multi-agent reinforcement-learning system for coordinating drone and ground-robot teams, and trained a detector to identify survivors in aerial images.</p>
-          <a href="https://github.com/olavrenin-data-scientist/omnisearch">Project code <span aria-hidden="true">↗</span></a>
-        </article>
+      <div class="cv-section-heading"><h2 id="projects-title">Robotics &amp; Applied ML Projects</h2></div>
+      <div class="cv-section-body cv-entry">
+        <ul>
+          <li><strong>Animal2robot: teaching a Unitree Go2 to walk like a real dog</strong> (independent, early stage). Building a pipeline to extract gait patterns from dog video and train RL locomotion policies in Isaac Lab; working with ROS 2 on my own Go2 toward deploying them on the robot. <span class="cv-inline-links"><a href="https://github.com/annkasch/animal2robot" target="_blank" rel="noopener">Code</a></span></li>
+          <li><strong>OmniSearch: robot and drone teams for wildfire search-and-rescue</strong> (master’s project). Built a dynamic simulator and multi-agent RL so robots and drones coordinate search without a central controller; trained a YOLO detector to find human survivors in aerial imagery. <span class="cv-inline-links"><a href="https://github.com/olavrenin-data-scientist/omnisearch" target="_blank" rel="noopener">Code</a> | <a href="https://www.ischool.berkeley.edu/programs/mids/capstone/2026b-summer/omnisearch-simulation-platform-test-coordinated-drone-and" target="_blank" rel="noopener">Project page</a></span></li>
+        </ul>
       </div>
     </section>
 
     <section class="cv-section" aria-labelledby="publications-title">
-      <div class="cv-section-heading"><p class="eyebrow">03 / Selected work</p><h2 id="publications-title">Publications</h2></div>
+      <div class="cv-section-heading"><h2 id="publications-title">Selected Publications</h2></div>
       <div class="cv-section-body cv-publications">
-        <p><strong>Schuetz, A.-K.</strong> et al. “RESuM: Rare Event Surrogate Model for Physics Detector Design.” <em>International Conference on Learning Representations</em>, 2025. Spotlight. <a href="https://proceedings.iclr.cc/paper_files/paper/2025/file/c3909e3abe8ebdb20c42a42ce0bc907d-Paper-Conference.pdf">Paper <span aria-hidden="true">↗</span></a></p>
-        <p>Kim, H., Mak, S., <strong>Schuetz, A.-K.</strong>, and Poon, A. W. P. “Efficient optimization of expensive black-box simulators via marginal means, with application to neutrino detector design.” arXiv:2508.01834, 2025. <a href="https://arxiv.org/abs/2508.01834">Preprint <span aria-hidden="true">↗</span></a></p>
-      </div>
-    </section>
-
-    <section class="cv-section" aria-labelledby="education-title">
-      <div class="cv-section-heading"><p class="eyebrow">04 / Education</p><h2 id="education-title">Academic training</h2></div>
-      <div class="cv-section-body cv-education">
-        <div><h3>University of California, Berkeley</h3><p>Master of Information and Data Science · 2026</p></div>
-        <div><h3>University of Tübingen, Germany</h3><p>PhD in Physics · 2019 · magna cum laude</p></div>
-        <div><h3>University of Tübingen, Germany</h3><p>BSc and MSc in Physics · 2013</p></div>
+        <p><strong>A.-K. Schuetz</strong>, et al., <em>RESuM: Rare Event Surrogate Model for Physics Detector Design</em>. ICLR 2025 (<strong>Spotlight</strong>). <span class="cv-inline-links"><a href="https://proceedings.iclr.cc/paper_files/paper/2025/file/c3909e3abe8ebdb20c42a42ce0bc907d-Paper-Conference.pdf" target="_blank" rel="noopener">Paper</a></span></p>
+        <p>H. Kim, S. Mak, <strong>A.-K. Schuetz</strong>, A. W. P. Poon, <em>Efficient optimization of expensive black-box simulators via marginal means, with application to neutrino detector design</em>, arXiv:2508.01834, August 2025. <span class="cv-inline-links"><a href="https://arxiv.org/abs/2508.01834" target="_blank" rel="noopener">Paper</a></span></p>
+        <p>A. Drobizhev, …, <strong>A.-K. Schuetz</strong>, et al., <em>Characterization of the First Prototype of the L1K65n Differential-Output Charge-Sensitive Preamplifier ASIC for … HPGe Detector Readout</em>, IEEE Trans. Nucl. Sci. 73 (2026). <span class="cv-inline-links"><a href="https://www.osti.gov/pages/biblio/3366978" target="_blank" rel="noopener">Paper</a></span></p>
       </div>
     </section>
 
     <section class="cv-section" aria-labelledby="skills-title">
-      <div class="cv-section-heading"><p class="eyebrow">05 / Technical skills</p><h2 id="skills-title">Methods and tools</h2></div>
+      <div class="cv-section-heading"><h2 id="skills-title">Skills</h2></div>
       <div class="cv-section-body cv-skills">
-        <p><strong>Machine learning:</strong> PyTorch, TensorFlow, scikit-learn, transformers, diffusion models, VAEs, CNNs, multimodal learning, LLM fine-tuning, RAG, knowledge graphs.</p>
-        <p><strong>Probabilistic modeling and simulation:</strong> Bayesian inference, MCMC, Gaussian processes, uncertainty quantification, surrogate models, experimental design, Monte Carlo, Geant4.</p>
-        <p><strong>Robotics and perception:</strong> Isaac Lab, Isaac Sim, VMAS, ROS 2, reinforcement learning, multi-agent coordination, path planning, YOLO, stereo geometry, point clouds.</p>
-        <p><strong>Signals and hardware:</strong> waveform analysis, digital signal processing, low-noise electronics, data acquisition, cleanroom fabrication, sensor characterization, low-latency inference.</p>
-        <p><strong>Software and computing:</strong> Python, C++, Julia, R, SQL, Bash, Linux, Git, Docker, Kubernetes, CUDA, Slurm, OpenMP, distributed computing at NERSC.</p>
+        <p><strong>Agentic AI &amp; LLMs:</strong> multi-agent systems, LangGraph, LangChain, RAG, LoRA/QLoRA, knowledge graphs.</p>
+        <p><strong>Deep learning:</strong> PyTorch, TensorFlow/Keras, scikit-learn, transformers, diffusion models, VAEs, CNNs, multimodal representation learning.</p>
+        <p><strong>RL &amp; robotics:</strong> PPO, HAPPO, multi-agent RL, decentralized coordination, path planning, Isaac Lab, Isaac Sim, VMAS, ROS/ROS 2.</p>
+        <p><strong>Perception &amp; signal processing:</strong> YOLO, point clouds, stereo geometry, homography, motion estimation; DSP, waveform analysis, noise filtering, time- and frequency-domain analysis, streaming DAQ, low-latency inference.</p>
+        <p><strong>Probabilistic ML &amp; simulation:</strong> GPy, Gaussian processes, Bayesian inference, MCMC, uncertainty quantification, surrogate models, Monte Carlo, physics-based 3D simulation (Geant4).</p>
+        <p><strong>Hardware:</strong> ultra-low-noise electronics, cleanroom fabrication, sensor characterization, sensor-response modeling, installation and commissioning.</p>
+        <p><strong>Languages:</strong> Python, C++, Julia, R, SQL, Bash.</p>
+        <p><strong>Infrastructure &amp; MLOps:</strong> Docker, Singularity, Kubernetes, AWS, Spark, Airflow, Snakemake, MongoDB, Git, Linux.</p>
+        <p><strong>HPC &amp; GPU:</strong> CUDA, Slurm, OpenMP, distributed training on DOE supercomputers (NERSC).</p>
       </div>
     </section>
   </main>

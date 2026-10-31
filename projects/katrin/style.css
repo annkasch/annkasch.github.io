@@ -349,3 +349,30 @@ summary { cursor: pointer; width: fit-content; }
 @media (max-width: 540px) {
   .result-strip { padding-inline: 26px; }
 }
+
+/* Tritium spectrum figure */
+.spec-frame { fill: none; stroke: #9a9c90; stroke-width: 1; }
+.spec-tick { stroke: #9a9c90; stroke-width: 1; }
+.spec-line { fill: none; stroke: #894321; stroke-width: 2; stroke-linejoin: round; }
+.spec-line-m { stroke: #b59a3a; }
+.spec-shade { fill: #894321; fill-opacity: .18; stroke: none; }
+.spec-zoom { fill: #894321; fill-opacity: .12; stroke: #894321; stroke-width: .8; }
+.spec-arrow { fill: none; stroke: #252a25; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.spec-l0 { fill: #894321; } .spec-l1 { fill: #9a7f22; }
+
+/* Uncertainty breakdown table */
+.uncertainty-table { margin: 34px 0 40px; }
+.uncertainty-table table { width: 100%; border-collapse: collapse; font-size: .8rem; line-height: 1.45; }
+.uncertainty-table caption { caption-side: top; text-align: left; margin-bottom: 12px; font: 400 1.05rem/1.4 var(--serif); color: var(--ink); }
+.uncertainty-table th, .uncertainty-table td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; font-weight: 400; }
+.uncertainty-table thead th { color: var(--muted); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 500; }
+.uncertainty-table td:nth-child(2) { width: 7.5em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.uncertainty-table .bar-cell { width: 34%; padding-right: 0; }
+.uncertainty-table .bar-cell span { display: block; height: 8px; background: var(--accent); opacity: .55; }
+.uncertainty-table .is-stat th, .uncertainty-table .is-stat td { font-weight: 600; }
+.uncertainty-table .is-stat .bar-cell span { opacity: 1; background: var(--ink); }
+.uncertainty-table .is-stat th, .uncertainty-table .is-stat td { border-bottom: 2px solid var(--ink); }
+.uncertainty-table .is-small th, .uncertainty-table .is-small td { color: var(--muted); font-size: .74rem; }
+.uncertainty-table figcaption { margin-top: 12px; font-size: .7rem; line-height: 1.7; color: var(--muted); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 760px) { .uncertainty-table .bar-cell { width: 22%; } }

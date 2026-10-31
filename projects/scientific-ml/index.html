@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#183339">
-  <meta name="description" content="How scientific ML compares with common ML workflows in tech and industry: data generation, physical structure, I/O, memory, distributed computing, and scientific validation.">
+  <meta name="description" content="Where machine learning adds value in science, how scientific workloads differ from industry, and why ML on supercomputers is limited by I/O, communication and compute rather than model size.">
   <title>The hidden work behind AI for science | Ann-Kathrin Schuetz</title>
-  <link rel="stylesheet" href="../../style.css?v=20261026">
-  <link rel="stylesheet" href="style.css?v=20261026">
+  <link rel="stylesheet" href="../../style.css?v=20261031">
+  <link rel="stylesheet" href="style.css?v=20261031">
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -17,7 +17,7 @@
     <nav class="site-nav" aria-label="Main navigation">
       <a href="../../">Home</a>
       <a href="../../about/">About</a>
-      <a href="../">Projects</a>
+      <a href="../" aria-current="page">Projects</a>
       <a href="../../cv/">CV</a>
       <a href="../../publications/">Publications</a>
     </nav>
@@ -26,13 +26,13 @@
   <main id="main" class="wrap">
     <article>
       <header class="essay-cover">
-        <p class="eyebrow">Scientific ML / A comparison with tech and industry</p>
+        <p class="eyebrow">Scientific ML / Performance on HPC systems</p>
         <h1>The hidden work<br>behind <em>AI for science.</em></h1>
         <div class="cover-bottom">
-          <p class="cover-deck">Scientific ML uses familiar algorithms under demanding constraints: costly simulations, physically structured samples, and conclusions that depend on reliable uncertainty estimates. How do these workflows compare with ML in tech and industry? The differences reach from training data to I/O, memory, and the meaning of a successful prediction.</p>
-          <div class="essay-meta"><p>By Ann-Kathrin Schuetz</p><p>Physics · inference · high-performance computing</p><a href="#data-landscape">Read the essay <span aria-hidden="true">↓</span></a></div>
+          <p class="cover-deck">Scientific machine learning inherits industry’s models but not its operating assumptions. Industry scales by adding FLOPs to abundant, homogeneous data. Science runs on data that is either extreme-scale or scarce, on large irregular samples, and on shared allocations where idle GPU-hours are the real cost. Making it work means treating training as an HPC workload inside a larger simulation loop, and treating every speed optimization as a potential scientific error.</p>
+          <div class="essay-meta"><p>By Ann-Kathrin Schuetz</p><p>Scientific ML · high-performance computing</p><a href="#borrow">Read the essay <span aria-hidden="true">↓</span></a></div>
         </div>
-        <div class="cover-topics" aria-label="Themes"><span>Data at scientific scale</span><span>The I/O behind every batch</span><span>Compute beyond the model</span></div>
+        <div class="cover-topics" aria-label="Themes"><span>What transfers from industry</span><span>Where the GPU-hours go</span><span>Orchestrating the loop</span></div>
       </header>
 
       <div class="essay-layout">
@@ -40,147 +40,75 @@
           <nav aria-label="In this essay">
             <p class="eyebrow">In this essay</p>
             <ol>
-              <li><a href="#data-landscape">What changes in science?</a></li>
-              <li><a href="#io">Four ways I/O stalls training</a></li>
-              <li><a href="#different">First, create the data</a></li>
-              <li><a href="#pipeline">The size of one sample</a></li>
-              <li><a href="#bottlenecks">Communication &amp; compute</a></li>
-              <li><a href="#experiment">Try a faster GPU</a></li>
-              <li><a href="#trust">When errors change the science</a></li>
-              <li><a href="#design">The cost of a discovery</a></li>
+              <li><a href="#borrow">What transfers from industry</a></li>
+              <li><a href="#regime">The operating regime</a></li>
+              <li><a href="#gpu-hours">Where the GPU-hours go</a></li>
+              <li><a href="#loop">Orchestrating the loop</a></li>
+              <li><a href="#takeaway">Takeaway</a></li>
             </ol>
             <a class="contents-sources" href="#sources">Sources &amp; further reading ↗</a>
           </nav>
         </aside>
 
         <div class="essay-body">
-          <section class="chapter" id="data-landscape" aria-labelledby="data-landscape-title">
-            <p class="section-number">01 / Comparing the workflows</p>
-            <h2 id="data-landscape-title">Familiar algorithms.<br>Different demands.</h2>
+          <section class="chapter" id="borrow" aria-labelledby="borrow-title">
+            <p class="section-number">01 / Industry and science</p>
+            <h2 id="borrow-title">From simulation and analysis<br>to machine learning.</h2>
             <div class="prose">
-              <p class="lead">A recommendation system may learn from clicks and purchases. A scientific surrogate may learn from simulations that must first be paid for, run on a supercomputer, and checked against physical measurements. The learning algorithm can be familiar while the surrounding job changes substantially.</p>
-              <p>Scientific ML spans climate prediction, materials design, astronomical inference, and experimental analysis. Some projects face enormous data streams; others have only a handful of expensive, high-quality examples. In both cases, the data comes from a physical system, and a useful prediction must support a defensible scientific conclusion.</p>
+              <p class="lead">I came to machine learning from the other end of the pipeline. Before training networks on simulated data, I spent years producing that data and analysing it: writing C++ Monte Carlo simulations of particle transport, radioactive decays and cosmic-ray interactions for germanium experiments, building a Bayesian background model for GERDA, and running MCMC analyses of the KATRIN tritium spectrum on NERSC.</p>
+              <p>That background shapes how I see scientific ML. When I later trained neural networks on detector waveforms and Geant4 output, and built surrogate models such as RESuM for detector design and black-hole population inference, the hard parts were rarely the architecture. They were how the data was produced and stored, how it reached the GPUs, how simulation and training jobs fit into an allocation, and whether a model’s error would survive into a physics result. My training in data science at UC Berkeley, including ML at scale with Spark and Hadoop, showed me the same problems from the industry side, along with the infrastructure industry has built to solve them.</p>
+              <p>This essay collects what I have learned at that boundary. Scientific ML runs on the same software stack as industrial ML: PyTorch, transformers, graph networks, diffusion models, distributed data parallelism. The models transfer. The assumptions about data, scaling and error mostly do not.</p>
+              <p>In science, a learned model is rarely the product. It sits inside a chain of simulation, measurement and inference, in one of four roles: as a <strong>surrogate</strong> for an expensive physics code inside design or optimization loops; in <strong>experimental operations</strong>, tuning beams and detectors and detecting faults and drifts online; in <strong>accelerated analysis</strong>, where reconstruction, denoising and compression happen on streaming detector data; and in <strong>large-scale inference</strong>, where surrogates accelerate MCMC and networks trained on simulator output perform likelihood-free inference. In each role, model error ends up in a physics result.</p>
+              <p><strong>What transfers well</strong> is infrastructure. Sharded, sequential-read dataset formats in the style of WebDataset or TFRecord, multi-process and GPU-side data loading, sharded optimizers and parameters (ZeRO, FSDP), mixed precision, compiled and fused kernels, and experiment tracking were all developed for industrial-scale training, and solve exactly the problems scientific workloads hit on HPC systems. Much of the HPC performance work in scientific ML is adopting this infrastructure for data it was not designed for.</p>
+              <p>The big-data stack is instructive for a different reason: it embodies the opposite architecture. Hadoop and Spark were built for commodity clusters in which storage and compute live on the same nodes. HDFS replicates data blocks across those nodes, and the scheduler moves computation to the data. Supercomputers separate the two: compute nodes read from a shared parallel filesystem over the interconnect, which is optimal for tightly coupled simulations and leaves training jobs exposed to every other user’s I/O. Neither architecture is designed for what ML training needs, which is repeated, shuffled, high-throughput reads of the same dataset. The lessons of data locality, however, transfer directly.</p>
+              <p><strong>What does not transfer</strong> are three assumptions: that more data and more FLOPs reliably buy better models; that samples are small, homogeneous and independent; and that small prediction errors are acceptable. Each fails for a specific reason, and each failure shows up as a cost on a shared supercomputer.</p>
             </div>
-            <div class="comparison-scroll" role="region" aria-label="Common product ML and scientific ML workflows" tabindex="0">
-              <table class="comparison workflow-comparison">
-                <caption>How the starting conditions can change</caption>
-                <thead><tr><th scope="col">Question</th><th scope="col">Common product ML workflow</th><th scope="col">Scientific ML workflow</th></tr></thead>
+          </section>
+
+          <section class="chapter" id="regime" aria-labelledby="regime-title">
+            <p class="section-number">02 / The operating regime</p>
+            <h2 id="regime-title">Same architectures,<br>different constraints.</h2>
+            <div class="comparison-scroll">
+              <table class="comparison">
+                <thead><tr><th scope="col"></th><th scope="col">Industrial ML</th><th scope="col">Scientific ML</th></tr></thead>
                 <tbody>
-                  <tr><th scope="row">Where do examples come from?</th><td>Interactions, transactions, or content collected during a service’s operation, with additional curation and labeling.</td><td>Instruments, observations, or simulations. Obtaining independent examples can require experimental time or a computing campaign.</td></tr>
-                  <tr><th scope="row">What is one sample?</th><td>A record, image, or sequence organized for a prediction task.</td><td>Possibly a 3D field, evolving trajectory, or irregular graph. Resolution, physical context, and correlations constrain batching and sampling.</td></tr>
-                  <tr><th scope="row">What counts as success?</th><td>Predictive quality and service outcomes, evaluated alongside latency, cost, and other product requirements.</td><td>Predictive quality plus physical validity, uncertainty, and the effect of errors on an inferred explanation or experimental result.</td></tr>
-                  <tr><th scope="row">What sets the computing cost?</th><td>Data preparation, training, serving, and communication across the system.</td><td>Those stages plus simulation or instrument processing, large structured samples, repeated physical validation, and shared HPC resources.</td></tr>
+                  <tr><th scope="row">Data</th><td>Abundant, comparatively homogeneous, user-generated</td><td>Either extreme-scale or very sparse; generated by instruments and simulations</td></tr>
+                  <tr><th scope="row">Objective</th><td>Predictive performance</td><td>Physical insight, consistency and validity</td></tr>
+                  <tr><th scope="row">Scaling limited by</th><td>FLOPs</td><td>Memory, I/O, communication, required fidelity, uncertainty quantification</td></tr>
+                  <tr><th scope="row">Error tolerance</th><td>Small errors acceptable</td><td>Errors can invalidate the scientific conclusion</td></tr>
+                  <tr><th scope="row">Workflow</th><td>Largely feed-forward pipeline</td><td>Closed loop with simulation and experiment</td></tr>
+                  <tr><th scope="row">Compute</th><td>Dedicated, elastic clusters</td><td>Shared allocations, batch queues, wall-time limits</td></tr>
                 </tbody>
               </table>
             </div>
-            <div class="prose comparison-context">
-              <p>These are common workflow patterns. Industrial simulation, robotics, and medical ML share many scientific constraints; large technology systems also face severe I/O and communication limits. The comparison helps identify which assumptions about data, scaling, and validation carry over to a particular scientific problem.</p>
-              <h3>One example of scientific data scale: particle physics</h3>
-              <p>The historical comparison below places CERN above familiar technology companies in daily data volume. It illustrates how far scientific data production can extend. At the Large Hadron Collider, trigger systems select a small fraction of collision events for storage; ML can help with selection, reconstruction, and subsequent analysis.</p>
+            <div class="prose">
+              <p>The data regime spans both extremes. The Rubin Observatory will produce on the order of 20 TB of raw data per night, and individual climate simulations produce multi-petabyte outputs. Rare-event studies, in contrast, may have fewer than 100 high-fidelity samples: my <a href="../resum/">RESuM</a> study of the LEGEND neutron moderator started from four, each costing about 170 CPU-hours.</p>
+              <p>The compute regime is different too. On a facility such as NERSC’s Perlmutter, jobs run through a batch scheduler on a shared allocation, under wall-time limits, alongside thousands of other users of the same parallel filesystem and network. Throughput is measured against the allocation, so an idle GPU is not just slow: it is charged. Scaling a scientific model is therefore less a question of how many FLOPs a model can use than of how many of the allocated GPU-hours do useful work.</p>
             </div>
+          </section>
+
+          <section class="chapter" id="gpu-hours" aria-labelledby="gpu-hours-title">
+            <p class="section-number">03 / Where the GPU-hours go</p>
+            <h2 id="gpu-hours-title">I/O, communication<br>and compute.</h2>
+            <div class="prose">
+              <p>In data-parallel training on hundreds to thousands of GPUs, three bottlenecks account for most idle time. None of them is the model.</p>
+            </div>
+            <h3 class="sml-subhead">I/O: data ingestion as the limiting stage</h3>
             <figure class="source-figure">
               <a href="assets/cern-data-comparison-sqream-2022.png" aria-label="Open the original data-volume comparison at full resolution"><img src="assets/cern-data-comparison-sqream-2022.png" width="1024" height="538" alt="Historical pyramid titled Data processed per day, placing CERN at the top at 1,000 PB, above Smart City, Walmart, Google, Netflix, Meta, and Smart Factory."></a>
-              <figcaption>Data processed per day. Original figure from slide 20, credited there to SQREAM (2022). Its 1,000 PB/day label for CERN is a historical illustration, not a current, like-for-like ranking. Raw detector streams, processed data, and retained archives describe different stages. <a href="assets/cern-data-comparison-sqream-2022.png">View full-size figure ↗</a></figcaption>
+              <figcaption>Data processed per day. Figure credited to SQREAM (2022). Its 1,000 PB/day label for CERN is a historical illustration, not a current, like-for-like ranking. Raw detector streams, processed data, and retained archives describe different stages. <a href="assets/cern-data-comparison-sqream-2022.png">View full-size figure ↗</a></figcaption>
             </figure>
             <div class="prose">
-              <p>As a separate measure of retained data, <a href="https://home.cern/cern-hits-one-exabyte-stored-experimental-data-lhc">CERN reported one exabyte of stored LHC experimental data in December 2025</a>, accumulated over more than 15 years. Its <a href="https://home.cern/science/computing/storage/">EOS storage system had exceeded seven billion files by June 2022</a>. These figures illustrate the scale of one scientific facility.</p>
-              <p>Across scientific fields, an archive still has to become a usable training set. Detector measurements need calibration and reconstruction; climate outputs need variables and time windows aligned; materials simulations may need conversion into atomic graphs. The layout produced by an instrument or simulation often differs from the layout needed for efficient learning.</p>
-              <p>The familiar “three Vs” of big data become practical constraints across these workflows:</p>
+              <p>For training, the relevant quantity is not archive size but sustained, randomly accessed read throughput per epoch. TB- to PB-scale training sets are out of core and must be re-streamed from the parallel filesystem every epoch, with aggregate demand growing with the number of loader processes. Most scientific data at NERSC is stored in HDF5, laid out for writing complete simulation states; small random reads trigger metadata lookups and decompression of chunks far larger than the sample. Datasets stored as millions of small files shift the load to the filesystem’s metadata servers, where concurrent open/stat/close calls from thousands of workers cause metadata storms. And correlated samples in space and time limit how freely data can be shuffled without scattering reads or leaking information between training and test sets.</p>
+              <p>The industrial answer, sharded sequential formats with staging to node-local storage and prefetching, works here, but only after the data has been re-laid out for the sampling policy, which is itself a significant processing job. When the dataset is small enough, the simplest fix is to remove I/O from the critical path entirely: the RESuM training set, about 1 GB of simulated events, is loaded into memory at startup, and the network trains at about 10<sup>5</sup> samples per second on a single GPU.</p>
             </div>
-            <dl class="data-dimensions">
-              <div><dt>Volume</dt><dd>Can the selected training set fit in memory or local storage? If it cannot, every pass depends on sustained reads from shared storage.</dd></div>
-              <div><dt>Velocity</dt><dd>Can the pipeline keep up with an instrument’s stream, or supply the next batch before the GPUs finish the current one?</dd></div>
-              <div><dt>Variety</dt><dd>Detector events, particle graphs, simulation grids, and time series need different layouts and preparation. A byte count alone misses this work.</dd></div>
-            </dl>
-            <div class="prose"><p><strong>Owning a large dataset and feeding a large training job are different achievements.</strong> The route between them is where much of the computing difficulty lives.</p></div>
-          </section>
-
-          <section class="chapter" id="io" aria-labelledby="io-title">
-            <p class="section-number">02 / The I/O behind every batch</p>
-            <h2 id="io-title">Before a GPU can learn,<br>the data has to reach it.</h2>
+            <h3 class="sml-subhead">Communication: synchronization at scale</h3>
             <div class="prose">
-              <p class="lead">“Slow data loading” hides several different problems. A filesystem can have ample capacity and impressive bandwidth while a training job still struggles to obtain its next batch.</p>
-              <p>A simulation may write complete states in time order, while training requests shuffled slices from many runs. An experimental archive may be organized for traceability and reconstruction. Adapting these outputs for ML can require another substantial data-processing step.</p>
-              <p>Follow one batch from stored scientific output to the accelerator. Each stage has its own limit; optimizing the matrix multiplication at the end does not remove the stages before it.</p>
+              <p>Synchronous data parallelism ends each step with an AllReduce of the gradients. For a ring AllReduce of a gradient of size <i>M</i> over <i>p</i> ranks with latency α and bandwidth β, the cost is about 2(<i>p</i>−1)α + 2(<i>p</i>−1)/<i>p</i> · <i>M</i>/β: the bandwidth term approaches 2<i>M</i>/β, the latency term grows with <i>p</i>, and neither shrinks as per-rank computation does under strong scaling. Large, irregular samples force small per-rank batches, so synchronization becomes frequent relative to useful work and harder to overlap with the backward pass. And because AllReduce is a barrier, load imbalance from variable sample sizes or slow reads delays one rank while all others idle: I/O variance becomes exposed communication time, and the job runs at the speed of its slowest rank.</p>
             </div>
-            <figure class="batch-path">
-              <ol>
-                <li><span>01 / Locate</span><strong>Find &amp; open files</strong><small>Directory and file metadata requests</small></li>
-                <li><span>02 / Read</span><strong>Fetch chunks</strong><small>Storage bandwidth and access latency</small></li>
-                <li><span>03 / Prepare</span><strong>Build the batch</strong><small>Decompression, transforms, graph construction</small></li>
-                <li><span>04 / Transfer</span><strong>Copy to the GPU</strong><small>Host-to-device transfer</small></li>
-              </ol>
-              <div class="batch-destination"><span aria-hidden="true">↓</span> GPU training can proceed when its inputs are ready</div>
-              <figcaption>A simplified path for a batch. Prefetching can overlap stages, but a persistently slower upstream stage still limits supply.</figcaption>
-            </figure>
-            <div class="io-problem">
-              <p class="eyebrow">01 / Streaming a dataset that cannot fit in memory</p>
-              <h3>Capacity does not guarantee throughput.</h3>
-              <p>Terabyte-to-petabyte training sets often have to stream from disk. Each epoch reads the selected data again unless a useful working set can be cached. The limiting resource becomes the rate at which storage can deliver those bytes, shared with other readers and jobs.</p>
-              <p>Adding GPUs increases demand for ready batches. If the storage path cannot supply them fast enough, the accelerators become starved for input. A model that scales well on synthetic, already-resident data can scale poorly on the real scientific archive.</p>
-              <p class="io-response"><strong>What to measure:</strong> sustained read throughput and time spent waiting for batches, as the number of training processes grows. Staging and caching help only when their capacity and reuse match the workload.</p>
-            </div>
-            <div class="io-problem">
-              <p class="eyebrow">02 / Hierarchical formats and scattered reads</p>
-              <h3>A small sample can trigger a much larger read.</h3>
-              <p>Scientific formats such as HDF5 can hold many datasets, groups, attributes, and chunked arrays. They preserve valuable structure. But a layout designed to write a complete simulation snapshot may serve randomly selected training samples poorly.</p>
-              <p>If a requested slice touches a compressed chunk, that chunk must be fetched and decompressed. A batch scattered across many chunks can read far more data than the model uses. Dataset lookups, chunk indexing, and repeated opens add further overhead. The format alone does not determine performance: chunk shape, compression, caching, and the actual access pattern matter.</p>
-              <p class="io-response"><strong>What to measure:</strong> bytes read per useful sample, chunk reuse, open/lookup time, and decompression time. Match layout to sampling; repacking data has its own storage and preparation cost.</p>
-            </div>
-            <div class="io-problem">
-              <p class="eyebrow">03 / Millions of small files</p>
-              <h3>The filesystem can be busy finding data.</h3>
-              <p>Locating, opening, checking, and closing a file requires metadata operations. With millions of small files, a job may spend more time on these requests than moving useful bytes. Many workers issuing them simultaneously can overload a shared filesystem’s metadata service: a metadata storm.</p>
-              <p>This is a different limit from bulk bandwidth. The storage system may move large contiguous files quickly yet deliver small training samples slowly. High-rate random access for graph neural networks or transformers can amplify the problem. Simply increasing the number of data-loader workers can increase contention and batch latency.</p>
-              <p class="io-response"><strong>What to measure:</strong> file-open rates and latency, metadata activity, and samples delivered per second. Larger shards and fewer repeated opens can help, provided they preserve the required sampling.</p>
-            </div>
-            <div class="io-problem">
-              <p class="eyebrow">04 / Correlations versus efficient access</p>
-              <h3>The order on disk is rarely the order for learning.</h3>
-              <p>Simulation outputs are naturally grouped by run and time step; detector data by acquisition period. Nearby records can be strongly correlated. Reading them sequentially is efficient, but training on long runs of similar examples may give a poor mix of physical conditions. Random sampling can scatter reads across files and chunks, increasing both metadata requests and data movement.</p>
-              <p>Physical context also matters. A time sequence or connected particle neighborhood cannot always be shuffled or split arbitrarily. Training/test separation may need to happen by independent simulation run or acquisition group. The sampling policy must satisfy those scientific requirements while making I/O manageable.</p>
-              <p class="io-response"><strong>What to measure:</strong> throughput under the real sampling policy, alongside correlation and leakage checks. Block or shard shuffling, bounded shuffle buffers, and prefetching are options to validate together with the science.</p>
-            </div>
-            <aside class="takeaway"><p class="eyebrow">At hundreds or thousands of GPUs</p><p>Every training process needs data. More readers can create more contention; one late batch can become a delay for the whole synchronized job.</p></aside>
-            <div class="prose"><p class="source-note">These are the four I/O mechanisms in slide 20. <a href="https://docs.nersc.gov/performance/io/">NERSC’s I/O guidance</a> likewise emphasizes access patterns, small-file overhead, and measuring the I/O stack. Bandwidth, metadata latency, CPU preparation, and device transfer need separate measurements.</p></div>
-          </section>
-
-          <section class="chapter" id="different" aria-labelledby="different-title">
-            <p class="section-number">03 / Before training begins</p>
-            <h2 id="different-title">First, you may have to<br>create the training data.</h2>
+            <h3 class="sml-subhead">Compute: memory-bound kernels and host overhead</h3>
             <div class="prose">
-              <p class="lead">How did pairs of massive stars become the merging black holes we observe today?</p>
-              <p>Gravitational-wave detectors observe the mergers, long after the original stars have disappeared. To test an explanation, researchers can simulate populations of stars: vary their birth masses, composition, and interactions, evolve them, and compare the resulting black holes with observations. Each choice of physical assumptions can send us back to the simulations.</p>
-              <p>A machine-learning model can help explore this space faster. But the examples it learns from have to come from somewhere. Producing them may already require substantial computation. Checking a prediction in an unfamiliar region can require another simulation. The cost of learning includes the cost of generating the world the model learns from.</p>
-              <p>Other fields encounter this in different forms. A climate model generates evolving three-dimensional fields. An instrument produces a stream of measurements that must be calibrated. A rare-event experiment may accumulate a huge archive while providing very few examples of the signal it seeks. <strong>A lot of stored data does not necessarily mean a lot of useful training examples.</strong></p>
-            </div>
-            <figure class="pipeline">
-              <ol>
-                <li><span class="pipeline-index">01</span><strong>Generate</strong><span>Pay for simulations or measurements</span></li>
-                <li><span class="pipeline-index">02</span><strong>Learn</strong><span>Move data &amp; fit an approximation</span></li>
-                <li><span class="pipeline-index">03</span><strong>Infer</strong><span>Compare physical explanations</span></li>
-                <li><span class="pipeline-index">04</span><strong>Validate</strong><span>Check against trusted calculations or data</span></li>
-              </ol>
-              <div class="feedback"><span aria-hidden="true">↶</span> An uncertain result can send us back to generating more data</div>
-              <figcaption>Training sits inside this loop. Making one stage faster changes where the next constraint appears.</figcaption>
-            </figure>
-            <dl class="applications">
-              <div><dt>Simulation surrogates</dt><dd>Approximate expensive physics calculations and support design optimization, with error bounds and checks for bias.</dd></div>
-              <div><dt>Experimental operations</dt><dd>Tune beams or detectors, identify anomalies, and anticipate maintenance needs.</dd></div>
-              <div><dt>Accelerated analysis</dt><dd>Process detector streams, extract features, or compress and denoise measurements within a larger analysis chain.</dd></div>
-              <div><dt>Scientific inference</dt><dd>Accelerate MCMC, variational inference, or likelihood-free posterior estimation on HPC systems.</dd></div>
-            </dl>
-            <div class="prose">
-              <p>For readers used to product ML, the shift is in the starting conditions. A transaction or recommendation system may learn from activity that is already happening. A scientific surrogate may need an explicitly funded simulation campaign before its first training run. Industrial systems also face expensive data and physical constraints; these pressures are especially visible when the data itself is a scientific calculation.</p>
-            </div>
-          </section>
-
-          <section class="chapter" id="pipeline" aria-labelledby="pipeline-title">
-            <p class="section-number">04 / What counts as one example?</p>
-            <h2 id="pipeline-title">One sample can be<br>a volume of space.</h2>
-            <div class="prose">
-              <p>An “example” in scientific ML might be a three-dimensional state from a fluid or climate simulation. At every point on a grid, it stores several physical quantities. Refining the grid adds data along all three directions at once.</p>
-              <p>Consider an illustrative grid with eight quantities per cell, stored as four-byte numbers. Change the resolution below to see what happens to the memory needed for just one state.</p>
+              <p>With data resident and gradients synchronized, achieved throughput is still often far below peak. Decompression, normalization and collation running in Python on the host put the CPU on the critical path, and adding data-loader workers runs into the GIL and oversubscribed cores. Many scientific models consist of small, unfused operations with low arithmetic intensity, memory-bound on a roofline. Activation and optimizer-state memory for large spatial or spatio-temporal fields limit batch size, which reduces occupancy and raises relative communication cost. The per-sample footprint alone grows quickly with resolution:</p>
             </div>
             <figure class="resolution-figure" aria-labelledby="resolution-caption">
               <div class="resolution-controls" id="resolution-controls" hidden>
@@ -214,44 +142,8 @@
               <figcaption id="resolution-caption">Illustrative storage calculation, not a benchmark or a complete training-memory estimate. GiB and MiB are binary gigabytes and megabytes (2³⁰ and 2²⁰ bytes). The cube is schematic; each drawn division represents many cells.</figcaption>
             </figure>
             <div class="prose">
-              <p>That number covers the stored physical fields alone. Training must also store the model, intermediate results from its calculations, and information used to update its parameters. A time-dependent example may contain several such volumes. Making a batch larger can be a memory problem before it becomes a question of faster arithmetic.</p>
-              <p>Now consider training on many examples, repeatedly. Each state has to be read from storage, prepared, and delivered to an accelerator. Cutting a volume into smaller pieces can help, but the pieces may lose the long-range physical context the model needs. Reducing resolution changes which physical scales are represented. These choices affect both the computation and the scientific question.</p>
+              <p>The three are coupled: read variance becomes straggler time at the barrier, and large samples force small batches that raise both communication and launch overhead. Accelerating one stage moves the critical path to the next, so the end-to-end speedup is bounded by the stages that were not accelerated:</p>
             </div>
-            <aside class="takeaway"><p class="eyebrow">The scaling trap</p><p>Twice as fine in three dimensions means eight times the cells. The simulation that produces them may also need smaller time steps.</p></aside>
-          </section>
-
-          <section class="chapter" id="bottlenecks" aria-labelledby="bottlenecks-title">
-            <p class="section-number">05 / Communication and compute</p>
-            <h2 id="bottlenecks-title">A thousand GPUs<br>can still be waiting.</h2>
-            <div class="prose">
-              <p>Adding accelerators helps when there is useful work ready for them. In a large scientific workflow, keeping them supplied and coordinated is a substantial task of its own. The slowest part can move as the job grows.</p>
-            </div>
-            <div class="bottleneck">
-              <div class="bottleneck-heading"><span class="bottleneck-symbol" aria-hidden="true">CPU</span><div><p class="eyebrow">Reading the bytes is only part of the job</p><h3>Waiting for the host to prepare them</h3></div></div>
-              <p>A batch may still need decompression, normalization, augmentation, graph construction, and collation into tensors. Python loops and CPU transformations over large scientific arrays can hold up delivery even when storage reads are fast. The GPU waits for work on the host computer to finish.</p>
-              <p>Moving preparation to the GPU can help some workloads, but it consumes device memory and execution time. More CPU workers can oversubscribe cores or compete for memory bandwidth. The useful question is which stage limits ready batches under the actual allocation.</p>
-              <details class="technical-note"><summary>What changes in the implementation?</summary><p>Separate read, decompression, transformation, collation, and host-to-device timings. Vectorize repeated operations, profile worker counts, and test pinned-memory transfers or overlap where supported. Check the full timeline to see whether preparation is hidden behind training or exposed as a wait.</p></details>
-            </div>
-            <div class="bottleneck">
-              <div class="bottleneck-heading"><span class="bottleneck-symbol" aria-hidden="true">↔</span><div><p class="eyebrow">The workers have to agree</p><h3>Waiting for the slowest process</h3></div></div>
-              <p>In common distributed training setups, each GPU processes different examples, then combines parameter gradients through a collective operation such as AllReduce. That synchronization travels over a network. If one worker gets an unusually large graph, a difficult batch, or slow data access, other workers can reach the meeting point first and wait. A storage straggler has now become a communication stall.</p>
-              <p>With a fixed amount of work, more GPUs give each one less computation between exchanges. Communication can then take a larger share of the step. Increasing the batch to give every GPU more work can hit memory limits or change how the model learns.</p>
-              <details class="technical-note"><summary>What changes in the implementation?</summary><p>Measure exposed AllReduce time, rank imbalance, and scaling efficiency. Gradient synchronization cost depends on message size, collective algorithm, network topology, and overlap with backpropagation. Balanced batches and suitable rank placement can help. Gradient accumulation can reduce synchronization frequency, but changes the effective batch and may require retuning.</p></details>
-            </div>
-            <div class="bottleneck">
-              <div class="bottleneck-heading"><span class="bottleneck-symbol" aria-hidden="true">GPU</span><div><p class="eyebrow">The numbers have to move inside the device</p><h3>Waiting for memory</h3></div></div>
-              <p>Even after a sample reaches the GPU, arithmetic can be waiting on data. Some operations spend more time moving large arrays through device memory than calculating with them. Many small operations can add dispatch overhead. Large samples can limit the batch size and leave hardware less efficiently occupied.</p>
-              <p>A larger advertised arithmetic rate does not automatically shorten these waits. Sometimes the useful change is to reuse data, combine operations, reorganize arrays, or change the algorithm while preserving the physics it needs to learn.</p>
-              <details class="technical-note"><summary>What changes in the implementation?</summary><p>Inspect CPU/GPU timelines, kernel sizes, memory bandwidth, and activation and optimizer memory. Vectorized preprocessing, fused or compiled operations, and suitable tensor layouts may help. Mixed precision needs numerical validation; activation checkpointing trades extra computation for lower memory use.</p></details>
-            </div>
-            <aside class="allocation-note"><p class="eyebrow">Waiting also scales</p><p>A one-minute stall across <strong>1,024 allocated GPUs</strong> occupies about <strong>17 GPU-hours</strong>.</p><p>That is allocated computing capacity during a minute without training progress. This is an arithmetic illustration, not a measured NERSC workload: 1,024 × 1/60 hour.</p></aside>
-            <div class="prose"><p class="source-note">Practical background: <a href="https://docs.nersc.gov/performance/io/">NERSC’s I/O guidance</a> and the <a href="https://docs.pytorch.org/docs/stable/notes/ddp.html">PyTorch distributed data-parallel design notes</a>.</p></div>
-          </section>
-
-          <section class="chapter" id="experiment" aria-labelledby="experiment-title">
-            <p class="section-number">06 / Try the speedup</p>
-            <h2 id="experiment-title">Make the GPU work faster.<br>What happens to the job?</h2>
-            <div class="prose"><p>Give the GPU work a speedup, then watch the total step time. When data loading or communication takes most of the time, even a large improvement in GPU execution makes a modest difference to the whole step.</p></div>
             <div class="explorer" id="bottleneck-explorer" hidden>
               <fieldset class="scenario-picker">
                 <legend>Choose a starting bottleneck</legend>
@@ -270,63 +162,54 @@
               <div class="experiment-result" role="status" aria-atomic="true"><p><strong id="total-speedup">1.18×</strong> end-to-end speedup</p><p id="experiment-explanation">GPU work is 4× faster, but the whole step falls from 100 to 85 ms. Data loading still takes 70 ms.</p></div>
             </div>
             <noscript><p class="static-example">With 70 ms of data loading, 20 ms of GPU work, and 10 ms of communication, making GPU work 4× faster reduces a step to 85 ms: a 1.18× end-to-end speedup.</p></noscript>
+            
             <p class="model-note" id="model-assumptions">Illustration, not a benchmark. The model adds sequential data-loading, GPU, and communication times: T = T<sub>data</sub> + T<sub>GPU</sub>/s + T<sub>communication</sub>. It assumes fixed work, unchanged non-GPU stages, and no overlap. Real pipelines overlap stages and require profiling; this estimates step time, not time to scientific convergence.</p>
           </section>
 
-          <section class="chapter" id="trust" aria-labelledby="trust-title">
-            <p class="section-number">07 / When a prediction becomes evidence</p>
-            <h2 id="trust-title">A small error can change<br>the scientific answer.</h2>
+          <section class="chapter" id="loop" aria-labelledby="loop-title">
+            <p class="section-number">04 / Orchestration</p>
+            <h2 id="loop-title">Training is one stage<br>of a closed loop.</h2>
             <div class="prose">
-              <p class="lead">The computation does not end when the predictions look convincing.</p>
-              <p>Return to the black-hole example. Suppose a surrogate systematically underestimates how often one kind of stellar population produces a merger. An inference procedure using that surrogate may compensate by favoring a different population. The fit can look good while the inferred stellar history has shifted.</p>
-              <p>Average prediction error might barely change if that population occupies a small part of the test set. Yet that region can matter greatly to the physical conclusion. This is why scientific validation asks where errors occur, what they do downstream, and whether the reported uncertainty still means what it claims.</p>
-              <h3>More stored examples may not give an independent test</h3>
-              <p>Neighboring snapshots from one simulation share a history. Putting some in training and others in a test set can make generalization look easier than it is. Testing on independent runs or new physical conditions can mean generating more expensive data.</p>
-              <h3>The rare cases can be the important ones</h3>
-              <p>A small signal, an unusual event, or an extreme physical regime may drive the discovery. Denoising, compression, and sampling can improve throughput while altering precisely those cases. Their effect has to be checked through the analysis.</p>
-              <h3>Confidence in a surrogate is not confidence in the simulator</h3>
-              <p>A learned model can reproduce a simulation faithfully and inherit its missing physics. Measurement noise, uncertain parameters, simulator assumptions, and approximation error need separate attention. Independent measurements and trusted calculations remain part of the work.</p>
+              <p>An industrial training pipeline mostly runs forward: data is collected, a model is trained and deployed. A scientific workflow is a loop: <strong>simulate → train → infer → validate → select the next simulation</strong>. Its stages have very different resource profiles, and the loop, not any single stage, sets the time to a result.</p>
+              <p>In the RESuM study, the stages look like this. Low-fidelity Geant4 runs take 0.15 CPU-hours and can be farmed out as large job arrays on CPU nodes; high-fidelity runs take about 170 CPU-hours each. Training the neural network takes a few GPU-hours. Evaluating it is cheap: about six million events per second on one GPU, roughly 200 times faster than simulating them. The multi-fidelity model then selects the next high-fidelity simulation by active learning, and each of the six iterations waits on one of those 170-hour runs. The wall-clock time of the study is dominated by simulation and queueing, not by training.</p>
+              <p>That makes orchestration a first-order performance problem:</p>
+              <ul>
+                <li><strong>Match resources to stages.</strong> Simulation belongs on CPU nodes as job arrays; training and inference on GPU nodes. Holding GPU nodes while CPU-bound simulations run is idle allocation.</li>
+                <li><strong>Encode the loop in the scheduler.</strong> Job dependencies in Slurm, or a workflow manager such as Snakemake, chain simulation, training and selection without manual hand-offs, and let independent branches proceed in parallel.</li>
+                <li><strong>Design for the queue.</strong> Wall-time limits and preemption require checkpoint and restart for long training and simulation jobs; the number and size of jobs affects queue wait as much as run time.</li>
+                <li><strong>Stage data between steps.</strong> Simulation output is written in the layout the simulator prefers; converting it to a training-friendly, sharded format is a pipeline step of its own, best done once rather than in every epoch. This is exactly the kind of embarrassingly parallel extract-transform-load work that Spark was built for: reading many simulation files, filtering and joining events, computing features and writing balanced shards, with fault tolerance for free.</li>
+                <li><strong>Spend expensive runs where they inform most.</strong> Active learning chooses each high-fidelity simulation to maximally reduce model uncertainty, which is the most effective way to shorten a loop whose bottleneck is the simulator.</li>
+              </ul>
             </div>
-            <aside class="takeaway"><p class="eyebrow">The cost of being confident</p><p>Validation can require new simulations, repeated inference, and independent data. It belongs in the compute budget from the beginning.</p></aside>
-            <details class="technical-note"><summary>What does this mean for inference?</summary><p>Test downstream parameter bias and use suitable coverage or simulation-based calibration checks alongside posterior predictive checks; they answer different questions. A surrogate substituted into a likelihood can change the sampled posterior. A surrogate used to propose MCMC moves can preserve the original target when acceptance uses the exact likelihood and the appropriate proposal correction.</p></details>
           </section>
 
-          <section class="chapter" id="design" aria-labelledby="design-title">
-            <p class="section-number">08 / The cost of a discovery</p>
-            <h2 id="design-title">Count the work<br>around the model.</h2>
+          <section class="chapter" id="takeaway" aria-labelledby="takeaway-title">
+            <p class="section-number">05 / Takeaway</p>
+            <h2 id="takeaway-title">The scarce resource is<br>trustworthy, deliverable data.</h2>
             <div class="prose">
-              <p>ML can make previously impractical scientific work possible: exploring more physical models, processing detector streams, guiding experiments, or replacing repeated expensive calculations. Realizing that promise means accounting for the computation around every prediction.</p>
-              <p>That accounting changes the comparison with a familiar product ML workflow. Scientific training data may itself be a computational result. The size of a sample can be set by the physical system. And testing the model may require running the expensive calculation it was built to accelerate.</p>
+              <p>Industry has shown how to scale models when data is plentiful and compute is the bottleneck. In science, the scarce resource is different: data that is either too expensive to produce or too large to move, and that must remain physically meaningful through every transformation. Performance engineering for scientific ML is therefore organized around getting the right data to the right device at the right time, with the right fidelity.</p>
+              <p>That suggests a division of labour. <strong>Adopt industry’s infrastructure</strong> for data loading, distributed training and memory management, because it solves real problems that scientific workloads share. <strong>Co-design the rest</strong>, data layouts, sampling, parallelization, scheduling and the simulation loop itself, around the hardware topology and the scientific question. And treat every optimization that changes the numerics or the data, from reduced precision and lossy compression to subsampling and surrogate substitution, as a potential systematic error that has to be validated against the physics before its speedup counts.</p>
+              <p>The figure of merit is not peak FLOPs or model size, but useful, validated science per allocated GPU-hour.</p>
             </div>
-            <div class="comparison-scroll" role="region" aria-label="How scientific requirements change an ML workflow" tabindex="0">
-              <table class="comparison">
-                <caption>Questions worth asking before the next training run</caption>
-                <thead><tr><th scope="col">A familiar next step</th><th scope="col">The scientific question behind it</th><th scope="col">Where computation enters</th></tr></thead>
-                <tbody>
-                  <tr><th scope="row">Get more examples</th><td>Can we generate independent cases in the physical regime that matters?</td><td>Simulation campaigns, instrument time, calibration, and storage.</td></tr>
-                  <tr><th scope="row">Use a larger batch</th><td>Can the sample be made smaller without losing essential physical structure?</td><td>Device memory, resolution, context, and data movement.</td></tr>
-                  <tr><th scope="row">Add more GPUs</th><td>Can we supply and balance enough useful work?</td><td>Shared I/O, communication, synchronization, and allocation cost.</td></tr>
-                  <tr><th scope="row">Accept a lower test error</th><td>Does it preserve the physical conclusion and its uncertainty?</td><td>Independent validation and repeated downstream inference.</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="prose comparison-context"><p>These constraints also appear in industrial simulation, robotics, medicine, and other demanding ML applications. The useful comparison is between workflows and their requirements.</p></div>
-            <div class="prose"><p class="closing">A millisecond prediction can sit on top of a long chain of simulations, data transfers, coordinated computation, and physical checks. Understanding that chain is how we decide which acceleration will actually bring a discovery closer.</p></div>
           </section>
 
           <section class="references" id="sources" aria-labelledby="sources-title">
             <p class="eyebrow">Continue exploring</p>
             <h2 id="sources-title">Sources &amp; further reading</h2>
-            <p>Adapted from slides 19–24 of my December 2025 presentation on ML in scientific workflows. Slide 19 supplies the use cases; slide 20 the CERN comparison, three-V framing, and four I/O mechanisms; slides 21–22 the communication and compute constraints; slides 23–24 the system-level design and science/industry comparison. Particle physics provides one example of scientific data scale. The historical SQREAM graphic retains its original branding and the credit given in the slides; the archive milestone is a separate CERN measurement. The stellar-population example is a conceptual illustration, not a report of a measured result. The grid-memory calculation, allocation example, and timing budgets are illustrative, rather than measurements of NERSC workloads.</p>
             <ul>
-              <li><a href="https://home.cern/cern-hits-one-exabyte-stored-experimental-data-lhc">CERN: one exabyte of stored LHC experimental data ↗</a><span>17 December 2025. A cumulative archive milestone, distinct from daily processing volume.</span></li>
-              <li><a href="https://home.cern/science/computing/storage/">CERN: storage ↗</a><span>Trigger selection, disk and tape, and the distinction between raw streams and retained data.</span></li>
-              <li><a href="https://docs.nersc.gov/machinelearning/">Machine learning at NERSC ↗</a><span>Frameworks, distributed training, and facility guidance.</span></li>
-              <li><a href="https://docs.nersc.gov/performance/io/">NERSC: I/O resources and best practices ↗</a><span>Access patterns, small files, and profiling scientific I/O.</span></li>
-              <li><a href="https://docs.pytorch.org/docs/stable/notes/ddp.html">PyTorch: distributed data-parallel design ↗</a><span>Gradient synchronization, buckets, and communication overlap.</span></li>
+              <li><a href="https://docs.nersc.gov/machinelearning/">Machine learning at NERSC ↗</a><span>Frameworks, distributed training and facility guidance.</span></li>
+              <li><a href="https://docs.nersc.gov/performance/io/">NERSC: I/O resources and best practices ↗</a><span>Access patterns, small files and profiling scientific I/O.</span></li>
+              <li><a href="https://docs.pytorch.org/docs/stable/notes/ddp.html">PyTorch: distributed data-parallel design ↗</a><span>Gradient synchronization, buckets and communication overlap.</span></li>
+              <li><a href="https://arxiv.org/abs/1910.02054">Rajbhandari et al.: ZeRO, memory optimizations toward training trillion-parameter models ↗</a><span>Sharding optimizer state, gradients and parameters across data-parallel ranks.</span></li>
+              <li><a href="https://github.com/webdataset/webdataset">WebDataset ↗</a><span>Sharded, sequential-read dataset format for large-scale training.</span></li>
+              <li><a href="https://www.usenix.org/conference/nsdi12/technical-sessions/presentation/zaharia">Zaharia et al.: Resilient distributed datasets ↗</a><span>The fault-tolerant, in-memory abstraction behind Apache Spark (NSDI 2012).</span></li>
+              <li><a href="https://slurm.schedmd.com/job_array.html">Slurm: job arrays ↗</a><span>Running large sets of independent simulations under a batch scheduler.</span></li>
+              <li><a href="https://home.cern/cern-hits-one-exabyte-stored-experimental-data-lhc">CERN: one exabyte of stored LHC experimental data ↗</a><span>December 2025. A cumulative archive milestone, distinct from daily processing volume.</span></li>
+              <li><a href="https://rubinobservatory.org/for-scientists/rubin-101/the-legacy-survey-of-space-and-time-lsst">Vera C. Rubin Observatory: the Legacy Survey of Space and Time ↗</a><span>Survey design and data volumes.</span></li>
               <li><a href="https://arxiv.org/abs/1911.01429">Cranmer, Brehmer &amp; Louppe: The frontier of simulation-based inference ↗</a><span>How simulation and machine learning meet in scientific inference.</span></li>
             </ul>
-            <div class="related-reading"><p class="eyebrow">Related work</p><a href="../katrin/">Bayesian inference with KATRIN <span aria-hidden="true">→</span></a><a href="../black-hole-binaries/">Computational models of black-hole populations <span aria-hidden="true">→</span></a></div>
+            <p class="source-note">The grid-memory calculation and the timing budgets are illustrations, not measurements of NERSC workloads. RESuM figures are from the published study.</p>
+            <div class="related-reading"><p class="eyebrow">Related work</p><a href="../resum/">RESuM: a rare-event surrogate model for detector design <span aria-hidden="true">→</span></a><a href="../katrin/">Bayesian inference with KATRIN <span aria-hidden="true">→</span></a></div>
           </section>
         </div>
       </div>

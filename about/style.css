@@ -82,3 +82,5 @@
   .about-section { padding-block: 28px; }
   .work-note, .background-list > div { break-inside: avoid; }
 }
+
+.contact-links { display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: flex-end; }

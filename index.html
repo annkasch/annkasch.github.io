@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Ann-Kathrin Schuetz, physicist at Lawrence Berkeley National Laboratory, working on rare-event probabilities in physics simulations: statistical and machine-learning methods, detector hardware, and the link to physical AI.">
+  <meta name="description" content="Ann-Kathrin Schuetz, physicist at Lawrence Berkeley National Laboratory: machine learning for physical systems, simulation, Bayesian inference, rare-failure estimation and sensor hardware, with a focus on physical AI and robotics.">
   <title>Ann-Kathrin Schuetz | Research portfolio</title>
   <link rel="stylesheet" href="style.css?v=20261026">
-  <link rel="stylesheet" href="home.css?v=20261029d">
+  <link rel="stylesheet" href="home.css?v=20261031">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -24,15 +24,45 @@
   <main id="main" class="wrap">
     <section class="home-hero" aria-labelledby="hero-title">
       <div class="home-hero-copy">
-        <p class="eyebrow">Rare events · Simulation · Machine learning</p>
-        <h1 id="hero-title">Estimating what almost never happens.</h1>
-        <p class="home-lede">I’m a physicist at Lawrence Berkeley National Laboratory. I work on <a href="projects/rare-events/">rare events</a>: outcomes so unlikely that a simulation produces only a handful of them, from background signals in searches for neutrinoless double-beta decay, a process whose half-life exceeds the age of the universe ten million billion times over, to the stellar histories behind black-hole mergers.</p>
-        <p class="home-lede">I develop statistical and machine-learning methods that estimate these probabilities with far less computation, and I have built detector electronics for the experiments that search for them. The same question, how often a rare failure happens, is central to physical AI, which I also write about.</p>
-        <p class="home-links"><a href="about/">About me</a><a href="cv/">CV</a><a href="publications/">Publications</a></p>
+        <p class="eyebrow">Physical systems · Simulation · Machine learning</p>
+        <h1 id="hero-title">Machine learning for physical systems, tested against reality.</h1>
+        <p class="home-lede">I’m a physicist at Lawrence Berkeley National Laboratory. I build simulations and learned models of physical systems, infer their parameters from noisy data, and build the sensor hardware that produces the data. Throughout, the question is whether a model can be trusted: where it differs from reality, and how large its uncertainty really is.</p>
+        <p class="home-lede">My best-known work makes rare outcomes computable from simulation (ICLR 2025 Spotlight), the same problem as estimating how often a robot fails. I’m open to research roles in physical AI and robotics, especially in simulation, evaluation and safety.</p>
+        <p class="home-links"><a href="mailto:annkaschue@gmail.com">Email me</a><a href="cv/">CV</a><a href="about/">About me</a><a href="publications/">Publications</a></p>
       </div>
       <figure class="home-hero-photo home-hero-portrait home-hero-cleanroom">
         <img src="about/assets/cleanroom.jpg?v=3" width="880" height="1100" fetchpriority="high" alt="Ann-Kathrin Schuetz in a white cleanroom suit, goggles and mask, standing in a cleanroom next to lab equipment.">
       </figure>
+    </section>
+
+    <section class="home-threads" aria-labelledby="threads-title">
+      <div class="home-section-head"><h2 id="threads-title">What I work on</h2></div>
+      <div class="threads-grid">
+        <article class="thread">
+          <p class="thread-label">Simulation · sim-to-real</p>
+          <h3>Simulations that agree with measurements</h3>
+          <p>Monte Carlo simulations of particle transport in complex 3D geometries, validated against detector data, and multi-fidelity models that learn the discrepancy between cheap and expensive simulations.</p>
+          <p class="thread-links"><a href="projects/resum/">RESuM</a><a href="projects/lmfe-production/">Signal formation</a></p>
+        </article>
+        <article class="thread">
+          <p class="thread-label">Inference · uncertainty</p>
+          <h3>Physical parameters from noisy data</h3>
+          <p>Bayesian models with systematic uncertainties, MCMC on NERSC supercomputers, and learned likelihood emulators that make high-dimensional inference feasible, from neutrino mass to stellar evolution.</p>
+          <p class="thread-links"><a href="projects/katrin/">KATRIN</a><a href="projects/black-hole-binaries/">Black-hole populations</a></p>
+        </article>
+        <article class="thread">
+          <p class="thread-label">Rare failures · evaluation</p>
+          <h3>Probabilities too small to count</h3>
+          <p>Backgrounds in searches for a decay whose half-life exceeds the age of the universe ten million billion times, and outcomes rarer than 1 in 10,000: estimated from simulation with uncertainties checked against independent runs.</p>
+          <p class="thread-links"><a href="projects/rare-events/">Method</a><a href="projects/rare-events-rl/">Link to reinforcement learning</a></p>
+        </article>
+        <article class="thread">
+          <p class="thread-label">Sensors · hardware</p>
+          <h3>Building and diagnosing the instruments</h3>
+          <p>Low-noise front-end electronics from cleanroom fabrication to installation, readout ASIC characterization, and deep-learning waveform classifiers optimized for latency in the data acquisition.</p>
+          <p class="thread-links"><a href="projects/lmfe-production/">LEGEND-200 front end</a></p>
+        </article>
+      </div>
     </section>
 
     <section class="home-featured" aria-labelledby="featured-title">
@@ -43,9 +73,9 @@
       <div class="featured-grid">
         <a class="featured-card" href="projects/black-hole-binaries/">
           <span class="featured-media"><img src="projects/assets/thumb-black-hole-binaries.jpg" width="480" height="480" loading="lazy" alt=""></span>
-          <span class="featured-kind">Application</span>
+          <span class="featured-kind">Inference</span>
           <h3>Massive stars and black-hole mergers</h3>
-          <p>Population models of the stars behind gravitational-wave events, where the outcomes of interest are rarer than 1 in 10,000.</p>
+          <p>Inferring stellar-evolution parameters from gravitational-wave populations, with a learned likelihood emulator in place of a slow population simulator.</p>
         </a>
         <a class="featured-card" href="projects/lmfe-production/">
           <span class="featured-media"><img src="projects/assets/thumb-lmfe.jpg" width="960" height="960" loading="lazy" alt=""></span>
@@ -56,7 +86,7 @@
         <a class="featured-card" href="projects/rare-events-rl/">
           <span class="featured-media"><img src="projects/assets/thumb-rare-events-rl.jpg" width="960" height="960" loading="lazy" alt=""></span>
           <span class="featured-kind">Essay</span>
-          <h3>Rare-event physics and reinforcement learning</h3>
+          <h3>Hunting the improbable: rare-event physics and reinforcement learning</h3>
           <p>Importance sampling, conditional Monte Carlo, where each one fails, and what this means for estimating failure rates of physical AI.</p>
         </a>
       </div>

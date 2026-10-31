@@ -71,3 +71,15 @@
 .home-lede a { color: var(--accent-dark); text-decoration-color: var(--accent); }
 
 .home-hero-cleanroom img { object-position: 50% 30%; }
+
+/* "What I work on" threads */
+.home-threads { padding: 48px 0 56px; border-top: 1px solid var(--line); }
+.threads-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 40px; }
+.thread { display: flex; flex-direction: column; padding-top: 18px; border-top: 2px solid var(--accent); }
+.thread-label { margin: 0 0 8px; color: var(--accent-dark); font-size: .64rem; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
+.thread h3 { margin: 0 0 10px; font: 400 1.4rem/1.25 var(--serif); letter-spacing: -.02em; }
+.thread > p:not(.thread-label):not(.thread-links) { margin: 0 0 14px; color: #354e52; font-size: .9rem; line-height: 1.75; }
+.thread-links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: auto 0 0; }
+.thread-links a { color: var(--accent-dark); font-size: .76rem; font-weight: 650; text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 2px; }
+.thread-links a:hover { color: var(--ink); border-color: var(--ink); }
+@media (max-width: 760px) { .threads-grid { grid-template-columns: 1fr; gap: 26px; } }

@@ -376,3 +376,11 @@ summary { cursor: pointer; width: fit-content; }
 .uncertainty-table figcaption { margin-top: 12px; font-size: .7rem; line-height: 1.7; color: var(--muted); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (max-width: 760px) { .uncertainty-table .bar-cell { width: 22%; } }
+
+/* Beyond physics box */
+.katrin-beyond { max-width: 1180px; margin: 0 auto 10px; padding: 20px 24px 6px; border-left: 3px solid var(--accent); background: #f1ece2; }
+.katrin-beyond .beyond-label { margin: 0 0 12px; color: var(--accent); font-size: .62rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.katrin-beyond ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 28px; margin: 0; padding: 0; list-style: none; }
+.katrin-beyond li { margin: 0 0 16px; color: #3d433c; font-size: .84rem; line-height: 1.7; }
+.katrin-beyond strong { color: var(--ink); font-weight: 650; }
+@media (max-width: 760px) { .katrin-beyond ul { grid-template-columns: 1fr; } }

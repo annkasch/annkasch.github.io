@@ -7,7 +7,7 @@
   <meta name="description" content="RESuM, the Rare Event Surrogate Model (ICLR 2025 Spotlight): a conditional neural process and a multi-fidelity Gaussian process that optimize detector designs when the quantity to minimize is a rare-event probability. Applied to the LEGEND neutron moderator, it found a design with 66.5% less neutron-induced background using 3.3% of the compute.">
   <title>RESuM: Rare Event Surrogate Model | Ann-Kathrin Schuetz</title>
   <link rel="stylesheet" href="../../style.css?v=20261026">
-  <link rel="stylesheet" href="style.css?v=20261029c">
+  <link rel="stylesheet" href="style.css?v=20261031">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],ignoredTags:['script','noscript','style','textarea','pre','code','svg'],throwOnError:false})"></script>
@@ -60,6 +60,11 @@
         <div><span>The approach</span><p>A conditional neural process turns each simulated event’s 0/1 outcome into a hit probability. A multi-fidelity Gaussian process combines those smooth estimates from cheap simulations with a few expensive ones, and active learning decides where to simulate next.</p></div>
         <div><span>The result</span><p>For the LEGEND neutron moderator: (66.5 ± 3.5)% less neutron-induced background, 3.3% of the compute of a brute-force search, and uncertainties that cover 69%, 95% and 100% of independent checks at 1σ, 2σ and 3σ.</p></div>
       </section>
+
+      <aside class="beyond-box" aria-label="Beyond physics">
+        <p class="beyond-label">Beyond physics</p>
+        <ul><li><strong>Rare-failure estimation. </strong>Estimates probabilities too small to count by brute force, from simulation, with uncertainties that are tested rather than assumed. The same problem arises in validating how often a robot or other learned system fails.</li><li><strong>Multi-fidelity and sim-to-real. </strong>Combines many cheap simulations with a few expensive ones and learns the discrepancy between them, the structure of correcting a fast simulator with scarce high-fidelity or real data.</li><li><strong>Design under uncertainty. </strong>An active-learning loop chooses where to simulate next and ranks designs with calibrated error bars, at a few percent of the compute of a grid search.</li></ul>
+      </aside>
 
       <div class="essay-layout">
         <aside class="contents">

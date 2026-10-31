@@ -132,3 +132,11 @@ a.resum-app:hover { transform: translateX(3px); color: inherit; }
 .resum-shower figcaption { margin: 0 !important; font-size: .76rem !important; }
 .resum-shower-note { display: block; margin-top: 10px; color: var(--ink); }
 @media (max-width: 700px) { .resum-shower-grid { grid-template-columns: 1fr; } .resum-shower video { max-width: 360px; margin: 0 auto; } }
+
+/* Beyond physics box */
+.beyond-box { margin: 26px 0 0; padding: 20px 24px 6px; border-left: 3px solid var(--accent); background: var(--soft); }
+.beyond-label { margin: 0 0 12px; color: var(--accent-dark); font-size: .62rem; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
+.beyond-box ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 28px; margin: 0; padding: 0; list-style: none; }
+.beyond-box li { margin: 0 0 16px; color: #354e52; font-size: .84rem; line-height: 1.7; }
+.beyond-box strong { color: var(--ink); font-weight: 650; }
+@media (max-width: 760px) { .beyond-box ul { grid-template-columns: 1fr; } }

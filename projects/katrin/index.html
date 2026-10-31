@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#111512">
   <meta name="description" content="How Ann-Kathrin Schuetz helped lay the groundwork at Berkeley Lab for future Bayesian analyses of KATRIN data: statistical models, an MCMC framework and runs on NERSC's Cori and Perlmutter.">
   <title>Weighing the weightless | KATRIN | Ann-Kathrin Schuetz</title>
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -57,6 +57,11 @@
           <p>The data are recorded in measurement campaigns, each with its own operating conditions and systematic effects. A Bayesian analysis of the first two campaigns was carried out at Berkeley Lab. Extending it to the full data set means a single joint fit with shared physics parameters and campaign-specific nuisance parameters, an order of magnitude more dimensions and compute. This page describes the groundwork for that step: statistical models for the systematics, a modular MCMC framework, and feasibility and scaling studies on NERSC’s Cori and Perlmutter.</p>
         </div>
       </header>
+
+      <aside class="beyond-box katrin-beyond" aria-label="Beyond physics">
+        <p class="beyond-label">Beyond physics</p>
+        <ul><li><strong>System identification. </strong>Infers a few physical parameters jointly with many nuisance parameters from noisy count data, through a forward model of the whole instrument.</li><li><strong>Uncertainty budgets. </strong>Each systematic effect enters the likelihood with a prior from calibration, so the final uncertainty accounts for everything the model knows it does not know.</li><li><strong>Inference at scale. </strong>Ensemble MCMC parallelized on NERSC supercomputers, where the cost of evaluating the physics model, not the sampler, sets the wall time.</li></ul>
+      </aside>
 
       <div class="article-layout">
         <aside class="contents">
